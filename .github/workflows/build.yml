@@ -19,8 +19,6 @@ jobs:
         node-version: 20
         
     - run: npm install -g bats
-
-    - run: npm i --save gitalk
     
     - run: bats -v
       
