@@ -1,0 +1,147 @@
+---
+layout: default
+---
+
+<article class="posts">
+
+  <h1>{{ page.title }}</h1>
+
+  <div clsss="meta">
+    <span class="date">
+      {{ page.date | date: "%Y-%m-%d" }}
+    </span>
+
+    <ul class="tag">
+      {% for tag in page.tags %}
+      <li>
+        <a href="{{ site.url }}{{ site.baseurl }}/tags#{{ tag }}">
+          {{ tag }}
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+
+
+  <div class="entry">
+    {{ content }}
+  </div>
+
+  {% include disqus.html %}
+  {% include gitalk.html %}
+  <!-- <div id="gitalk-container"></div> -->
+  <!-- <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js">
+    const gitalk = new Gitalk({
+      clientID: "{{ site.gitalk.clientID }}",
+      clientSecret: "{{ site.gitalk.clientSecret }}",
+      repo: "{{ site.gitalk.repo }}",
+      owner: "{{ site.gitalk.owner }}",
+      admin: ["{{ site.gitalk.owner }}"],
+      id: location.pathname,      // Ensure uniqueness and length less than 50
+      distractionFreeMode: false,  // Facebook-like distraction free mode
+      title: "{{ page.title }}",
+      language: "zh-CN",
+
+    })
+
+    gitalk.render('gitalk-container')
+  </script> -->
+  <hr>
+  <div lang="zh-CN" class="gitment-container gitment-header-container">
+    <span><strong id="comments-num"></strong> 条评论</span>
+  </div>
+  <div lang="zh-CN" class="gitment-container gitment-comments-container">
+    <ul class="gitment-comments-list" id="comment-list"></ul>
+  </div>
+  <div style="text-align: center">
+    <ul class="pagination" id="pages" style="display: none"></ul>
+  </div>
+  <div style="text-align:left">
+    <div lang="zh-CN" class="gitment-container gitment-editor-container">
+      <div id="avatar"></div>
+      <div class="gitment-editor-main">
+        <div class="gitment-editor-header">
+          <nav class="gitment-editor-tabs">
+            <button class="gitment-editor-tab gitment-selected" id="editComment">评论</button>
+            <button class="gitment-editor-tab" id="preview">预览</button>
+          </nav>
+          <div class="gitment-editor-login" id='login'></div>
+        </div>
+        <div class="gitment-editor-body">
+          <div class="gitment-editor-write-field" id="write-field">
+            <textarea placeholder="(发表评论)" title="请登入以发表评论" disabled id="comment-input"></textarea>
+          </div>
+          <div class="gitment-editor-preview-field gitment-hidden">
+            <div class="gitment-editor-preview gitment-markdown" id="preview-content">（没有预览）</div>
+          </div>
+        </div>
+      </div>
+      <div class="gitment-editor-footer">
+        <a class="gitment-editor-footer-tip" href="https://guides.github.com/features/mastering-markdown/"
+          target="_blank">
+          支持 Markdown 语法
+        </a>
+        <button class="gitment-editor-submit" disabled>发送</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+  <script type="text/javascript">
+    var gitalk = new Gitalk({
+      clientID: 'e46f6dec7c07145c652c',
+      clientSecret: 'd1a0b627f9b76d21bd3080d1777d0aa0ad55dd83',
+      accessToken: '6a2f4d91a1f188a2089e70c2a7b63628f3e9e664',
+      repo: 'gitalk',
+      owner: 'gitalk',
+      admin: ['booxood', 'mamboer'],
+      id: 'Demo',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+
+    var language = navigator.language || navigator.userLanguage;
+    var intro = document.getElementsByClassName('hero-intro')[0];
+    var beginBtn = document.getElementsByClassName('btn-begin')[0];
+    var demo = document.getElementsByClassName('demo')[0];
+    if (language === 'zh-TW') {
+      intro.innerText = '一個基於 Github Issue 和 Preact 開發的評論插件';
+      beginBtn.innerText = '開始使用';
+    } else if (!~language.indexOf('zh')) {
+      intro.innerText = 'A modern comment component based on Github Issue and Preact';
+      beginBtn.innerText = 'GET STARTED';
+      demo.innerText = 'Demo';
+    }
+  </script>
+  <script>
+    (function (i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-49304532-4', 'auto');
+    ga('send', 'pageview');
+  </script>
+</article>
+
+<div class="pagination">
+  {% if page.previous.url %}
+  <span class="prev">
+    <a href="{{ site.url }}{{ site.baseurl }}{{ page.previous.url }}">
+      ← 上一篇
+    </a>
+  </span>
+  {% endif %}
+  {% if page.next.url %}
+  <span class="next">
+    <a href="{{ site.url }}{{ site.baseurl }}{{ page.next.url }}">
+      下一篇 →
+    </a>
+  </span>
+  {% endif %}
+</div>
