@@ -13,10 +13,10 @@ author: feng6917
 
 ### 目录
 
-- [Mac install Minikube](#mac install minikube)
-- [Centos7.9 Install Kubeadmin](#Centos7.9 Install Kubeadmin)
+- [Mac install Minikube](#Mac部署Minikube)
+- [Centos7.9 Install Kubeadmin](#Centos部署Kubeadmin)
 
-#### Mac Install Minikube
+#### Mac部署Minikube
 
 - 1. 安装 Home-brew <https://cloud.tencent.com/developer/article/1853162>
 
@@ -40,7 +40,7 @@ author: feng6917
 
 ##### [返回目录](#目录)
 
-#### Centos7.9 Install Kubeadmin
+#### Centos部署Kubeadmin
 
 - 1. 查看版本号
 
