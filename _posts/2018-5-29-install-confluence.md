@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Confluence 安装"
+title: "Centos 安装 Confluence 7.4.6"
 date:   2018-5-29
 tags: 
   - app

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "K8s 单机版 安装"
+title: "Centos 安装 单机版K8s"
 date:   2018-5-30
 tags: 
   - app

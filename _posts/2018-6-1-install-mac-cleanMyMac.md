@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "CleanMyMac 安装"
+title: "MAC 安装 CleanMyMac X 4.10.6"
 date:   2018-6-1
 tags: 
   - app

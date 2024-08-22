@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "vsftpd 安装"
+title: "Centos 安装 vsftpd 3.0.2"
 date:   2018-5-30
 tags: 
   - app

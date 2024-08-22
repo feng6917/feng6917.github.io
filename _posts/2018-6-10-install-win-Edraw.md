@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Win 安装 Edraw"
+title: "Win 安装 Edraw 9.0"
 date:   2018-6-10
 tags: 
   - app
