@@ -2,7 +2,12 @@
 layout: post
 title: "Confluence 安装"
 date:   2018-5-29
-tags: [install，app，centos，confluence]
+tags: 
+  - install
+  - app
+  - centos
+  - confluence
+header-img: ../images/2018-5-29/header.jpg
 comments: true
 author: feng6917
 ---
@@ -13,12 +18,15 @@ author: feng6917
 
 ### 目录
 
-- [一、MySQL 部署 & 库创建](#一、MySQL部署&库创建)
-- [二、Confluence 部署](#二、Confluence部署)
-- [三、Confluence 破解](#三、Confluence破解)
-- [四、Confluence 配置](#四、Confluence配置)
+- [1. MySQL 部署 & 库创建](#MySQL部署和库创建)
 
-#### 一、MySQL部署&库创建
+- [2. Confluence 部署](#Confluence部署)
+
+- [3. Confluence 破解](#Confluence破解)
+
+- [4. Confluence 配置](#Confluence配置)
+
+#### MySQL部署和库创建
 
 - 1.1 # 创建挂载文件夹
 
@@ -73,7 +81,7 @@ author: feng6917
         set global tx_isolation='READ-COMMITTED';
     ```
 
-#### 二、Confluence部署
+#### Confluence部署
 
 - 2.1 # 拷贝本地 xxx.bin 到服务器
   - <https://www.atlassian.com/software/confluence/download-archives> 官网下载地址
@@ -106,7 +114,7 @@ author: feng6917
 - 2.8 复制服务器ID
     ![img](../images/2018-5-29/5.png)
 
-#### 三、Confluence破解
+#### Confluence破解
 
 - 3.1 拷贝服务器atlassian-extras-decoder-v2-3.4.1.jar 到本地
 
@@ -150,7 +158,7 @@ author: feng6917
 - 3.8 登录web页面 localhost:8090 复制授权码并粘贴
     ![img](../images/2018-5-29/7.png)
 
-#### 四、Confluence配置
+#### Confluence配置
 
 - 4.1 设置您的数据库 选择 我自己的数据库 下一步
 
