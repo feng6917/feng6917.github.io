@@ -9,9 +9,7 @@ comments: true
 author: feng6917
 ---
 
-    ```
-        TablePlus for Mac 是一款功能全面、操作简便的数据库管理工具，专为 Mac 用户设计。
-    ```
+    `TablePlus for Mac 是一款功能全面、操作简便的数据库管理工具，专为 Mac 用户设计。`
 
 <!-- more -->
 
