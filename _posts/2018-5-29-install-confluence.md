@@ -188,9 +188,8 @@ author: feng6917
 
   ![img](../images/2018-5-29/9.png)
 
-#### 下载压缩包
+[Link](https://pan.baidu.com/s/1FhLo-OyXSHUqtClSql_3Rw?pwd=v1o6)
 
-      链接：https://pan.baidu.com/s/1FhLo-OyXSHUqtClSql_3Rw?pwd=v1o6 
 参考连接：
 
 - [Linux搭建confluence企业级WIKI](https://www.dczzs.com/articles/2021/09/14/1631581152758.html)
