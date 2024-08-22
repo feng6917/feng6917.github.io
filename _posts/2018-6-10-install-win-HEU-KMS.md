@@ -9,7 +9,7 @@ comments: true
 author: feng6917
 ---
 
-`HEU KMS Activator 激活工具是适用于 Windows、Office 及 VL 版本的一款基于KMS服务端模拟环境“KMS Server Emulator”的激活工具，使用起来直接离线全自动激活，无需联网，并KMS服务是微软公司对windows和office等的批量授权服务，十分强大。`
+`HEU KMS Activator 激活工具是适用于 Windows、Office 及 VL 版本的一款基于KMS服务端模拟环境“KMS Server Emulator”的激活工具，使用起来直接离线全自动激活，无需联网，十分强大。`
 
 <!-- more -->
 
