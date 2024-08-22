@@ -30,7 +30,7 @@ navigation:
   - name: 分类
     url: /tags
 
-paginate: 4
+paginate: 5
 
 excerpt_separator: <!-- more -->
 
