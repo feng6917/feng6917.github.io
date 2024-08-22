@@ -9,7 +9,7 @@ comments: true
 author: feng6917
 ---
 
-    `Typora 是一款轻量级的 Markdown 编辑器，其最为出众的特点是： 所见即所得 。`
+`Typora 是一款轻量级的 Markdown 编辑器，其最为出众的特点是： 所见即所得 。`
 
 <!-- more -->
 

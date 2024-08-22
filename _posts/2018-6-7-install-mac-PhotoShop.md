@@ -9,7 +9,7 @@ comments: true
 author: feng6917
 ---
 
-    `Adobe Photoshop 是一个由 Adobe 开发和发行的图像处理软件。该软件提供对 Windows 和 macOS 操作系统的支持。`
+`Adobe Photoshop 是一个由 Adobe 开发和发行的图像处理软件。该软件提供对 Windows 和 macOS 操作系统的支持。`
 
 <!-- more -->
 

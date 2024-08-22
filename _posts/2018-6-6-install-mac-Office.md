@@ -9,7 +9,7 @@ comments: true
 author: feng6917
 ---
 
-    `Microsoft Office 是由 微软公司 开发的 办公软件套装 ，有 Microsoft Windows 、 Mac系列 、 iOS 和 Android 等不同系统的版本。 与其他办公室应用程式一样，它包括联合的 伺服器 和基于 网际网路 的服务。`
+`Microsoft Office 是由 微软公司 开发的 办公软件套装 ，有 Microsoft Windows 、 Mac系列 、 iOS 和 Android 等不同系统的版本。 与其他办公室应用程式一样，它包括联合的 伺服器 和基于 网际网路 的服务。`
 
 <!-- more -->
 
