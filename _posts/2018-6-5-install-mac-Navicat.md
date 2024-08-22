@@ -3,7 +3,6 @@ layout: post
 title: "Mac 安装 Navicat 16.3.6"
 date:   2018-6-5
 tags: 
-  - app
   - mac
 comments: true
 author: feng6917

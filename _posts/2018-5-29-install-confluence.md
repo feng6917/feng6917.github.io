@@ -3,7 +3,6 @@ layout: post
 title: "Centos 安装 Confluence 7.4.6"
 date:   2018-5-29
 tags: 
-  - app
   - centos
 comments: true
 author: feng6917

@@ -3,7 +3,6 @@ layout: post
 title: "Mac 安装 PhotoShop CC 2019"
 date:   2018-6-7
 tags: 
-  - app
   - mac
 comments: true
 author: feng6917

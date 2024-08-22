@@ -3,7 +3,6 @@ layout: post
 title: "Mac 安装 TablePlus 3.11"
 date:   2018-6-8
 tags: 
-  - app
   - mac
 comments: true
 author: feng6917

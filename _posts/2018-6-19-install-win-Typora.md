@@ -3,7 +3,6 @@ layout: post
 title: "Win 安装 Typora 1.8.6"
 date:   2018-6-19
 tags: 
-  - app
   - win
 comments: true
 author: feng6917

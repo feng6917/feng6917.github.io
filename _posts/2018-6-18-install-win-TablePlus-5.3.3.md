@@ -3,7 +3,6 @@ layout: post
 title: "Win 安装 TablePlus 5.3.3"
 date:   2018-6-18
 tags: 
-  - app
   - win
 comments: true
 author: feng6917

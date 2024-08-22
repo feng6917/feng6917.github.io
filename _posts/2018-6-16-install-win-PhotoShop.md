@@ -3,7 +3,6 @@ layout: post
 title: "Win 安装 PhotoShop 2021"
 date:   2018-6-16
 tags: 
-  - app
   - win
 comments: true
 author: feng6917

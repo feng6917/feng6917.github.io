@@ -3,7 +3,6 @@ layout: post
 title: "Win 安装 Navicat 16.1"
 date:   2018-6-13
 tags: 
-  - app
   - win
 comments: true
 author: feng6917

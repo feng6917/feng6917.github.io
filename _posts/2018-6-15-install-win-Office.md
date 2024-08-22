@@ -3,7 +3,6 @@ layout: post
 title: "Win 安装 Office 2016"
 date:   2018-6-15
 tags: 
-  - app
   - win
 comments: true
 author: feng6917

@@ -3,7 +3,6 @@ layout: post
 title: "Mac 安装 Typora 1.8.10"
 date:   2018-6-9
 tags: 
-  - app
   - mac
 comments: true
 author: feng6917
