@@ -3,11 +3,8 @@ layout: post
 title: "Confluence 安装"
 date:   2018-5-29
 tags: 
-  - install
   - app
   - centos
-  - confluence
-header-img: ../images/2018-5-29/header.jpg
 comments: true
 author: feng6917
 ---
@@ -18,15 +15,15 @@ author: feng6917
 
 ### 目录
 
-- [1. MySQL 部署 & 库创建](#MySQL部署和库创建)
+- [1. MySQL 部署 & 库创建](#MySQL 部署和库创建)
 
-- [2. Confluence 部署](#Confluence部署)
+- [2. Confluence 部署](#Confluence 部署)
 
-- [3. Confluence 破解](#Confluence破解)
+- [3. Confluence 破解](#Confluence 破解)
 
-- [4. Confluence 配置](#Confluence配置)
+- [4. Confluence 配置](#Confluence 配置)
 
-#### MySQL部署和库创建
+#### MySQL 部署和库创建
 
 - 1.1 # 创建挂载文件夹
 
@@ -81,7 +78,9 @@ author: feng6917
         set global tx_isolation='READ-COMMITTED';
     ```
 
-#### Confluence部署
+[返回目录](#目录)
+
+#### Confluence 部署
 
 - 2.1 # 拷贝本地 xxx.bin 到服务器
   - <https://www.atlassian.com/software/confluence/download-archives> 官网下载地址
@@ -114,7 +113,9 @@ author: feng6917
 - 2.8 复制服务器ID
     ![img](../images/2018-5-29/5.png)
 
-#### Confluence破解
+[返回目录](#目录)
+
+#### Confluence 破解
 
 - 3.1 拷贝服务器atlassian-extras-decoder-v2-3.4.1.jar 到本地
 
@@ -158,7 +159,9 @@ author: feng6917
 - 3.8 登录web页面 localhost:8090 复制授权码并粘贴
     ![img](../images/2018-5-29/7.png)
 
-#### Confluence配置
+[返回目录](#目录)
+
+#### Confluence 配置
 
 - 4.1 设置您的数据库 选择 我自己的数据库 下一步
 
@@ -179,6 +182,8 @@ author: feng6917
 - 4.7 设置成功
     ![img](../images/2018-5-29/8.png)
 
+[返回目录](#目录)
+
 #### 效果图
 
   ![img](../images/2018-5-29/9.png)
@@ -186,11 +191,9 @@ author: feng6917
 #### 下载压缩包
 
       链接：https://pan.baidu.com/s/1FhLo-OyXSHUqtClSql_3Rw?pwd=v1o6 
-提取码：v1o6
+参考连接：
 
-- 参考连接：
-
-  - <https://www.dczzs.com/articles/2021/09/14/1631581152758.html>
-  - <https://blog.csdn.net/weixin_44024436/article/details/135389431>
-  - <https://blog.whsir.com/post-5854.html>
-  - <https://www.atlassian.com/software/confluence/download-archives> 官网下载地址
+- [Linux搭建confluence企业级WIKI](https://www.dczzs.com/articles/2021/09/14/1631581152758.html)
+- [wiki的confluence 8.5.4安装部署](https://blog.csdn.net/weixin_44024436/article/details/135389431) 
+- [Confluence7.4安装并汉化](https://blog.whsir.com/post-5854.html)
+- [Confluence官网下载地址](https://www.atlassian.com/software/confluence/download-archives)
