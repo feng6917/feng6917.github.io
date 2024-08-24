@@ -15,7 +15,7 @@ author: feng6917
 
 # [目录]
 
-#### [开发准备](#开发准备)
+#### [开发环境](https://feng6917.github.io/lg-go-dev-env/)
 #### [基础知识](#基础知识)
   - [go]()
   - [Go语言(Golang)编码规范](https://www.bookstack.cn/read/go-code-convention/zh-CN-README.md)
@@ -36,7 +36,7 @@ author: feng6917
   - [学历路线图]()
 
 #### [面试题](#面试题)
-  - [流程问题](https://feng6917.github.io/resume-flow/)
+  - [流程问题](https://feng6917.github.io/lg-go-resume-flow/)
   - [基础问题]()
   - [项目问题]()
   - [笔试题目]()
