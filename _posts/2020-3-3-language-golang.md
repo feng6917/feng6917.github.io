@@ -16,13 +16,9 @@ author: feng6917
 # [目录]
 
 #### [开发准备](#开发准备)
-  - [Win 环境安装]()
-  - [Mac 环境安装]()
-  - [Linux 环境安装]()
-  - [Docker 环境安装]()
-   
 #### [基础知识](#基础知识)
   - [go]()
+  - [Go语言(Golang)编码规范](https://www.bookstack.cn/read/go-code-convention/zh-CN-README.md)
   
 #### [进阶知识](#进阶知识)
    
