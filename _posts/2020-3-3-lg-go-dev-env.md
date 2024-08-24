@@ -95,32 +95,40 @@ author: feng6917
 
 #### 构建和运行
   - 1. 编写代码
+
     - 1. 新建 *go_test* 文件夹
 
-      `$ make dir go_test`
+        `$ make dir go_test`
+
     - 2. 新建 hello.go 
-      ```
-        $ vi hello.go
-        --------------------------------------------
-        package main
 
-        import "fmt"
+        ```
+          $ vi hello.go
+          --------------------------------------------
+          package main
 
-        func main() {
+          import "fmt"
 
-            fmt.Println("Hello World!")	
-        } 
+          func main() {
 
-      ```  
+              fmt.Println("Hello World!")	
+          } 
+
+        ```  
+
   - 2. 构建
+
     - 1. 初始化
-      ```
-      $ go mod init hello
-      $ go mod tidy
-      ```
+
+        ```
+        $ go mod init hello
+        $ go mod tidy
+        ```
+
     - 2. 构建
 
       `go build`  
+      
     - 3. 运行
 
       `./hello`
