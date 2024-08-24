@@ -31,11 +31,13 @@ author: feng6917
 #### 不同环境安装
 - Linux
   1. 下载安装包
+
   2. 通过删除 /usr/local/go 文件夹（如果存在）来删除任何以前的 Go 安装，然后将您刚刚下载的存档解压到 /usr/local，在 /usr/local/go 中创建一个新的 Go 树：
     ```
       $ rm -rf /usr/local/go && tar -C /usr/local -xzf go1.23.0.linux-amd64.tar.gz
 
     ```
+
   3. 将 /usr/local/go/bin 添加到 PATH 环境变量
     ```
       您可以通过将以下行添加到您的 $HOME/.profile 或 /etc/profile (对于系统范围的安装) 来执行此操作：
@@ -44,6 +46,7 @@ author: feng6917
       
       注意：对配置文件所做的更改可能要等到您下次登录计算机时才会生效。要立即应用更改，只需直接运行 shell 命令或使用 source $HOME/.profile 等命令从配置文件中执行这些更改。
     ```  
+
   4. 打开命令提示符并输入以下命令来验证是否已安装 Go
     ```
       $ go version
@@ -94,7 +97,7 @@ author: feng6917
     ```
 
 #### 构建和运行
-  - 编写代码
+  1. 编写代码
     1. 新建 *go_test* 文件夹
 
         `$ make dir go_test`
@@ -115,7 +118,7 @@ author: feng6917
 
         ```  
 
-  - 构建
+  2. 构建
     1. 初始化
 
         ```
@@ -123,13 +126,13 @@ author: feng6917
         $ go mod tidy
         ```
 
-    2. 构建
+    2. 构建、运行
 
-      `go build`  
-
-    3. 运行
-
-      `./hello`
+      ```
+      $ go build
+      $ ./hello
+      ```  
+    
 
 
 [返回目录](https://feng6917.github.io/language-golang/#目录)      
