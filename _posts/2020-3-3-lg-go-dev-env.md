@@ -33,12 +33,13 @@ author: feng6917
   1. 下载安装包
 
   2. 通过删除 /usr/local/go 文件夹（如果存在）来删除任何以前的 Go 安装，然后将您刚刚下载的存档解压到 /usr/local，在 /usr/local/go 中创建一个新的 Go 树：
+    
     ```
       $ rm -rf /usr/local/go && tar -C /usr/local -xzf go1.23.0.linux-amd64.tar.gz
-
     ```
 
   3. 将 /usr/local/go/bin 添加到 PATH 环境变量
+    
     ```
       您可以通过将以下行添加到您的 $HOME/.profile 或 /etc/profile (对于系统范围的安装) 来执行此操作：
       
@@ -48,6 +49,7 @@ author: feng6917
     ```  
 
   4. 打开命令提示符并输入以下命令来验证是否已安装 Go
+    
     ```
       $ go version
     ```  
@@ -55,10 +57,12 @@ author: feng6917
 - Mac
   1. 下载安装包
   2. 打开下载的包文件，按照提示安装Go
+      
       ```
         该软件包将 Go 发行版安装到 /usr/local/go。该软件包应将 /usr/local/go/bin 目录放入您的 PATH 环境变量中。您可能需要重新启动任何打开的终端会话才能使更改生效。
       ```
   3. 打开命令提示符并输入以下命令来验证是否已安装 Go
+    
     ```
       $ go version
     ```     
@@ -66,11 +70,13 @@ author: feng6917
 - Windows
   1. 下载安装包
   2. 打开下载的 MSI 文件并按照提示安装 Go
+      
       ```
         默认情况下，安装程序将安装 Go to Program Files 或 Program Files (x86)。您可以根据需要更改位置。安装后，您需要关闭并重新打开所有打开的命令提示符，以便安装程序对环境所做的更改反映在命令提示符中。
       ```
   3. 验证您是否已安装 Go。
       1. 输入 Win+Q， cmd, Enter 确认
+      
       2. 打开命令提示符并输入以下命令来验证是否已安装 Go
         ```
           $ go version
@@ -128,10 +134,10 @@ author: feng6917
 
     2. 构建、运行
 
-      ```
-      $ go build
-      $ ./hello
-      ```  
+        ```
+        $ go build
+        $ ./hello
+        ```  
     
 
 
