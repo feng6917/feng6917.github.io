@@ -3,7 +3,7 @@ layout: post
 title: "Golang 语言学习"
 date:   2020-3-3
 tags: 
-  - life
+  - golang
 comments: true
 author: feng6917
 ---
