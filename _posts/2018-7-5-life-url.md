@@ -29,7 +29,12 @@ author: feng6917
   ```
      这是一本开源的Go语言进阶图书
   ```
+
 - [Markdown 基本语法](https://markdown.com.cn/basic-syntax/)  
+
+- [go blog](https://learnku.com/docs/go-blog)
+
+- [Go wiki 社区](https://learnku.com/go/wikis)
 
 #### 视频
 
