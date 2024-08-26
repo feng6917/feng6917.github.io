@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Golang 语言学习"
+title: "Go Learn"
 date:   2020-3-3
 tags: 
   - golang
@@ -17,6 +17,10 @@ author: feng6917
 #### [开发环境](https://feng6917.github.io/lg-go-dev-env/)
 
 #### [基础知识](#基础知识)
+
+```
+列一个书单 把go相关的书籍 回顾一下 再继续补充
+```
 
 - [Go 语言简介](https://feng6917.github.io/lg-go-profile/)
 - [Init 和 Main 函数]()

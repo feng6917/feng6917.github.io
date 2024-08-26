@@ -53,12 +53,11 @@ author: feng6917
 - 39、除了本公司外，还应聘了哪些公司？
 - 40、何时可以到职？
 
-
 [返回上级](https://feng6917.github.io/language-golang/#面试题)
 
-[返回目录](https://feng6917.github.io/language-golang/#目录)
-
+[Go Learn](https://feng6917.github.io/language-golang/#目录)
 
 ---
 参考链接如下
+
 - [面试题](http://mian.topgoer.com/)

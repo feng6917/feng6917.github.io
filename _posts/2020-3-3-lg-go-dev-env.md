@@ -22,6 +22,8 @@ author: feng6917
 
 - [构建和运行](#构建和运行)
 
+- [编译](#编译)
+
 #### 安装包下载
 
 1. 请求 [下载地址](https://go.dev/dl/) 进行 安装包下载
@@ -144,7 +146,64 @@ author: feng6917
           ./hello
           ```
 
-[返回目录](https://feng6917.github.io/language-golang/#目录)
+#### 编译
+
+---
+
+- GOOS：目标可执行程序运行操作系统，支持 darwin，freebsd，linux，windows
+- GOARCH：目标可执行程序操作系统构架，包括 386，amd64，arm
+
+---
+
+1. Mac下编译Linux, Windows平台的64位可执行程序：
+
+- Linux
+
+      ```
+      CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o appName main.go
+      ```
+
+- Windows
+
+      ```
+      CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o appName main.go
+      ```
+
+2. Linux Linux下编译Mac, Windows平台的64位可执行程序：
+
+- Mac
+
+      ```
+      CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -o appName main.go
+      ```
+
+- Windows
+
+      ```
+      CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -o appName main.go
+      ```
+
+3. Windows
+
+- Mac
+
+      ```
+        SET CGO_ENABLED=0
+        SET GOOS=darwin
+        SET GOARCH=amd64
+        go build -o appName main.go
+      ```
+
+- Linux
+
+      ```
+        SET CGO_ENABLED=0
+        SET GOOS=linux
+        SET GOARCH=amd64
+        go build -o appName main.go
+      ```
+
+[Go Learn](https://feng6917.github.io/language-golang/#目录)
 
 ----
 参考链接

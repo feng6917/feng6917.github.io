@@ -172,7 +172,7 @@ author: feng6917
 
 [TOP](#目录)
 
-#### [Golang 语言学习](https://feng6917.github.io/language-golang/#目录)
+#### [Go Learn](https://feng6917.github.io/language-golang/#目录)
 
 ---
 参考链接：
