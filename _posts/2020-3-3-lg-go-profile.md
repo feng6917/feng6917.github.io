@@ -182,3 +182,4 @@ author: feng6917
 - [Go Blog 中文翻译](https://learnku.com/docs/go-blog)
 - [Go语言简介及语言特征](https://cloud.tencent.com/developer/article/1706721)
 - [Go语言编译原理与过程解析](https://cloud.tencent.com/developer/article/2401918)
+- [Go语言学习笔记] - 雨痕
