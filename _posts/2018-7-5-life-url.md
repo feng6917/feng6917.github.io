@@ -36,6 +36,8 @@ author: feng6917
 
 - [Go wiki 社区](https://learnku.com/go/wikis)
 
+- [golang 硬核学习](https://geekdaxue.co/books/kshare@golang)
+
 #### 视频
 
 #### 书籍
