@@ -8,7 +8,7 @@ comments: true
 author: feng6917
 ---
 
-`使用 Confluence 构建企业内部WIKI 记录`
+`部署 Confluence 构建企业内部WIKI 记录, 使用起来 确实不错`
 
 <!-- more -->
 

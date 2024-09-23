@@ -1,14 +1,14 @@
 ---
 layout: post
 title: "链路追踪之Jaeger"
-date:   2021-2-6
+date:   2024-9-6
 tags: 
   - Golang
 comments: true
 author: feng6917
 ---
 
-`链路追踪是什么?`
+`链路追踪就像脚印, 走到哪都有迹可循`
 
 <!-- more -->
 
