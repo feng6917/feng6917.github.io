@@ -1,28 +1,28 @@
 ---
 layout: post
-title: "Centos 安装 Confluence 7.4.6"
-date:   2018-5-29
+title: "企业知识库管理协同软件Confluence搭建"
+date:   2024-8-22
 tags: 
   - centos
 comments: true
 author: feng6917
 ---
 
-`Confluence是一款由JAVA编写用于企业知识库管理协同软件，多用于构建企业内部WIKI`
+`使用 Confluence 构建企业内部WIKI 记录`
 
 <!-- more -->
 
 ### 目录
 
-- [1. MySQL 部署 & 库创建](#数据库部署和库创建)
+- [一、MySQL 部署 & 库创建](#数据库部署和库创建)
 
-- [2. Confluence 部署](#软件部署)
+- [二、Confluence 部署](#软件部署)
 
-- [3. Confluence 破解](#软件破解)
+- [三、Confluence 破解](#软件破解)
 
-- [4. Confluence 配置](#软件配置)
+- [四、Confluence 配置](#软件配置)
 
-#### 数据库部署和库创建
+#### 一、数据库部署和库创建
 
 - 1.1 # 创建挂载文件夹
 
@@ -77,9 +77,9 @@ author: feng6917
         set global tx_isolation='READ-COMMITTED';
     ```
 
-[返回目录](#目录)
+[Top](#目录)
 
-#### 软件部署
+#### 二、软件部署
 
 - 2.1 # 拷贝本地 xxx.bin 到服务器
   - <https://www.atlassian.com/software/confluence/download-archives> 官网下载地址
@@ -96,25 +96,25 @@ author: feng6917
     ```
 
 - 2.3 # 期间需要输入O、 1、 i、 y 如下图所示
-    ![img](../images/2018-5-29/1.png)
+    ![img](../images/2024-8-22/1.png)
 
 - 2.4 # 完成后 浏览器上打开服务器 ip:8090
 
 - 2.5 Language 选择中文
-    ![img](../images/2018-5-29/2.png)
+    ![img](../images/2024-8-22/2.png)
 
 - 2.6 选择产品安装 下一步
-    ![img](../images/2018-5-29/3.png)
+    ![img](../images/2024-8-22/3.png)
 
 - 2.7 勾选所有扩展功能 下一步
-    ![img](../images/2018-5-29/4.png)
+    ![img](../images/2024-8-22/4.png)
 
 - 2.8 复制服务器ID
-    ![img](../images/2018-5-29/5.png)
+    ![img](../images/2024-8-22/5.png)
 
-[返回目录](#目录)
+[Top](#目录)
 
-#### 软件破解
+#### 三、软件破解
 
 - 3.1 拷贝服务器atlassian-extras-decoder-v2-3.4.1.jar 到本地
 
@@ -134,7 +134,7 @@ author: feng6917
 - 3.3 点击.patch 选择atlassian-extras-2.4.jar
 
 - 3.4 点击.gen
-    ![img](../images/2018-5-29/6.png)
+    ![img](../images/2024-8-22/6.png)
 
 - 3.5 拷贝生成的atlassian-extras-2.4.jar 到服务器
 
@@ -156,11 +156,11 @@ author: feng6917
     ```
 
 - 3.8 登录web页面 localhost:8090 复制授权码并粘贴
-    ![img](../images/2018-5-29/7.png)
+    ![img](../images/2024-8-22/7.png)
 
-[返回目录](#目录)
+[Top](#目录)
 
-#### 软件配置
+#### 四、软件配置
 
 - 4.1 设置您的数据库 选择 我自己的数据库 下一步
 
@@ -179,17 +179,17 @@ author: feng6917
 - 4.6 配置系统管理员账户  admin@123456
 
 - 4.7 设置成功
-    ![img](../images/2018-5-29/8.png)
+    ![img](../images/2024-8-22/8.png)
 
-[返回目录](#目录)
+[Top](#目录)
 
 #### 效果图
 
-  ![img](../images/2018-5-29/9.png)
+  ![img](../images/2024-8-22/9.png)
 
 [Link](https://pan.baidu.com/s/1FhLo-OyXSHUqtClSql_3Rw?pwd=v1o6)
 
-参考连接：
+###### 参考连接
 
 - [Linux搭建confluence企业级WIKI](https://www.dczzs.com/articles/2021/09/14/1631581152758.html)
 - [wiki的confluence 8.5.4安装部署](https://blog.csdn.net/weixin_44024436/article/details/135389431)
