@@ -3,7 +3,7 @@ layout: post
 title: "企业知识库管理协同软件Confluence搭建"
 date:   2024-8-22
 tags: 
-  - centos
+  - App
 comments: true
 author: feng6917
 ---

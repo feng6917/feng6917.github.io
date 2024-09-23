@@ -3,7 +3,7 @@ layout: post
 title: "链路追踪之Jaeger"
 date:   2021-2-6
 tags: 
-  - golang
+  - Golang
 comments: true
 author: feng6917
 ---

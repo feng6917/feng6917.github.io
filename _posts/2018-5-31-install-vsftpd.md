@@ -3,7 +3,7 @@ layout: post
 title: "Centos 安装 vsftpd 3.0.2"
 date:   2018-5-30
 tags: 
-  - app
+  - App
 comments: true
 author: feng6917
 ---

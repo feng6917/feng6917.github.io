@@ -3,7 +3,7 @@ layout: post
 title: "Mac 安装 IINA 1.2.0"
 date:   2018-6-3
 tags: 
-  - mac
+  - App
 comments: true
 author: feng6917
 ---

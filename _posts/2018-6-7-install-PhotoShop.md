@@ -3,7 +3,7 @@ layout: post
 title: "PhotoShop 安装教程"
 date:   2018-6-7
 tags: 
-  - app
+  - App
 comments: true
 author: feng6917
 ---

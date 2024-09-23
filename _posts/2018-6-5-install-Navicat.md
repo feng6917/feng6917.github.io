@@ -3,7 +3,7 @@ layout: post
 title: "Navicat 安装教程"
 date:   2018-6-5
 tags: 
-  - app
+  - App
 comments: true
 author: feng6917
 ---
