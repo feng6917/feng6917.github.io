@@ -3,7 +3,7 @@ layout: post
 title: "Centos 安装 单机版K8s"
 date:   2018-5-30
 tags: 
-  - centos
+  - app
 comments: true
 author: feng6917
 ---

@@ -3,7 +3,7 @@ layout: post
 title: "Win 安装 HEU KMS v30.1.0"
 date:   2018-6-11
 tags: 
-  - win
+  - app
 comments: true
 author: feng6917
 ---
