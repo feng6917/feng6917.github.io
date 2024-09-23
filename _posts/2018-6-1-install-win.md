@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "Win 安装 Edraw 9.0"
+title: "一些 Windows系统软件安装教程"
 date:   2018-6-10
 tags: 
-  - App
+  - 应用软件
 comments: true
 author: feng6917
 ---

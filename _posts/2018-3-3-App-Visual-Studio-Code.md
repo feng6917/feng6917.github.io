@@ -3,7 +3,7 @@ layout: post
 title: "Visual Studio Code 安装配置"
 date:   2018-3-3
 tags: 
-  - App
+  - 应用软件
 comments: true
 author: feng6917
 ---

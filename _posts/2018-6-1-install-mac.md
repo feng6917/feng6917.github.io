@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "一些 MAC 软件安装教程"
+title: "一些 MacOS系统软件安装教程"
 date:   2018-6-1
 tags: 
-  - App
+  - 应用软件
 comments: true
 author: feng6917
 ---

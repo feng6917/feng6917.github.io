@@ -3,7 +3,7 @@ layout: post
 title: "MySQL 备份"
 date:   2018-6-29
 tags: 
-  - MySQL
+  - 数据库
 comments: true
 author: feng6917
 ---
