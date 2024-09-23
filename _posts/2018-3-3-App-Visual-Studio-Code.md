@@ -84,17 +84,17 @@ author: feng6917
 
 2. 推荐几个插件
 
-    | 插件名称                                                  | 描述信息                               | 备注 |
-    | --------------------------------------------------------- | -------------------------------------- | ---- |
-    | Chinese (Simplified) Language Pack for Visual Studio Code | 中文语言包                             |      |
-    | Comment Translate                                         | 翻译插件                               |      |
-    | GitLens、Git History                                      | Git 插件                               |      |
-    | Todo Tree                                                 | 管理项目中的 TODO 注释和其他标记       |      |
-    | vscode-pets                                               | 萌宠插件                               |      |
-    | Tabnine (AI Code Completion)                              | AI 代码补全                            |      |
-    | CodeGeeX                                                  | 解释代码、生成注释、联网搜索、文件提问 |      |
-    | Markdown All in One                                       | md 文档编辑                            |      |
-    | Power Mode                                                | 酷炫打字                               |      |
+    | 插件名称                                                  | 描述信息                               |
+    | --------------------------------------------------------- | -------------------------------------- |
+    | Chinese (Simplified) Language Pack for Visual Studio Code | 中文语言包                             |
+    | Comment Translate                                         | 翻译插件                               |
+    | GitLens、Git History                                      | Git 插件                               |
+    | Todo Tree                                                 | 管理项目中的 TODO 注释和其他标记       |
+    | vscode-pets                                               | 萌宠插件                               |
+    | Tabnine (AI Code Completion)                              | AI 代码补全                            |
+    | CodeGeeX                                                  | 解释代码、生成注释、联网搜索、文件提问 |
+    | Markdown All in One                                       | md 文档编辑                            |
+    | Power Mode                                                | 酷炫打字                               |
 
 3. 插件导出与导入
    - 导出
