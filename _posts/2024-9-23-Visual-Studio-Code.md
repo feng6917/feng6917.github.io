@@ -97,7 +97,8 @@ author: feng6917
     | CodeGeeX                                                  | 解释代码、生成注释、联网搜索、文件提问 |
     | Markdown All in One                                       | md 文档编辑                            |
     | Power Mode                                                | 酷炫打字                               |
-    ![img]()
+
+    ![img](../images/2018-3-3/vs-pets.gif)
 
 3. 插件导出与导入
    - 导出
