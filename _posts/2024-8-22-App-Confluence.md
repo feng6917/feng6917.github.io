@@ -77,7 +77,10 @@ author: feng6917
         set global tx_isolation='READ-COMMITTED';
     ```
 
-[Top](#目录)
+
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 #### 二、软件部署
 
@@ -112,7 +115,10 @@ author: feng6917
 - 2.8 复制服务器ID
     ![img](../images/2024-8-22/5.png)
 
-[Top](#目录)
+
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 #### 三、软件破解
 
@@ -158,7 +164,10 @@ author: feng6917
 - 3.8 登录web页面 localhost:8090 复制授权码并粘贴
     ![img](../images/2024-8-22/7.png)
 
-[Top](#目录)
+
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 #### 四、软件配置
 
@@ -181,7 +190,10 @@ author: feng6917
 - 4.7 设置成功
     ![img](../images/2024-8-22/8.png)
 
-[Top](#目录)
+
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 #### 效果图
 

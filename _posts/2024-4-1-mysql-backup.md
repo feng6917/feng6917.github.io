@@ -1,24 +1,21 @@
 ---
 layout: post
-title: "MySQL 备份"
-date:   2018-6-29
+title: "MySQL 数据备份"
+date:   2024-4-1
 tags: 
   - 数据库
 comments: true
 author: feng6917
 ---
 
-`MySQL Backup`
-
 <!-- more -->
 
-#### [目录]
+### [目录]
 
-- [普通备份恢复](#普通备份恢复)
+- [直接通过命令备份](#普通备份恢复)
+- [利用Cron实现定时备份](#脚本备份)
 
-- [脚本备份](#脚本备份)
-
-#### 普通备份恢复
+#### 直接通过命令备份
 
 - 1. 备份
 
@@ -32,9 +29,13 @@ author: feng6917
     mysql -u root -p123456 < /data/mysql/all-databases.sql
     ```
 
-[返回目录](#目录)
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">返回目录</a>
+</div>
 
-#### 脚本备份
+<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+
+#### 利用Cron实现定时备份
 
 - 1. 备份脚本编写
 
@@ -102,7 +103,65 @@ author: feng6917
         #crontab -l
       ```
 
-[返回目录](#目录)
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">返回目录</a>
+</div>
+
+<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+
+#### K8s Cronjob 定时备份
+
+- 全量备份
+  > /root/data/scripts 备份脚本的路径
+
+  > /root/data/mysql_data 宿主机上mysql的data目录
+
+  > /root/data/mysql_backup 备份文件夹
+
+  ```
+    apiVersion: v1
+    kind: CronJob
+    metadata:
+      namespace: mysql_backup
+      name:  full
+    spec:
+      jobTemplate:
+        spec:
+          completions: 1
+          template:
+            spec:
+              restartPolicy: Never
+              volumes:
+                - name: mysql-script
+                  hostPath:
+                    path: /root/data/scripts
+                - name: mysql-backup
+                  hostPath:
+                    path: /root/data/mysql-backup
+                - name: local-time
+                  hostPath:
+                    path: /etc/localtime
+                - name: mysql-data
+                  hostPath:
+                    path: /root/data/mysql-data
+              containers:
+                - name: mysqldump-container
+                  image: percona/percona-xtrabackup:2.4
+                  volumeMounts:
+                    - name: mysql-script
+                      mountPath: /root/data/scripts
+                    - name: local-time
+                      mountPath: /etc/localtime
+                    - name: mysql-backup
+                      mountPath: /root/data/mysql-backup
+                    - name: mysql-data
+                      mountPath: /var/lib/mysql
+
+                  command:
+                    - "sh"
+                    - "/root/data/scripts/backup.sh"
+      schedule: "0 * * * *"  # 这里为了测试1小时跑一次  正常时每周日跑1次
+  ```
 
 参考链接：
 

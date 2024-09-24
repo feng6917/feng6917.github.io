@@ -1,32 +1,34 @@
 ---
 layout: post
-title: "Centos 安装 单机版K8s"
-date:   2018-5-30
+title: "K8s 安装部署教程"
+date:   2024-8-30
 tags: 
   - 应用软件
 comments: true
 author: feng6917
 ---
 
-`Kubernetes 是一种开源容器管理工具，可自动执行容器部署、容器扩展、解缩放和容器负载均衡（也称为容器编排工具）。`
+`K8s，懂得都懂，容器编排，部署，扩展，负载均衡等。`
 
 <!-- more -->
 
 ### 目录
 
-- [Mac install Minikube](#Mac部署Minikube)
+- [Mac 部署 Minikube](#mac-部署-minikube)
 
-- [Centos7.9 Install Kubeadmin](#Centos部署Kubeadmin)
+- [Centos7.9 部署 Kubeadmin](#centos79-部署-kubeadmin)
 
-#### Mac部署Minikube
+- [安装包 部署 K8s 集群](#安装包-部署-k8s-集群)
 
-- 1. 安装 Home-brew <https://cloud.tencent.com/developer/article/1853162>
+#### Mac 部署 Minikube
+
+1. 安装 Home-brew <https://cloud.tencent.com/developer/article/1853162>
 
     ```shell
     > /usr/bin/ruby -e "$(curl -fsSL https://cdn.jsdelivr.net/gh/ineo6/homebrew-install/install)"
     ```
 
-- 2. 安装 Minukube <https://minikube.sigs.k8s.io/docs/start/>
+2. 安装 Minukube <https://minikube.sigs.k8s.io/docs/start/>
 
    ```shell
    > brew install minikube
@@ -34,35 +36,40 @@ author: feng6917
    # 解决方式：https://zhuanlan.zhihu.com/p/491515480
    ```
 
-- 3.
+3. 查看版本
 
     ```shell
     > kubectl version -o json # 显示版本信息
     ```
 
-##### [返回目录](#目录)
 
-#### Centos部署Kubeadmin
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
-- 1. 查看版本号
+<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+
+#### Centos7.9 部署 Kubeadmin
+
+1. 查看版本号
 
    ```shell
    >  cat /etc/redhat-release
    ```
 
-- 2. 添加 IP
+2. 添加 IP
 
    ```shell
    > ip add
    ```
 
-- 3. 修改主机名称
+3. 修改主机名称
 
    ```shell
    > hostnamectl set-hostname k8s-master && bash
    ```
 
-- 4. 添加 hosts,这里的 IP 是自己服务器 ip
+4. 添加 hosts,这里的 IP 是自己服务器 ip
 
    ```shell
    > ifconfig #查看主机IP地址
@@ -71,7 +78,7 @@ author: feng6917
      EOF
    ```
 
-- 5. 关闭防火墙,关闭 selinux
+5. 关闭防火墙,关闭 selinux
 
    ```shell
    > systemctl stop firewalld
@@ -80,14 +87,14 @@ author: feng6917
    > setenforce 0 # 临时
    ```
 
-- 6. 关闭 swap
+6. 关闭 swap
 
    ```shell
    > swapoff -a # 临时
    > sed -i 's/.*swap.*/#&/' /etc/fstab # 永久
    ```
 
-- 7. 将桥接的 IPv4 流量传递到 iptables 的链
+7. 将桥接的 IPv4 流量传递到 iptables 的链
 
    ```shell
    > cat > /etc/sysctl.d/k8s.conf << EOF
@@ -98,14 +105,14 @@ author: feng6917
    > sysctl --system # 生效
    ```
 
-- 8. 时间同步
+8. 时间同步
 
    ```shell
    > yum install ntpdate -y
    > ntpdate time.windows.com
    ```
 
-- 9. 安装 Docker
+9. 安装 Docker
 
    ```shell
    > wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo -O /etc/yum.repos.d/docker-ce.repo
@@ -115,7 +122,7 @@ author: feng6917
 
    ```
 
-- 10. 给 docker 添加加速器
+10. 给 docker 添加加速器
 
     ```shell
     > cat > /etc/docker/daemon.json << EOF
@@ -134,7 +141,7 @@ author: feng6917
 
     ```
 
-- 11. 添加 kubernetes 的 yum 源
+11. 添加 kubernetes 的 yum 源
 
     ```shell
     > cat > /etc/yum.repos.d/kubernetes.repo << EOF
@@ -150,31 +157,31 @@ author: feng6917
 
     ```
 
-- 12. 安装 kubeadm，kubelet 和 kubectl
+12. 安装 kubeadm，kubelet 和 kubectl
 
     ```shell
     > yum -y install kubelet-1.21.5-0 kubeadm-1.21.5-0 kubectl-1.21.5-0  #当前时间最新版是v1.21.5固定版本，下面有用
     > systemctl enable kubelet
     ```
 
-- 13. 部署 Kubernetes Master
+13. 部署 Kubernetes Master
 
     ```shell
     > kubeadm init --apiserver-advertise-address=10.0.4.11  --image-repository registry.aliyuncs.com/google_containers  --kubernetes-version v1.21.5  --service-cidr=10.96.0.0/12  --pod-network-cidr=10.244.0.0/16 --ignore-preflight-errors=all
 
     ```
 
-  - 参数说明：
-    - –apiserver-advertise-address=10.0.4.11 这个参数就是 master 主机的 IP 地址，例如我的 Master 主机的 IP 是：10.0.4.11
-    - –image-repository registry.aliyuncs.com/google_containers 这个是镜像地址，由于国外地址无法访问，故使用的阿里云仓库地址：repository registry.aliyuncs.com/google_containers
-    - –kubernetes-version=v1.21.5 这个参数是下载的 k8s 软件版本号
-    - –service-cidr=10.96.0.0/12 这个参数后的 IP 地址直接就套用 10.96.0.0/12 ,以后安装时也套用即可，不要更改
-    - –pod-network-cidr=10.244.0.0/16 k8s 内部的 pod 节点之间网络可以使用的 IP 段，不能和 service-cidr 写一样，如果不知道怎么配，就先用这个 10.244.0.0/16
-    - –ignore-preflight-errors=all 添加这个会忽略错误
-  - 执行语句后，看到如下的信息说明就安装成功了。
+- 参数说明：
+  - –apiserver-advertise-address=10.0.4.11 这个参数就是 master 主机的 IP 地址，例如我的 Master 主机的 IP 是：10.0.4.11
+  - –image-repository registry.aliyuncs.com/google_containers 这个是镜像地址，由于国外地址无法访问，故使用的阿里云仓库地址：repository registry.aliyuncs.com/google_containers
+  - –kubernetes-version=v1.21.5 这个参数是下载的 k8s 软件版本号
+  - –service-cidr=10.96.0.0/12 这个参数后的 IP 地址直接就套用 10.96.0.0/12 ,以后安装时也套用即可，不要更改
+  - –pod-network-cidr=10.244.0.0/16 k8s 内部的 pod 节点之间网络可以使用的 IP 段，不能和 service-cidr 写一样，如果不知道怎么配，就先用这个 10.244.0.0/16
+  - –ignore-preflight-errors=all 添加这个会忽略错误
+- 执行语句后，看到如下的信息说明就安装成功了。
       ![img.png](img.png)  
 
-- 14. 执行如下语句
+14. 执行如下语句
 
     ```shell
     > mkdir -p $HOME/.kube
@@ -183,7 +190,7 @@ author: feng6917
     > kubectl get nodes    #节点状态为NotReady
     ```
 
-- 15. 安装 Pod 网络插件（CNI）
+15. 安装 Pod 网络插件（CNI）
 
     ```shell
     > wget https://docs.projectcalico.org/archive/v3.20/manifests/calico.yaml
@@ -985,14 +992,14 @@ author: feng6917
     > kubectl apply -f calico.yaml
     ```
 
-- 16. 验证网络
+16. 验证网络
 
     ```shell
     > kubectl get nodes  #看到 Ready说明网络就正常了
     > kubectl get pods -n kube-system  #全部显示Running就是对的
     ```
 
-- 17. 单集版的 k8s 安装后, 无法部署服务
+17. 单集版的 k8s 安装后, 无法部署服务
 
     ```shell
     # 因为默认master不能部署pod,有污点, 需要去掉污点或者新增一个node，我这里是去除污点。
@@ -1000,7 +1007,7 @@ author: feng6917
     > kubectl taint nodes --all node-role.kubernetes.io/master-   #执行这句就行，就是取消污点
     ```
 
-- 18. 安装补全命令的包
+18. 安装补全命令的包
 
     ```shell
     > yum -y install bash-completion  #安装补全命令的包
@@ -1013,7 +1020,7 @@ author: feng6917
     EOF
     ```
 
-- 19. 测试 kubernetes 集群
+19. 测试 kubernetes 集群
 
     ```shell
     # 在Kubernetes集群中部署一个Nginx：
@@ -1023,13 +1030,76 @@ author: feng6917
     # 注意：看到对外暴露的是3xxxx端口,开放安全组端口范围
     ```
 
-[返回目录](#目录)
+> centos 安装 k8s 基本参考 【kubernetes 最新版安装单机版 v1.21.5】，之所以 cpoy 一遍文章内容，主要担心原文丢失！！
 
-## ps
 
-centos 安装 k8s 基本参考 【kubernetes 最新版安装单机版 v1.21.5】，之所以 cpoy 一遍文章内容，主要担心原文丢失！！
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
-参考链接：
+<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+
+#### 安装包 部署 K8s 集群
+>
+> 该安装包对系统初始化、K8s初始化、部署Docker、部署K8s Master、部署K8s Node 等进行了封装，见闻知意，直接使用即可。
+> 通过遵循以下步骤，便可轻松部署Kubernetes集群。如有任何安装问题，请前往bilibil中，搜索：AI-Linker 进行问题留言！之后会更新更多精彩内容。还请多多关注！(文字摘要自安装包部署说明)
+
+##### 安装文档
+
+本文档旨在帮助初级开发者快速安装企业级的Kubernetes（k8s）集群。您无需进行复杂配置，只需简单设置服务器相关信息即可。
+
+##### 安装条件
+
+- 本安装包仅适配 CentOS 7.9、CentOS 7.6 以及 银河麒麟高级服务器操作系统V10 SP2。其他操作系统可能无法成功安装。
+- 安装操作系统时请选择标准安装，最小化安装可能缺少必需的组件。
+- 安装完成后，请将服务器IP地址设置为静态，以避免重启后IP变动引起的集群不可用问题。
+
+##### 安装步骤
+
+1. **修改配置文件**： 修改install_host 文件，参考如下修改示例:
+
+   ```toml
+   # 该示例讲解了，如何搭建一个三节点的k8s集群
+   [all] #这里配置所有 机器的名称 和 机器的ip
+   k8s-master ansible_host=192.168.211.110
+   k8s-node1  ansible_host=192.168.211.120
+   k8s-node2  ansible_host=192.168.211.130
+   
+   [all:vars] # 这里配置机器的账户密码，为了方便，所有机器账户密码需要保持一致
+   ansible_ssh_pass=k8s@2024
+   ansible_ssh_port=22
+   ansible_ssh_user=root
+   
+   [master] # 这里配置master节点的名称，名称就是上面all中填写的名称
+   k8s-master
+   
+   [node] # 这里配置node节点的名称，名称就是上面all中填写的名称
+   k8s-node1
+   k8s-node2
+   ```
+
+   这里的配置中包括了主节点（master）和工作节点（node）的设置。
+
+2. **执行安装命令**： 在服务器上打开终端，运行以下命令以开始安装：
+
+   ```shell
+   ./install.sh
+   ```
+
+3. **检查安装状态**： 安装完成后，检查日志中各节点的状态。若显示 `failed=0`，则表示集群安装成功：
+
+   ```shell
+   PLAY RECAP********************************************************************
+   k8s-master                 : ok=58   changed=56   unreachable=0    failed=0    skipped=5    rescued=0    ignored=1
+   k8s-node1                  : ok=55   changed=53   unreachable=0    failed=0    skipped=4    rescued=0    ignored=1
+   k8s-node2                  : ok=55   changed=53   unreachable=0    failed=0    skipped=4    rescued=0    ignored=1
+   ```
+
+[下载地址](通过百度网盘分享的文件：cluster-installer.zip
+链接：<https://pan.baidu.com/s/17szuBvV3McxvC6O81BahjQ?pwd=t474>
+提取码：t474)
+
+###### 参考链接如下
 
 - [kubernetes 最新版安装单机版 v1.21.5](https://blog.csdn.net/qq_14910065/article/details/122180162)
 - [安装 Pod 网络插件（CNI）](https://blog.csdn.net/moxiaotang/article/details/124790965)

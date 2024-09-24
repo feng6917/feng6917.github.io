@@ -57,7 +57,10 @@ author: feng6917
 
 ---
 
-[TOP](#目录)
+
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 #### 指导设计原则
   
@@ -93,7 +96,10 @@ author: feng6917
 
 ---
 
-[TOP](#目录)
+
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 #### Gopher吉祥物
 
@@ -113,7 +119,10 @@ author: feng6917
 
 ---
 
-[TOP](#目录)
+
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 #### Go语言特性
 
@@ -170,7 +179,10 @@ author: feng6917
   >
   > Go革命性地在静态开发语言阵营中率先提供了多返回值功能,这个特性可以让开发者从原来用各种比较别扭的方式返回多个值的痛苦中解脱出来,既不用区分参数列表中那几个用输入,那几个用输出,也不用为多个返回值专门定义一个数据结构。
 
-[TOP](#目录)
+
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 #### [Go Learn](https://feng6917.github.io/language-golang/#目录)
 

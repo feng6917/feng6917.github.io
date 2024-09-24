@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Win Bash"
-date:   2018-6-28
+title: "Windows 一些脚本"
+date:   2024-4-1
 tags: 
   - 脚本
 comments: true

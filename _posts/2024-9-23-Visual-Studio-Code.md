@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Visual Studio Code 安装配置"
-date:   2018-3-3
+date:   2023-9-23
 tags: 
   - 应用软件
 comments: true
@@ -75,7 +75,9 @@ author: feng6917
         git config --global --unset https.proxy
         ```
 
-[Top](#目录)
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 #### 三、插件配置
 
@@ -95,6 +97,7 @@ author: feng6917
     | CodeGeeX                                                  | 解释代码、生成注释、联网搜索、文件提问 |
     | Markdown All in One                                       | md 文档编辑                            |
     | Power Mode                                                | 酷炫打字                               |
+    ![img]()
 
 3. 插件导出与导入
    - 导出
@@ -102,7 +105,9 @@ author: feng6917
    - 导入
      ![img](../images/2018-3-3/vs-import-profile.gif)
 
-[Top](#目录)
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 #### 四、容器化开发
 
@@ -150,7 +155,9 @@ author: feng6917
 
 5. 在Docker 客户端 打开容器，在Visual Studio Code 中 Dev Containers -> Open Folder in Container -> 选择容器启动的路径，即可在VsCode 中进行开发，开发环境与容器一致。
 
-[Top](#目录)
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 #### 五、Golang 安装
 
@@ -185,7 +192,9 @@ author: feng6917
     AlignConsecutiveAssignments: true
     ```
 
-[Top](#目录)
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 #### 七、断点调试
 
@@ -217,7 +226,9 @@ author: feng6917
   - 2. 运行配置文件编辑
   ![img](../images/2018-3-3/3.png)  
 
-[Top](#目录)
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 ###### 参考链接如下
 

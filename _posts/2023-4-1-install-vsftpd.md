@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "Centos 安装 vsftpd 3.0.2"
-date:   2018-5-30
+title: "ftp服务器软件 vsftpd 搭建"
+date:   2024-4-1
 tags: 
   - 应用软件
 comments: true
@@ -12,9 +12,10 @@ author: feng6917
 
 <!-- more -->
 
-- [1. 查看是否已经安装vsftpd(如果已经安装可以跳过或者卸载重装)](#软件安装)
+### 目录
 
-- [2. 配置 vsftpd](#软件配置)
+- [软件安装](#软件安装)
+- [软件配置](#软件配置)
 
 #### 软件安装
 
@@ -27,7 +28,7 @@ author: feng6917
     Unit vsftpd.service could not be found.
     ```
 
-- 1.1 在本地拷贝 vsftpd 到服务器 [vsftpd 下载链接](<http://rpmfind.net/linux/rpm2html/search.php?query=vsftpd(x86-64)>) (已提供离线安装包)
+1. 在本地拷贝 vsftpd 到服务器 [vsftpd 下载链接](<http://rpmfind.net/linux/rpm2html/search.php?query=vsftpd(x86-64)>) (已提供离线安装包)
 
     ```
     $ scp vsftpd-3.0.2-28.el7.x86_64.rpm root@10.0.0.7:/root/
@@ -36,7 +37,7 @@ author: feng6917
 
     ```
 
-- 1.2 开始安装
+2. 开始安装
 
     ```
     [root@k8s-master-7 ~]#  rpm -ivh vsftpd-3.0.2-28.el7.x86_64.rpm
@@ -48,7 +49,7 @@ author: feng6917
     [root@k8s-master-7 ~]# systemctl start vsftpd
     ```
 
-- 1.3 查看状态
+3. 查看状态
 
     ```
     [root@k8s-master-7 ~]# systemctl status vsftpd
@@ -66,24 +67,26 @@ author: feng6917
     3月 20 17:27:19 k8s-master-7 systemd[1]: Started Vsftpd ftp daemon.
     ```
 
-- 1.4 查看 ftp 监听端口
+4. 查看 ftp 监听端口
 
     ```
     [root@k8s-master-7 ~]# netstat -antup | grep ftp
     tcp6       0      0 :::21                   :::*                    LISTEN      210255/vsftpd
     ```
 
-##### [返回目录](#目录)
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 #### 软件配置
 
-- 2.1 添加用户(用户可自定义，符合命名规则即可)
+1. 添加用户(用户可自定义，符合命名规则即可)
 
     ```
     [root@k8s-master-7 ~]# adduser ftpzhst
     ```
 
-- 2.2 修改用户密码
+2. 修改用户密码
 
     ```
     [root@k8s-master-7 ~]# passwd ftpzhst
@@ -96,19 +99,19 @@ author: feng6917
     ps: ftp1111 可自定义设置
     ```
 
-- 2.3 创建一个供 ftp 服务使用的文件目录(文件目录可自定义)
+3. 创建一个供 ftp 服务使用的文件目录(文件目录可自定义)
 
     ```
     [root@k8s-master-7 ~]# mkdir /var/ftpzhst
     ```
 
-- 2.4 更改 ftp 服务目录拥有者为添加的该用户
+4. 更改 ftp 服务目录拥有者为添加的该用户
 
     ```
     [root@k8s-master-7 ~]# chown -R ftpzhst:ftpzhst /var/ftpzhst
     ```
 
-- 2.5 修改 vsftpd.conf 配置文件, 配置 ftp 服务器为被动模式
+5. 修改 vsftpd.conf 配置文件, 配置 ftp 服务器为被动模式
 
     ```
     [root@k8s-master-7 ~]# vim /etc/vsftpd/vsftpd.conf # 使用vim 编辑文件
@@ -150,16 +153,18 @@ author: feng6917
     pasv_max_port=<port number>
     ```
 
-- 2.6 创建 chroot_list 文件，并在文件中写入例外用户名单
+6. 创建 chroot_list 文件，并在文件中写入例外用户名单
 
     ```
     [root@k8s-master-7 ~]# vim /etc/vsftpd/chroot_list # 使用vim 编辑文件
     ```
 
-- 2.7 运行命令重启 vsftpd 服务
+7. 运行命令重启 vsftpd 服务
 
     ```
     [root@k8s-master-7 ~]# systemctl restart vsftpd.service
     ```
 
-##### [返回目录](#目录)
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
