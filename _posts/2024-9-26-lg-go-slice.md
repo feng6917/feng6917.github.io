@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Golang 常见数据结构 之 Slice"
+title: "Golang 常见数据结构 之 slice"
 date:   2024-9-26
 tags: 
   - Golang

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Golang 常见数据结构 之 Struct"
+title: "Golang 常见数据结构 之 struct"
 date:   2024-9-26
 tags: 
   - Golang
