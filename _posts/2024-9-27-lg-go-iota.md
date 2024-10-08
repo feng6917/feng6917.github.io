@@ -23,21 +23,21 @@ iota 在 const 关键字出现时将被重置为 0（const 内部的第一行之
 
 #### 二、iota 的用法
 
-    1. 定义枚举值
+1. 定义枚举值
 
-        ```go
-        const (
-            Sunday = iota
-            Monday
-            Tuesday
-            Wednesday
-            Thursday
-            Friday
-            Saturday
-        )
-        ```
+    ```go
+    const (
+        Sunday = iota
+        Monday
+        Tuesday
+        Wednesday
+        Thursday
+        Friday
+        Saturday
+    )
+    ```
 
-    2. 位运算
+2. 位运算
 
     ```go
     const (
@@ -49,7 +49,7 @@ iota 在 const 关键字出现时将被重置为 0（const 内部的第一行之
         PB)
     ```
 
-    3. 自增值
+3. 自增值
 
     ```go
     const (
@@ -64,7 +64,7 @@ iota 在 const 关键字出现时将被重置为 0（const 内部的第一行之
     )
     ```
 
-    4. 自定义类型和自增枚举
+4. 自定义类型和自增枚举
 
     ```go
     type Direction int
