@@ -12,15 +12,16 @@ author: feng6917
 
 <!-- more -->
 
+`书单`
+
+- [Go专家编程](https://www.topgoer.cn/docs/gozhuanjia/gogfjhk)
+- [Go语言高级编程](https://chai2010.cn/advanced-go-programming-book/index.html)
+
 # [目录]
 
 #### [开发环境](https://feng6917.github.io/lg-go-dev-env/)
 
 #### [基础知识](#基础知识)
-
-```
-列一个书单 把go相关的书籍 回顾一下 再继续补充
-```
 
 - [Go 语言简介](https://feng6917.github.io/lg-go-profile/)
 - [Init 和 Main 函数]()
