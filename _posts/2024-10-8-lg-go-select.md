@@ -15,7 +15,7 @@ author: feng6917
 - [一、select 是什么](#一select-是什么)
 - [二、select 实现](#二select-实现)
 
-#### 一、select 是什么、
+#### 一、select 是什么
 
 select 是 Go 语言中的一个关键字，用于在多个通道上进行非阻塞的通信操作。它允许一个 goroutine 同时等待多个通道的操作，并在其中一个通道上接收到数据时执行相应的操作。
 
