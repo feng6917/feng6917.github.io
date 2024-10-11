@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Golang 常见数据结构 之 rwmutex"
+title: "Golang 常见数据结构 之 Goroutine"
 date:   2024-10-8
 tags: 
   - Golang
@@ -12,8 +12,8 @@ author: feng6917
 
 ### 目录
 
-- [一、mutex 是什么](#一mutex-是什么)
-- [二、mutex 数据结构](#二mutex-数据结构)
+- [一、Goroutine 调度器](#一goroutine-调度器)
+- [二、Goroutine 调度策略](#二goroutine-调度策略)
 
 #### 一、Goroutine 调度器
 
@@ -36,6 +36,12 @@ M必须拥有P才可以执行G中的代码，P含有一个包含多个G的队列
 P的个数在程序启动时决定，默认情况下等同于CPU得核数，由于M必须持有一个P才可以运行Go代码，所以同时运行的M个数，也即线程数一般等同于CPU的个数，以达到尽可能的使用CPU而又不至于产生过多的线程切换开销。
 
 程序中可以使用`runtime.GOMAXPROCS()`设置P的个数。
+
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
+
+<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
 
 #### 二、Goroutine 调度策略
 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Golang 常见数据结构 之 rwmutex"
+title: "Golang 常见数据结构 之 RWMutex"
 date:   2024-10-8
 tags: 
   - Golang
@@ -24,6 +24,10 @@ author: feng6917
 - 写锁需要阻塞读锁：一个协程拥有写锁时，其他协程读锁定需要阻塞。
 - 读锁需要阻塞写锁：一个协程拥有读锁时，其他协程写锁定需要阻塞。
 - 读锁不能阻塞读锁：一个协程拥有读锁时，其他协程也可以拥有读锁。
+
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
 
 <hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
 
