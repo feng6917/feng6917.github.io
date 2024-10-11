@@ -12,6 +12,15 @@ author: feng6917
 
 <!-- more -->
 
+## 暂时计划（分清主次）
+
+```
+1. 基础知识暂时性，非严格深究梳理
+2. 项目整体梳理
+3. 面试题梳理
+
+```
+
 `书单`
 
 - [Go专家编程](https://www.topgoer.cn/docs/gozhuanjia/gogfjhk)
@@ -26,34 +35,32 @@ author: feng6917
 - [Go 语言简介](https://feng6917.github.io/lg-go-profile/)
 - [Init 和 Main 函数]()
 - [Go 命令]()
-- [数据类型]()
-- [数据运算]()
+- [mutex](https://feng6917.github.io/lg-go-mutex/)
+- [rwmutex](https://feng6917.github.io/lg-go-rwmutex/)
 - [变量 和 常量]()
 - [引用 和 指针]()
 - [数组 和 切片]()
-- [散列表 Map](https://feng6917.github.io/lg-go-map/)
+- [Map](https://feng6917.github.io/lg-go-map/)
 - [锁 和 读写锁]()
 - [条件语句 IF ELSE]()
 - [Switch]()
 - [Select]()
-- [Range]()
+- [for range](https://feng6917.github.io/lg-go-range/)
 - [Break]()
 - [Goto]()
-- [For]()
 - [Error]()
 - [Interface]()
 - [defer](https://feng6917.github.io/lg-go-defer/)
 - [函数 匿名函数]()
 - [闭包]()
 - [单元测试]()
-- [Groutine]()
+- [Groutine](https://feng6917.github.io/lg-go-groutine/)
 - [Runtime]()
 - [channel](https://feng6917.github.io/lg-go-chan/)
 - [iota](https://feng6917.github.io/lg-go-iota/)
 - [定时器]()
 - [atomic]()
 - [GC]()
-- [GMP]()
 - [Log]()
 - [Context]()
 - [IO]()
@@ -117,7 +124,7 @@ author: feng6917
   
 #### [其他](#其他)
 
-- [学历路线图]()
+- [学习路线图]()
 - [待学习]
   - goroutine 内部实现
   - gc tcmalloc 是什么
@@ -126,7 +133,7 @@ author: feng6917
 #### [面试题](#面试题)
 
 - [流程问题](https://feng6917.github.io/lg-go-resume-flow/)
-- [基础问题]()
+- [基础问题](https://feng6917.github.io/lg-go-resume-base/)
 - [项目问题]()
 - [笔试题目]()
 
