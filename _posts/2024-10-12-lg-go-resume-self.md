@@ -1,5 +1,12 @@
-个人简历
-
+---
+layout: post
+title: "个人简历"
+date:   2024-10-12
+tags: 
+  - Golang
+comments: true
+author: feng6917
+---
 ---
 
 - 马燕争
