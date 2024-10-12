@@ -33,76 +33,76 @@ author: feng6917
 #### [基础知识](#基础知识)
 
 - [Go 语言简介](https://feng6917.github.io/lg-go-profile/)
-- [Init 和 Main 函数]()
-- [Go 命令]()
-- [mutex](https://feng6917.github.io/lg-go-mutex/)
-- [rwmutex](https://feng6917.github.io/lg-go-rwmutex/)
-- [变量 和 常量]()
-- [引用 和 指针]()
-- [数组 和 切片]()
+- ~~[Init 和 Main 函数]()~~
+- ~~[Go 命令]()~~
+- [Mutex](https://feng6917.github.io/lg-go-mutex/)
+- [RWMutex](https://feng6917.github.io/lg-go-rwmutex/)
+- ~~[变量 和 常量]()~~
+- ~~[引用 和 指针]()~~
+- ~~[数组 和 切片]()~~
 - [Map](https://feng6917.github.io/lg-go-map/)
-- [锁 和 读写锁]()
-- [条件语句 IF ELSE]()
-- [Switch]()
-- [Select]()
+
+- ~~[条件语句 IF ELSE]()~~
+- ~~[Switch]()~~
+- ~~[Select]()~~
 - [for range](https://feng6917.github.io/lg-go-range/)
-- [Break]()
-- [Goto]()
-- [Error]()
-- [Interface]()
-- [defer](https://feng6917.github.io/lg-go-defer/)
-- [函数 匿名函数]()
-- [闭包]()
-- [单元测试]()
+- ~~[Break]()~~
+- ~~[Goto]()~~
+- ~~[Error]()~~
+- ~~[Interface]()~~
+- [Defer](https://feng6917.github.io/lg-go-defer/)
+- ~~[函数 匿名函数]()~~
+- ~~[闭包]()~~
+- ~~[单元测试]()~~
 - [Groutine](https://feng6917.github.io/lg-go-groutine/)
-- [Runtime]()
-- [channel](https://feng6917.github.io/lg-go-chan/)
-- [iota](https://feng6917.github.io/lg-go-iota/)
-- [定时器]()
-- [atomic]()
-- [GC]()
-- [Log]()
-- [Context]()
-- [IO]()
-- [Strconv]()
-- [Convert 转换]()
-- [加密解密]()
-- [Http]()
-- [Grpc]()
-- [WebSocket]()
-- [广播]()
-- [反射]()
-- [Time]()
-- [string](https://feng6917.github.io/lg-go-string/)
-- [slice](https://feng6917.github.io/lg-go-slice/)
-- [struct](https://feng6917.github.io/lg-go-struct/)
-- [Flag]()
-- [Config]()
-- [异常处理]()
-- [递归函数]()
-- [ftp]()
-- [文件上传]()
-- [server]()
-- [pprof]()
-- [cache]()
-- [orm]()
-- [gui]()
-- [nsq]()
-- [policy]()
-- [sort]()
-- [api]()
-- [import]()
-- [CSP]()
-- [BASE]()
-- [SOP]()
-- [数据库 一系列]()
-- [架构 一系列]()
-- [微服务 一系列]()
-- [分布式 一系列]()
-- [ETCD]()
-- [Docker]()
-- [K8s]()
-- []()
+- ~~[Runtime]()~~
+- [Channel](https://feng6917.github.io/lg-go-chan/)
+- [Iota](https://feng6917.github.io/lg-go-iota/)
+- ~~[定时器]()~~
+- ~~[atomic]()~~
+- ~~[GC]()~~
+- ~~[Log]()~~
+- ~~[Context]()~~
+- ~~[IO]()~~
+- ~~[Strconv]()~~
+- ~~[Convert 转换]()~~
+- ~~[加密解密]()~~
+- ~~[Http]()~~
+- ~~[Grpc]()~~
+- ~~[WebSocket]()~~
+- ~~[广播]()~~
+- ~~[反射]()~~
+- ~~[Time]()~~
+- [String](https://feng6917.github.io/lg-go-string/)
+- [Slice](https://feng6917.github.io/lg-go-slice/)
+- [Struct](https://feng6917.github.io/lg-go-struct/)
+- ~~[Flag]()~~
+- ~~[Config]()~~
+- ~~[异常处理]()~~
+-
+- ~~[ftp]()~~
+- ~~[文件上传]()~~
+- ~~[server]()~~
+- ~~[pprof]()~~
+- ~~[cache]()~~
+- ~~[orm]()~~
+- ~~[gui]()~~
+- ~~[nsq]()~~
+- ~~[policy]()~~
+- ~~[sort]()~~
+- ~~[api]()~~
+- ~~[import]()~~
+- ~~[CSP]()~~
+- ~~[BASE]()~~
+- ~~[SOP]()~~
+- ~~[数据库 一系列]()~~
+- ~~[架构 一系列]()~~
+- ~~[微服务 一系列]()~~
+- ~~[分布式 一系列]()~~
+- ~~[ETCD]()~~
+- ~~[K8s]()~~
+- ~~[Docker]()~~
+- ~~[CI/CD]()~~
 - []()
 - []()
 - []()
