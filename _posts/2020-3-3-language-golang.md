@@ -60,9 +60,12 @@ author: feng6917
 - [Iota](https://feng6917.github.io/lg-go-iota/)
 - ~~[定时器]()~~
 - ~~[atomic]()~~
-- ~~[GC]()~~
+- 内存管理
+  - [内存分配原理](https://feng6917.github.io/lg-go-gc-1/)
+  - [垃圾分配原理](https://feng6917.github.io/lg-go-gc-2/)
+  - [逃逸分析](https://feng6917.github.io/lg-go-escape/)
 - ~~[Log]()~~
-- ~~[Context]()~~
+- [Context](https://feng6917.github.io/lg-go-context/)
 - ~~[IO]()~~
 - ~~[Strconv]()~~
 - ~~[Convert 转换]()~~
