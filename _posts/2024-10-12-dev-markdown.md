@@ -18,6 +18,7 @@ author: feng6917
 - [四、代码块](#四代码块)
 - [五、表格](#五表格)
 - [六、间隔线](#六间隔线)
+- [七、折叠][#七折叠]
 
 #### 一、图片
 
@@ -126,6 +127,13 @@ author: feng6917
     <hr />
 
     <hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+
+#### 七、折叠
+
+    <details>
+        <summary>点击展开</summary>
+        <p>内容</p>
+    </details>
 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>

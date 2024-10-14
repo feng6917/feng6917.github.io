@@ -137,6 +137,7 @@ author: feng6917
 
 - [流程问题](https://feng6917.github.io/lg-go-resume-flow/)
 - [基础问题](https://feng6917.github.io/lg-go-resume-base/)
+- [MySQL](https://feng6917.github.io/lg-resume-mysql/)
 - [项目问题]()
 - [笔试题目]()
 
