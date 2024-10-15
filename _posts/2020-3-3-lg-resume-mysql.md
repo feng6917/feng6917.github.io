@@ -875,4 +875,4 @@ author: feng6917
 ---
 参考链接如下
 
-- [面试题](http://mian.topgoer.com/)
+- [MySQL高频面试题](https://www.mianshi.online/mysql-mysql.html)
