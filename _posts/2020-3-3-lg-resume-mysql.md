@@ -574,7 +574,299 @@ author: feng6917
     </ul>
     </details>
 
-36.
+36. 什么是子查询？
+    <details>
+    <summary>Ans</summary>
+    <p>子查询是指在一个SQL语句中嵌套另一个SQL语句，子查询可以嵌套在SELECT、INSERT、UPDATE、DELETE等语句中，也可以嵌套在另一个子查询中。</p>
+    <p>子查询可以返回一个值、一个行、一个列或者一个表，根据子查询返回的结果类型，可以将子查询分为以下几类：</p>
+    <ol>
+        <li>标量子查询：指子查询返回的是一个值，可以使用=,>,<,>=,<=,<> 等操作符对子查询标量结构进行比较，一般子查询会放在比较式的右侧。<p><code> SELECT * FROM user WHERE age = (SELECT max(age) FROM user) // 查询年纪最大的人</code></p></li>
+        <li>列子查询：指子查询的结果是n行一列，一般应用于对表的某个字段进行查询返回。可以使用IN，ANY，SOME和ALL等操作符，不能直接使用<p><code>SELECT num1 FROM table1 WHERE num1 > ANY(SELECT num2 FROM table2)</code></p></li>
+        <li>行子查询：指子查询返回的结果一行n列<p><code>SELECT * FROM user WHERE (age, sex) = (SELECT age, sex FROM user WHERE name = '张三') // 查询和张三年龄和性别相同的人</code></p></li>
+        <li>表子查询：指子查询是n行n列的一个数据表<p><code>SELECT * FROM student WHERE (name, age, sex) IN (SELECT name, age, sex FROM user) // 查询在user表中存在的学生</code></p></li>
+    </details>
+
+37. 了解MySQL的连接查询吗？
+    <details>
+    <summary>Ans</summary>
+    <p>MySQL的连接查询主要可以分为外连接，内连接，交叉连接。</p>
+    <ol>
+        <li>外连接
+        <p>外连接主要分为左外连接(LEFT JOIN)、右外连接(RIGHT JOIN) 和全外连接。</p>
+        <p>左外连接：显示左表中所有的数据及右表中符合条件的数据，右表中不符合条件的数据为null.</p>
+        <p>右外连接：显示右表中所有的数据及左表符合条件的数据，左表中不符合条件的数据为null.</p>
+        <p>MySQL 中不支持全外连接</p>
+        </li>
+        <li>内连接：只显示符合条件的数据</li>
+        <li>交叉连接：使用笛卡尔积的一种连接
+        <p>笛卡尔积：两个集合X和Y的笛卡尔积表示为X*Y，第一个对象是X的成员，而第二个对象是Y的所有可能有序对的其中一个成员。</p>
+        <p>例如：A={a,b},B={0,1,2}, A*B={(a,0),(a,1),(a,2),(b,0),(b,1),(b,2)}</p>
+        </li>
+    </ol>
+    </details>
+
+38. MySQL中IN和EXISTS的区别
+    <details>
+    <summary>Ans</summary>
+    <p>IN和EXISTS都是子查询的条件判断，但是它们的执行方式和效率不同。</p>
+    <ul>
+        <li>使用exists时会先进行外表查询，将查询到的每行数据带入到内表查询中看是否满足条件；使用in一般会先进行内表查询获取结果集，然后对外表查询匹配结果集，返回数据。</li>
+        <li>in在内表查询或者外表查询过程中都会用到索引。</li>
+        <li>exists仅在内表查询时会用到索引</li>
+        <li>一般来说，当子查询的结果集比较大，外表较小使用exist效率更高；当子查询结果集较小，外表较大时，使用in效率更高。</li>
+        <li>对于not in和not exists, not exists效率比not in的效率高，于子查询的结果集无关，因为not in 对于内外表都进行了全表扫描，没有使用到索引。not exists的子查询中可以用到表上的索引。</li>
+    </ul>
+    </details>
+
+39. varchar和char的区别?MySQL中int(10)和char(10)和varchar(10)的区别?
+
+    <details>
+    <summary>Ans</summary>
+    <ul>
+        <li>varchar表示变长，char表示长度固定。<p>当所插入的字符超过他们的长度时，在严格模式下，会拒绝插入并提示错误信息，在一般模式下，会截取后插入。</p><p>如char(5),无论插入的字符长度是多少，长度是5，插入字符长度小于5，则用空格补充。对于varchar(5),如果插入的字符长度小于5，则存储的字符长度就是插入字符的长度，不会填充。</p></li>
+        <li>存储容量不同，对于char来说，最多能存放的字符个数为255。对于varchar,最多能存放的字符个数是65532.</li>
+        <li>存储速度不同，char长度固定，存储速度会比varchar快一些，但在空间上会占用额外的空间，属于一种空间换时间的策略。而varchar空间利用率会高些，但存储速度慢，属于一种时间换空间的策略。</li>
+    </ul>
+        <p>int(10)中的10表示的是显示数据的长度，而char(10)和varchar(10)表示的是存储数据的大小。</p>
+    </details>
+
+40. MySQL 中 drop、delete、truncate的区别
+    <details>
+    <summary>Ans</summary>
+        <img src="../images/2020-3-3/9.jpg">
+        一般来讲，删除整个表，使用drop。删除表的部分数据使用delete。保留表结构删除表的全部数据使用truncate。
+    </details>
+
+41. UNION和UNION ALL的区别?
+    <details>
+    <summary>Ans</summary>
+    <p>union和union all的作用都是将两个结果集合并在一起。</p>
+    <ul>
+        <li>union会对结果去重并排序，union all直接返回合并后的结果，不去重也不进行排序。</li>
+        <li>union all的性能比union性能好。</li>
+    </ul>
+    </details>
+
+42. 什么是临时表，什么时候会使用到临时表，什么时候删除临时表?
+    <details>
+    <summary>Ans</summary>
+    <p>MySQL在执行SQL语句的时候会临时创建一些存储中间结果集的表，这种表被称为临时表，临时表只对当前连接可见，在连接关闭后，临时表会被删除并释放空间。</p>
+    <p>临时表主要分为内存临时表和磁盘临时表两种。内存临时表使用的是MEMORY存储引擎，磁盘临时表使用的是MySQL存储引擎。</p>
+    <p>一般在以下几种情况中会使用到临时表：</p>
+    <ul>
+        <li>FROM 中的子查询</li>
+        <li>DISTINCT 查询并加上 ORDER BY</li>
+        <li>ORDER BY 和 GROUP BY的子句不一样时会产生临时表</li>
+        <li>使用UNION 查询会产生临时表</li>
+    </ul>
+    </details>
+
+43. 大表数据查询如何进行优化?
+    <details>
+    <summary>Ans</summary>
+    <ul>
+        <li>索引优化</li>
+        <li>SQL语句优化</li>
+        <li>水平拆分</li>
+        <li>垂直拆分</li>
+        <li>建立中间表</li>
+        <li>使用缓存技术</li>
+        <li>固定长度的表访问起来更快</li>
+        <li>越小的列访问越快</li>
+    </ul>
+    </details>
+
+44. 了解慢日志查询吗?统计过慢查询吗？对慢查询如何优化?
+    <details>
+    <summary>Ans</summary>
+    <p>慢查询一般用于记录执行时间超过某个临界值的SQL语句的日志。</p>
+    <p>相关参数:</p>
+    <ul>
+        <li>slow_query_log: 是否开启慢日志查询，1表示开启，0表示关闭。</li>
+        <li>slow_query_log_file: MySQL数据库慢查询日志存储路径。</li>
+        <li>long_query_time: 慢查询阈值，当SQL语句查询时间大于阈值，会被记录在日志上。</li>
+        <li>log_queries_not_using_indexes: 未使用索引的查询会被记录到慢查询日志中。</li>
+        <li>log_output: 日志存储方式。"FILE"表示将日志存入文件。"TABLE"表示将日志存入数据库。</li>
+    </ul>
+    <p>如何对慢查询进行优化？</p>
+    <ul>
+        <li>分析语句的执行计划，查看SQL语句的索引是否命中。</li>
+        <li>优化数据库的结构，将字段很多的表分解成多个表，或者考虑建立中间表。</li>
+        <li>优化LIMIT分页。</li>
+    </ul>
+    </details>
+
+45. 为什么要设置主键?主键一般用自增ID还是UUID?
+    <details>
+    <summary>Ans</summary>
+    <p>因为主键是唯一区分表中每一行的唯一标识，如果没有主键，更新或者删除表中特定的行会很困难，因为不能唯一准确地标识某一行。</p>
+    <p>主键一般用自增ID还是UUID?</p>
+    <p>使用自增ID的好处：</p>
+    <ul>
+        <li>字段长度较UUID会小很多</li>
+        <li>数据库自动编号，按顺序存放，利于检索</li>
+        <li>无需担心主键重复问题</li>
+    </ul>
+    <p>使用自增ID的缺点：</p>
+    <ul>
+        <li>因为是自增，在某些业务场景下，容易被其他人看到业务量。</li>
+        <li>发生数据迁移时，或者表合并时会非常麻烦。</li>
+        <li>在高并发的场景下，竞争自增锁会降低数据库的吞吐能力。</li>
+    </ul>
+    <p>UUID：通用唯一标识码，UUID是基于当前时间、计数器和硬件标识等数据计算生成的。</p>
+    <p>使用UUID的优点：</p>
+    <ul>
+        <li>唯一标识，不会考虑重复问题，在数据拆分、合并时也能达到全局的唯一性。</li>
+        <li>可以在应用层生成，提高数据库的吞吐能力。</li>
+        <li>无需担心业务量泄露的问题。</li>
+    </ul>
+    <p>使用UUID的缺点：</p>
+    <ul>
+        <li>因为UUID时随机生成的，所以会发生随机IO，影响插入速度，并且造成硬盘的使用率较低。</li>
+        <li>UUID占用空间较大，建立的索引较多，造成的影响越大。</li>
+        <li>UUID之间比较大小自增ID慢不少，影响查询速度。</li>
+    </ul>
+    <p>一般情况下，MySQL推荐使用自增ID。因为在MySQL的InnoDB存储引擎中，主键索引是一种聚簇索引，主键索引的B+树的叶子节点按照顺序存储了主键值及数据，如果主键索引是自增ID，只需要按顺序往后排列即可，如果是UUID，ID是随机生成的，在数据插入时会造成大量的数据移动，产生大量的内存碎片，造成插入性能的下降。</p>
+    </details>
+
+46. MySQL字段为什么要设置成NOT NULL?
+    <details>
+    <summary>Ans</summary>
+    <p>NULL和空值是不一样的，空值是不占用空间的，而NULL是占用空间的，所以字段设为NOT NULL后仍然可以插入空值。</p>
+    <p>字段设置成NOT NULL主要有以下几点原因：</p>
+    <ul>
+        <li>NULL值会影响一些函数的统计，如count，遇到NULL值，这条记录不会统计在内。</li>
+        <li>B树不存储NULL，所以索引用不到NULL，会造成第一点中说的统计不到的问题。</li>
+        <li>NOT IN子查询在有NULL值的情况下返回的结果都是空值。</li>
+        <li><code>SELECT * FROM user WHERE username NOT IN (SELECT username FROM user WHERE id != 0);</code><p>这条查询语句应该能够查到数据，但是结果显示为null。</p></li>
+        <li>MySQL在进行比较的时候，NULL会参与字段的比较，因为NULL是一种比较特殊的数据类型，数据库在处理时需要进行特殊处理，增加了数据库处理记录的复杂性。</li>
+    </ul>
+    <p>事务的隔离性由隔离级别进行管理，MySQL数据库有四种隔离级别：</p>
+    </details>
+
+47. 如何优化查询过程中的数据访问？
+    <details>
+    <summary>Ans</summary>
+    <p>从减少数据访问方面考虑：</p>
+    <ul>
+        <li>正确使用索引，尽量做到索引覆盖</li>
+        <li>优化SQL执行计划</li>
+    </ul>
+
+    <p>从返回更少的数据方面考虑：</p>
+    <ul>
+        <li>数据分页处理</li>
+        <li>只返回需要的字段</li>
+    </ul>
+
+    <p>从减少服务器CPU开销方面考虑：</p>
+    <ul>
+        <li>合理使用排序</li>
+        <li>较少比较的操作</li>
+        <li>复杂运算在客户端处理</li>
+    </ul>
+
+    <p>从增加资源方面考虑：</p>
+    <ul>
+        <li>客户端多进程并行访问</li>
+        <li>数据库并行处理</li>
+    </ul>
+    </details>
+
+48. 如何优化长难的查询语句？如何优化LIMIT分页？如何优化UNION查询？
+    <details>
+    <summary>Ans</summary>
+    <p>优化长难查询语句：</p>
+    <ul>
+        <li>将一个大的查询分解成多个小的查询</li>
+        <li>分解关联查询，使缓存的效率更高</li>
+    </ul>
+    <p>如何优化LIMIT分页？</p>
+    <ul>
+        <li>在LIMIT偏移量较大的时候，查询效率会变低，可以记录每次取出的最大ID，下次查询时可以利用ID进行查询</li>
+        <li>建立复合索引</li>
+    </ul>
+    <p>如何优化UNION查询？</p>
+    <ul>
+        <li>如果不需要对结果集进行去重或者排序建议使用UNION ALL，会好一些。</li>
+    </ul>
+    </details>
+
+49. 如何优化WHERE子句？
+    <details>
+    <summary>Ans</summary>
+    <p>不要在where子句中使用 != 和 <> 进行不等于判断，这样会导致放弃索引进行全表扫描</p>
+    <p>不要在where子句中使用null或空值判断，尽量设置字段为not null.</p>
+    <p>尽量使用union all代替or</p>
+    <p>在where 和order by设计的列建立索引</p>
+    <p>尽量减少使用in或者not in，会进行全表扫描</p>
+    <p>在where字句中使用参数会导致全表扫描</p>
+    <p>避免在where子句中对字段及进行表达式或者函数操作会导致存储引擎放弃索引进而全表扫描</p>
+    </details>
+
+50. SQL语句执行的很慢原因是什么？
+    <details>
+    <summary>Ans</summary>
+    <p>1. 没有建立索引</p>
+    <p>2. 索引失效</p>
+    <p>3. 数据过多</p>
+    <p>4. 查询字段过多</p>
+    <p>5. 服务器调优及各个参数设置不合理</p>
+    <p>如果SQL语句只是偶尔执行很慢，可能是执行的时候遇到了锁，也可能是redo log日志写满了，要将redo log中的数据同步到磁盘中去。</p>
+    <p>如果SQL语句一直都很慢，可能是字段上没有索引或者字段有索引但是没用上索引。</p>
+    </details>
+
+51. 数据库中大表如何优化？
+    <details>
+    <summary>Ans</summary>
+    <p>1. 限定数据的范围：避免不带任何限制数据范围条件的查询语句。</p>
+    <p>2. 读写分离：主库负责写，从库负责读。</p>
+    <p>3. 垂直分表：将一个表按照字段分成多个表，每个表存储其中一部分字段。</p>
+    <p>4. 水平分表：在同一数据库内，把一个表的数据按照一定规则拆分到多个表中。</p>
+    <p>5. 对单表进行优化：对表中的字段、索引、查询SQL语句优化。</p>
+    <p>6. 添加缓存</p>
+    </details>
+
+52. 分库分表后，ID键如何处理？
+    <details>
+    <summary>Ans</summary>
+    <p>UUID：优点：本地生成ID，不需要远程调用；全程唯一不重复。缺点：占用空间大，不适合作为索引。</p>
+    <p>数据库自增ID：在分库分表后使用数据库自增ID，需要专门用于生成主键的库，每次服务接收到请求，先向这个库中插入一条没有意义的数据，获取一个数据库自增的ID，利用这个ID去分库分表中写数据。优点：简单易实现。缺点：在高并发下存在瓶颈。系统结构图如下：</p>
+    <img src="../images/2020-3-3/10.jpg">
+    <p>Redis生成ID：优点：不依赖数据库，性能比较好。缺点：引入新的组件会使得系统复杂度增加。</p>
+    <p>Twitter 的 snowflake 算法.</p>
+    <p>美团的Leaf分布式ID生成系统，美团点评分布式ID生成系统。</p>
+    </details>
+
+53. MySQL的复制原理及流程？如何实现主从负值？
+    <details>
+    <summary>Ans</summary>
+    <p>MySQL复制：为保证主服务器和从服务器的数据一致性，在向主服务器插入数据后，从服务器会自动将主服务器中修改的数据同步过来。</p>
+    <p>主从复制的原理：</p>
+    <p>主从复制主要有三个线程：binlog线程，I/O线程，SQL线程。</p>
+    <ol>
+        <li>binlog线程：负责将主服务器上的数据更改写入到二进制日志（Binary Log）中。</li>
+        <li>I/O线程：负责从主服务器上读取二进制日志（Binary Log），并写入从服务器的中继日志（Relay Log）中。</li>
+        <li>SQL线程：负责读取中继日志，解析出主服务器中已经执行的数据更改并在从服务器中重放。</li>
+    </ol>
+    <p>主从复制的作用：</p>
+    <p>1. 高可用和故障转移</p>
+    <p>2. 负载均衡</p>
+    <p>3. 数据备份</p>
+    <p>4. 升级测试</p>
+    </details>
+
+54. 了解读写分离吗？
+    <details>
+    <summary>Ans</summary>
+    <p>读写分离主要依赖于主从复制，主从复制为读写分离服务。</p>
+    <p>读写分离的优势：</p>
+    <ul>
+        <li>主服务器负责写，从服务器负责读，缓解了锁的竞争。</li>
+        <li>从服务器可以使用MyISAM，提升查询性能及节约系统开销。</li>
+        <li>增加冗余，提高可用性。</li>
+    </ul>
+    </details>
 
 [返回上级](https://feng6917.github.io/language-golang/#面试题)
 
