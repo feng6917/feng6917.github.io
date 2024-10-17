@@ -21,6 +21,8 @@ author: feng6917
 
 待处理
 队列
+Gin 框架
+Zero 框架
 分布式
 微服务
 
@@ -145,6 +147,7 @@ author: feng6917
 - [基础问题](https://feng6917.github.io/lg-go-resume-base/)
 - [MySQL](https://feng6917.github.io/lg-resume-mysql/)
 - [Redis](https://feng6917.github.io/lg-resume-redis/)
+- [MQ](https://feng6917.github.io/lg-resume-mq/)
 - [项目问题]()
 - [笔试题目]()
 
