@@ -16,39 +16,37 @@ author: feng6917
 
 function password() {
 
-var testV = 0;
+    var testV=0;
 
-var pass1 = prompt('赶紧输密码:','');
+    var pass1=prompt('赶紧输密码:', '');
 
-while (testV < 3) {
+    while (testV < 3) {
 
-if (!pass1)
+        if ( !pass1) history.go(-1);
 
-history.go(-1);
+        if (pass1=="myz") {
 
-if (pass1 == "myz") {
+            alert('密码正确!');
 
-alert('密码正确!');
+            break;
 
-break;
+        }
 
-}
+        testV+=1;
 
-testV+=1;
+        if (testV==1) {
+            pass1=prompt('密码错了，搞什么啊！还剩两次机会。');
+        }
 
-if (testV == 1){
-  alert('密码错了，搞什么啊！还剩两次机会。');
-} else if (testV == 2){
-  alert('密码错了，搞什么啊！还剩一次机会。');
-}
+        else if (testV==2) {
+            pass1=prompt('密码错了，搞什么啊！还剩一次机会。');
+        }
 
-}
+    }
 
-if (pass1!="password" & testV ==3)
+    if (pass1 !="password" & testV==3) history.go(-1);
 
-history.go(-1);
-
-return " ";
+    return " ";
 
 }
 
