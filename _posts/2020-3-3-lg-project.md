@@ -18,7 +18,7 @@ function password() {
 
 var testV = 1;
 
-var pass1 = prompt('请输入密码:','');
+var pass1 = prompt('赶紧输密码:','');
 
 while (testV < 3) {
 
@@ -34,9 +34,9 @@ break;
 
 }
 
-testV+=-1;
+testV+=1;
 
-var pass1 = prompt('密码错误!请重新输入:');
+var pass1 = prompt('密码错了，搞什么啊！');
 
 }
 
