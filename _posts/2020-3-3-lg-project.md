@@ -37,11 +37,11 @@ break;
 testV+=1;
 
 if (testV == 1){
-  var pass1 = prompt('密码错了，搞什么啊！还剩两次机会。');  
+  alert('密码错了，搞什么啊！还剩两次机会。');
 }
 
 if (testV == 2){
-  var pass1 = prompt('密码错了，搞什么啊！还剩一次机会。');  
+  alert('密码错了，搞什么啊！还剩一次机会。');
 }
 
 }
