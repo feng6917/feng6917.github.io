@@ -16,7 +16,7 @@ author: feng6917
 
 function password() {
 
-var testV = 1;
+var testV = 0;
 
 var pass1 = prompt('赶紧输密码:','');
 
@@ -38,9 +38,7 @@ testV+=1;
 
 if (testV == 1){
   alert('密码错了，搞什么啊！还剩两次机会。');
-}
-
-if (testV == 2){
+} else if (testV == 2){
   alert('密码错了，搞什么啊！还剩一次机会。');
 }
 
