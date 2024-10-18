@@ -19,6 +19,7 @@ author: feng6917
 - [五、表格](#五表格)
 - [六、间隔线](#六间隔线)
 - [七、折叠][#七折叠]
+- [八、输入密码查看页面](#八输入密码查看页面)
 
 #### 一、图片
 
@@ -134,6 +135,54 @@ author: feng6917
         <summary>点击展开</summary>
         <p>内容</p>
     </details>
+
+#### 八、输入密码查看页面
+>
+> 把js代码放到首位，pass1 为设置的登录密码.
+
+```javascript
+    <SCRIPT language=JavaScript>
+
+    function password() {
+
+        var testV=0;
+
+        var pass1=prompt('赶紧输密码:', '');
+
+        while (testV < 3) {
+
+            if ( !pass1) history.go(-1);
+
+            if (pass1=="myz") {
+
+                alert('密码正确!');
+
+                break;
+
+            }
+
+            testV+=1;
+
+            if (testV==1) {
+                pass1=prompt('密码错了，搞什么啊！还剩两次机会。');
+            }
+
+            else if (testV==2) {
+                pass1=prompt('密码错了，搞什么啊！还剩一次机会。');
+            }
+
+        }
+
+        if (pass1 !="password" & testV==3) history.go(-1);
+
+        return " ";
+
+    }
+
+    document.write(password());
+
+    </SCRIPT>
+```
 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
