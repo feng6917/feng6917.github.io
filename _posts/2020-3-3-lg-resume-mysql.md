@@ -868,6 +868,113 @@ author: feng6917
     </ul>
     </details>
 
+55. now 和 current_date 区别？
+    <details>
+    <summary>Ans</summary>
+    <p>now()返回当前时间日期，current_date()返回当前日期，不包括时间部分。</p>
+    </details>
+
+56. SQL 生命周期
+    <details>
+    <summary>Ans</summary>
+    <p>1. 客户端通过用户名密码连接到MySQL服务器</p>
+    <p>2. 客户端发送一条查询给服务器</p>
+    <p>3. 服务器先检查查询缓存，如果命中缓存，则直接返回结果，否则进入下一阶段</p>
+    <p>4. 服务器进行SQL解析、预处理，再由优化器生成对应的执行计划</p>
+    <p>5. MySQL根据执行计划，调用存储引擎的API来执行查询</p>
+    <p>6. 将结果返回给客户端</p>
+    </details>
+
+57. Select For UPDATE 有什么含义？
+    <details>
+    <summary>Ans</summary>
+    <p>在MySQL中，InnoDB存储引擎支持对数据进行加锁操作，它支持两种行锁：共享锁和排他锁。默认情况下，InnoDB采用行锁，当然，也可以使用表锁。</p>
+    <p>共享锁又称读锁，是读取操作创建的锁。其他用户可以并发读取数据，但任何对数据记录的更新操作，都需要等待已存在的共享锁被释放后才可以执行。</p>
+    <p>排他锁又称写锁，是更新操作创建的锁。其他用户对数据的读写操作，都需要等待已存在的排他锁被释放后才可以执行。</p>
+    <p>在MySQL中，SELECT操作默认不加任何锁类型，如果加锁需要在SELECT之后加上FOR UPDATE（排他锁）或者LOCK IN SHARE MODE（共享锁）。</p>
+    </details>
+
+58. 什么是存储过程？有哪些优点？
+    <details>
+    <summary>Ans</summary>
+    <p>存储过程是一组为了完成特定功能的SQL语句集，它存储在数据库中，一次编译后永久有效，用户通过指定存储过程的名字并给定参数（如果该存储过程带有参数）来执行它。</p>
+    <p>优点：</p>
+    <ul>
+        <li>存储过程一旦被编译存储在数据库中，用户通过一次调用就可以引用，减少网络通信量。</li>
+        <li>存储过程在服务器端执行，减少数据在客户端和服务器端之间的传输。</li>
+        <li>存储过程由预编译的SQL代码组成，可以减少SQL语句的编译、解析时间，提高数据访问速度。</li>
+        <li>存储过程的安全性强，只有拥有执行权限的用户才能执行。</li>
+        <li>存储过程可以重复使用，减少数据库开发人员的工作量。</li>
+    </ul>
+    </details>
+
+59. 数据库支持emoji 表情么？
+    <details>
+    <summary>Ans</summary>
+    <p>MySQL默认的字符集是latin1，不支持存储emoji表情，需要将字符集修改为utf8mb4。</p>
+    <p>修改方法：</p>
+    <p>1. 修改MySQL配置文件my.cnf，在[mysqld]下添加以下配置：</p>
+    <pre><code>character-set-server=utf8mb4
+
+collation-server=utf8mb4_unicode_ci</code></pre>
+    <p>2. 修改数据库字符集：</p>
+    <pre><code>ALTER DATABASE database_name CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;</code></pre>
+    <p>3. 修改表字符集：</p>
+    <pre><code>ALTER TABLE table_name CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;</code></pre>
+    <p>4. 修改列字符集：</p>
+    <pre><code>ALTER TABLE table_name CHANGE column_name column_name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;</code></pre>
+    </details>
+
+60. 索引的目的是什么？
+    <details>
+    <summary>Ans</summary>
+    <p>索引的目的是提高查询速度，通过创建唯一索引，可以保证数据库表中每一行数据的唯一性。</p>
+    </details>
+
+61. 什么是最左前缀原则？
+    <details>
+    <summary>Ans</summary>
+    <p>最左前缀原则是指在创建多列索引时，查询条件必须从索引的最左侧开始使用，否则无法使用索引。</p>
+    <p>例如，创建了一个包含列a、b、c的多列索引，查询条件必须按照a、b、c的顺序使用，否则无法使用索引。</p>
+    </details>
+
+62. 什么情况下创建了索引但无法使用？
+    <details>
+    <summary>Ans</summary>
+    <p>以下情况下创建了索引但无法使用：</p>
+    <ul>
+        <li>查询条件中使用了函数或表达式，无法使用索引。</li>
+        <li>查询条件中使用了OR操作符，无法使用索引。</li>
+        <li>查询条件中使用了LIKE操作符，且通配符不在最左侧，无法使用索引。</li>
+        <li>查询条件中使用了NOT操作符，无法使用索引。</li>
+        <li>查询条件中使用了!=操作符，无法使用索引。</li>
+    </ul>
+    </details>
+
+63. 什么是数据库连接池，为什么需要数据库连接池？
+    <details>
+    <summary>Ans</summary>
+    <p>数据库连接池是用于管理数据库连接的池子，它可以在应用程序启动时预先创建一定数量的数据库连接，并在应用程序运行过程中重复使用这些连接，从而减少数据库连接的创建和销毁次数，提高应用程序的性能。</p>
+    <p>数据库连接池的优点：</p>
+    <ul>
+        <li>减少数据库连接的创建和销毁次数，提高应用程序的性能。</li>
+        <li>可以限制数据库连接的数量，防止数据库连接过多导致数据库服务器压力过大。</li>
+        <li>可以设置连接的超时时间，防止连接长时间占用数据库资源。</li>
+    </ul>
+    </details>
+
+64. 列运算符号是什么？
+    <details>
+    <summary>Ans</summary>
+    <p>列运算符号是用于对列进行运算的符号，例如加号（+）、减号（-）、乘号（*）、除号（/）等。</p>
+    </details>
+
+65. like 中 % 和 _ 的区别是什么？
+    <details>
+    <summary>Ans</summary>
+    <p>%表示任意多个字符，_表示任意一个字符。</p>
+    </details>
+
 [返回上级](https://feng6917.github.io/language-golang/#面试题)
 
 [Go Learn](https://feng6917.github.io/language-golang/#目录)
@@ -875,4 +982,4 @@ author: feng6917
 ---
 参考链接如下
 
-- [MySQL高频面试题](https://www.mianshi.online/mysql-mysql.html)
+- [MySQL高频面试题](https://www.mian·i.online/mysql-mysql.html)

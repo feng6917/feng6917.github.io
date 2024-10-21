@@ -602,6 +602,121 @@ author: feng6917
     <p>使用keys命令，时间复杂度是O(n),但是keys命令会阻塞Redis服务器，不建议使用。</p>
     <p>使用scan命令，scan命令可以分页扫描，不会阻塞Redis服务器。</p>
     </details>
+44. Redis相比 Memcached 有哪些优势？
+    <details>
+    <summary>Ans</summary>
+    <ul>
+        <li>Redis支持的数据类型更丰富，包括字符串、哈希、列表、集合、有序集合等，而Memcached只支持字符串类型。</li>
+        <li>Redis支持持久化，可以将数据存储到磁盘上，而Memcached不支持持久化。</li>
+        <li>Redis支持主从复制，可以实现数据的备份和故障转移，而Memcached不支持。</li>
+        <li>Redis支持事务，可以保证多个操作的原子性，而Memcached不支持。</li>
+        <li>Redis支持发布/订阅模式，可以实现消息的实时推送，而Memcached不支持。</li>
+        <li>Redis支持Lua脚本，可以实现复杂的逻辑操作，而Memcached不支持。</li>
+    </ul>
+    </details>
+
+45. Redis 常见性能问题和解决方案？
+    <details>
+    <summary>Ans</summary>
+    <ul>
+        <li>Master 最好不要写内存快照，如果Master 写内存快照，save命令 调度 rdbSave 函数，会阻塞主线程的工作，当快照比较大时会对性能影响非常大，会间接性暂停服务。</li>
+        <li>如果数据比较重要，某个Slave 开启AOF 备份数据，策略设置为每秒同步一次</li>
+        <li>为了主从复制的速度和连接的稳定性，Master和Slave最好在同一局域网</li>
+        <li>尽量避免在压力很大的主库上增加从</li>
+        <li>主从复制不要用图状结构，用单向链表结构更为稳定，即：Master<- Slave1 <- Slave2 <- Slave3... 这样的结构方便解决单点故障问题，实现Slave 对 Master 的替换。如果Master 挂了，可以立即启用Slave1 做 Master，其他不变。</li>
+    </ul>
+    </details>
+
+46. 为什么 redis 需要把所有数据放到内存中？
+    <details>
+    <summary>Ans</summary>
+    <p>Redis 为了达到最快的读写速度将数据都读到内存中，并通过异步的方式将数据写入到磁盘。所以redis 具有快速和数据持久化的特征。如果不将数据放在内存中，磁盘I/O 速度会严重影响 redis的性能。在内存越来越便宜的今天，redis 会越来越受欢迎。如果设置了最大使用的内存，则数据已有记录数达到内存限值后不能继续插入新值。</p>
+    </details>
+
+47. Redis 的同步机制了解么？
+    <details>
+    <summary>Ans</summary>
+    <p>Redis 可以使用主从同步，从从同步。第一次同步时，主节点做一次bgsave,并同时将后续修改操作记录到内存 buffer, 待完成后 将 rdb 文件全量同步到复制节点，复制节点接收完成后将 rdb 镜像加载到内存。加载完成后，再通知主节点将期间修改的操作记录同步到复制节点进行重放就完成了同步过程。</p>
+    </details>
+
+48. Pipeline 有什么好处，为什么要用 pipeline？
+    <details>
+    <summary>Ans</summary>
+    <p>可以将多次IO往返的时间缩减为一次，前提时pipeline 执行的指令之间没有因果相关性。使用 redis-benchmark 进行压测的时候可以发现影响redis 的QPS 峰值的一个重要因素是 pipeline 批次指令的数目。</p>
+    </details>
+
+49. Redis 哈希槽的概念？
+    <details>
+    <summary>Ans</summary>
+    <p>Redis 集群没有使用一致性hash,而是引入了哈希槽的概念，Redis 集群有16384个哈希槽，每个key 通过CRC16校验后对16384取模来决定放置哪个槽，集群的每个节点负责一部分hash槽。</p>
+    </details>
+
+50. Redis 集群的主从复制模型是怎样的？
+    <details>
+    <summary>Ans</summary>
+    <p>为了使在部分节点失败或者大部分节点无法通信的情况下集群仍然可用，所以集群使用了主从复制模型,每个节点都会有N-1个复制品.</p>
+    </details>
+
+51. Redis 集群会有写操作丢失吗？为什么？
+    <details>
+    <summary>Ans</summary>
+    <p>Redis 并不能保证数据的强一致性，在正常网络分区的情况下，Redis 是可以容忍部分节点故障的，因为 Redis 集群的数据是按照哈希槽来分布的，即使某个节点故障，也不会影响其他节点的数据，所以数据也不会丢失。</p>
+    </details>
+
+52. Redis 集群如何复制的？
+    <details>
+    <summary>Ans</summary>
+    <p>Redis 集群使用异步复制，这意味着主节点不会等待从节点确认接收了写入的数据，因此主节点可能会在从节点确认之前就返回了成功的响应。这可能会导致在从节点还没有接收到数据的情况下，主节点故障，从而导致数据丢失。</p>
+    </details>
+53. Redis 集群最大节点个数是多少？
+    <details>
+    <summary>Ans</summary>
+    <p>Redis 集群中的最大节点个数是16384个，这是由哈希槽的数量决定的。</p>
+    </details>
+
+54. 怎么测试Redis 的连通性？
+    <details>
+    <summary>Ans</summary>
+    <p>可以使用redis-cli 的ping命令来测试Redis 的连通性，如果Redis 正常运行，会返回PONG。</p>
+    </details>
+
+55. Redis 如何做内存优化？
+    <details>
+    <summary>Ans</summary>
+    <p>使用Redis 的内存优化策略，比如使用压缩列表、哈希表、整数集合等数据结构来减少内存的使用。同时，还可以使用Redis 的LRU 算法来淘汰不常用的数据，以释放内存空间。</p>
+    </details>
+
+56. Redis 回收进程是如何工作的？
+    <details>
+    <summary>Ans</summary>
+    <p>一个客户端运行了新的命令，添加了新的数据。Redis 检查内存使用情况，如果 大于 maxmemory 的限制，则根据设定好的策略进行回收。</p>
+    <p>一个新的命令被执行，等等。所以我们不断地穿越内存限制的边界，通过不断达到边界然后不断地回收到边界以下。</p>
+    <p>如果一个命令的结果导致大量内存被使用，不用多久内存限制就会被这个内存使用量超越。</p>
+    </details>
+
+57. Redis 的内存用完了会怎么样？
+    <details>
+    <summary>Ans</summary>
+    <p>如果达到设置的上限，Redis 的写命令会返回错误信息或者你可以将Redis 当缓存来使用配置淘汰机制，当Redis达到内存上限时就会冲刷掉旧的内容。</p>
+    </details>
+
+38. 一个Redis 实例最多能存放多少的keys?
+    <details>
+    <summary>Ans</summary>
+    <p>理论上Redis 可以处理多达232的keys</p>
+    </details>
+
+39. MySQL 里有2000w 条数据，Redis 中只存 20w 的数据，如何保证Redis 中的数据都是热点数据？
+    <details>
+    <summary>Ans</summary>
+    <p>1. 数据预热 定时任务/预热脚本 2. 选择合适的淘汰策略</p>
+    </details>
+
+40. 如果有大量的 keys 需要设置同一时间过期，应该怎么做？
+    <details>
+    <summary>Ans</summary>
+    <p>如果key 过期时间 过于集中，到过期的那个时间点，redis 可能会出现短暂的卡顿现象。一般需要在时间上加一个随机值，使得过期时间分散一些。</p>
+    </details>
 
 [返回上级](https://feng6917.github.io/language-golang/#面试题)
 
@@ -611,3 +726,4 @@ author: feng6917
 参考链接如下
 
 - [Redis高频面试题](https://www.mianshi.online/redis-keys.html)
+- [redis 面试必会6题经典](https://cloud.tencent.com/developer/article/2063046)
