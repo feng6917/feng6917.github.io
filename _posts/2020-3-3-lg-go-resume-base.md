@@ -571,8 +571,8 @@ author: feng6917
 5. WebSocket 和 Socket 的区别是什么？
     <details>
     <summary>Ans</summary>
-    <p>Socket 是对 TCP/IP 协议的封装，它提供了一个端到端的通信方式，使得数据可以在网络中传输。而 WebSocket 是一种在单个 TCP 连接上进行全双工通信的协议，它使得客户端和服务器之间的数据交换变得更加简单，允许服务端主动向客户端推送数据。</p>
-    <p>Socket 是一个网络编程接口，它提供了一种方式来在网络上进行通信。而 WebSocket 是一种协议，它允许在单个 TCP 连接上进行全双工通信。</p>
+    <p>Socket 是对 TCP/IP 协议的封装，它提供了一个端到端的通信方式，使得数据可以在网络中传输。</p>
+    <p>WebSocket 是一个网络编程接口，是一种在单个 TCP 连接上进行全双工通信的协议，它使得客户端和服务器之间的数据交换变得更加简单，允许服务端主动向客户端推送数据，它允许在单个 TCP 连接上进行全双工通信。</p>
     </details>
 
 6. http和WebSocket的区别是什么？
@@ -580,6 +580,185 @@ author: feng6917
     <summary>Ans</summary>
     <p>http 是一种应用层协议，它用于在网络上传输数据。而 WebSocket 是一种在单个 TCP 连接上进行全双工通信的协议，它允许在客户端和服务器之间进行实时通信。</p>
     <p>http 是一种请求-响应协议，客户端发送一个请求，服务器返回一个响应。而 WebSocket 是一种全双工协议，客户端和服务器可以同时发送和接收数据。</p>
+    </details>
+
+7. http 和 https 的区别？
+    <details>
+    <summary>Ans</summary>
+    <p>http 是一种超文本传输协议(Hypertext Transfer Protocol)，是一个在计算机世界里专门在两点之间传输文字、图片、音视频等文本数据的约定和规范。</p>
+    <img src="../images/2020-3-3/14.jpg" />
+    <p>HTTP 主要分为三部分： 超文本、传输、协议</p>
+    <ul>
+        <li>超文本就是不单单只是文本，它还可以传输图片、音视频，甚至点击文字或图片能够进行超链接的跳转。</li>
+        <li>上面这些概念可以统称为数据，传输就是数据需要经过一系列的物理介质从一个端系统传送到另外一个端系统的过程。通常我们把传输数据包的一方成为 请求方， 把 接到二进制数据包的一方称为 应答方。</li>
+        <li>而协议指的就是网络中（互联网）传递、管理信息的一些规范。如同人与人之间相互交流是需要遵循一定的规矩一样，计算机之间的相互通信需要共同遵守一定的规则，这些规则就称为协议，只不过是网络协议。</li>
+    </ul>
+    <p>TCP/IP网络模型：</p>
+    <img src="../images/2020-3-3/15.jpg" />
+    <img src="../images/2020-3-3/16.jpg" />
+    <p>https 就是身披了一层 SSL 的 http</p>
+    <img src="../images/2020-3-3/17.jpg" />
+
+    http 和 https 的区别：
+    <ul>
+        <li>http 以 http:// 开头；https 以 https:// 开头</li>
+        <li>http 是未经安全加密的协议，它的传输过程容易被攻击者监听、数据容易被窃取、发送方和接收方容易被伪造；而https 是安全的协议，它通过 密钥交换算法-签名算法-对称加密算法-摘要算法 能够解决上面问题。</li>
+        <li>http 默认端口是80；https 默认端口是443</li>
+    </ul>
+    </details>
+
+8. http get 和 post 区别？
+    <details>
+    <summary>Ans</summary>
+    <p>http 中 get 和 post 是 http 中最常用的两个方法，基本上使用 http 方法中有 99% 都是在使用 Get 和 post 方法，所以有必要我们对两个方法有更加深刻的认识。</p>
+    <ul>
+        <li>get 方法一般用于请求，比如你在浏览器地址栏输入 xxx ,其实就是发送了一个get请求，它的主要特征是请求服务器返回资源，而post 方法一般用于 form 表单的提交， 相当于是把信息提交给服务器，等待服务器做出响应，get 相当于一个是 pull/拉的操作，而 post 相当于是一个 push/推 的操作。</li>
+        <li>get 方法是不安全的，因为你在发送请求的过程中，你的请求参数会拼在URL后面，从而导致容易被攻击者窃取，对你的信息造成破坏和伪造；而post 方法是把参数放在请求体body 中的，对用户来说不可见。</li>
+        <li>get 请求的URL 有长度限制，而 post 请求会把参数和值放在消息体中，对数据长度没有要求。</li>
+        <li>get 请求会被浏览器主动 cache, 而 post 不会，除非手动设置。</li>
+        <li>get 请求在浏览器反复地 回退/前进 操作是无害的，而post 操作会再次提交表单请求。</li>
+        <li>get 请求在发送过程中会产生一个 TCP数据包；post 在发送过程中会产生两个TCP 数据包，对于 get 方式的请求，浏览器会把 http header 和 data 一并发送过去，服务器响应200（返回数据）;而对于post，浏览器先发送header, 服务器响应 100 continue, 浏览器再发送data, 服务器响应200 ok(返回数据)。</li>
+    </ul>
+    </details>
+
+9. 什么是无状态协议，http是无状态协议么，怎么解决？
+    <details>
+    <summary>Ans</summary>
+    <p>无状态协议 就是浏览器对于事务的处理没有记忆能力。举个例子来说就是比如客户端请求获得网页之后关闭浏览器，然后再次启动浏览器，登录该网站，但是服务器并不知道客户关闭了一次浏览器。</p>
+    <p>http 就是一种无状态的协议，它对用户的操作没有记忆能力。可能大多数用户不相信，它可能觉得每次输入用户名和密码登录一个网站后，下次登录就不再重新输入用户名和密码了。这其实不是http做的事情，起作用的是 一个叫做 小甜饼(Cookie) 的机制。它能够让浏览器具有记忆能力。</p>
+    <p>JWT 的 Cookie 信息存储在客户端，而不是服务器内存中。也就是说JWT 直接本地进行验证就可以，验证完毕后，这个Token 就会在 Session 中随请求一起发送到服务器，通过这种方式，可以节省服务器资源，并且 token 可以进行多次验证。</p>
+    <p>JWT 支持跨域认证，Cookies 只能用在单个 节点的域 或者 它的子域 中有效。如果它们尝试通过第三个节点访问，就会被禁止。使用JWT 可以解决这个问题，使用JWT 能够通过多个节点进行用户认证，也就是我们常说的跨域认证。</p>
+    </details>
+
+10. UDP 和 TCP 的区别？
+    <details>
+    <summary>Ans</summary>
+    <p>UDP User DataGram Protocol 用户数据包协议。它不需要所谓的 握手操作，从而加快了通信速度，允许网络上的其他主机在接收方同意通信之前进行数据传输。</p>
+    <p>UDP 的特点主要有：</p>
+    <ul>
+        <li>UDP 能够支持容忍数据包丢失的带宽密集型应用程序。</li>
+        <li>UDP 具有低延迟的特点</li>
+        <li>UDP 能够发送大量的数据包</li>
+        <li>UDP 能够允许 DNS 查找，DNS 是建立在 UDP 之上的应用层协议。</li>
+    </ul>
+    <p>TCP Transmission Control Protocol 传输控制协议。它能够帮助你确定计算机连接到 Internet 以及它们之间的数据传输。通过三次握手来建立TCP连接，三次握手就是用来启动和确认 TCP 连接的过程。一旦连接建立后，就可以发送数据了，当数据传输完成后，会通过关闭虚拟电路来断开连接。</p>
+    <p>TCP 的主要特点有：</p>
+    <ul>
+        <li>TCP 能够确保连接的建立和数据包的发送</li>
+        <li>TCP 支持错误重传机制</li>
+        <li>TCP 支持拥塞控制，能够在网络拥堵的情况下延迟发送</li>
+        <li>TCP 能够提供错误校验和甄别有害的数据包</li>
+    </ul>
+    <p>UDP 和 TCP 的区别：</p>
+    <ul>
+        <li>TCP 是面向连接的协议；UDP是无连接的协议</li>
+        <li>TCP 在发送数据前需要建立连接，然后再发送数据；UDP无需建立连接就可以直接发送大量数据</li>
+        <li>TCP 会按照特定顺序重新排列数据包；UDP数据包没有固定顺序，所有数据包都相互独立</li>
+        <li>TCP 传输速度比较慢；UDP 传输速度会更快</li>
+        <li>TCP 头部有20字节；UDP 头部只有8字节</li>
+        <li>TCP 是重量级的，在发送任何用户数据之前，TCP需要三次握手建立连接；UDP 是轻量级的，没有跟踪连接，消息排序等</li>
+        <li>TCP 会进行错误校验，并能够进行错误恢复；UDP 也会错误检查，但会丢弃错误的数据包。</li>
+        <li>TCP 有发送确认；UDP 没有</li>
+        <li>TCP 会使用握手协议，例如 SYN，SYN-ACK，ACK； UDP 无握手协议。</li>
+        <li>TCP 是可靠的，因为它可以确保数据传送到路由器；UDP 中不能保证数据发送到目标。</li>
+
+    </ul>
+    </details>
+
+11. TCP 三次握手和四次挥手？
+    <details>
+    <summary>Ans</summary>
+    <p>TCP 是一种面向连接的、可靠的、基于字节流的传输层通信协议，它能够保证数据包的准确送达。</p>
+    <p>三次握手：</p>
+    <img src="../images/2020-3-3/18.jpg" />
+    <p>四次挥手：</p>
+    <img src="../images/2020-3-3/19.jpg" />
+    </details>
+
+12. 简述 http1.0/1.1/2.0 的区别？
+    <details>
+    <summary>Ans</summary>
+    <p>http1.0：</p>
+    <ul>
+        HTTP 1.0 是在 1996 年引入的，从那时开始，它的普及率就达到了惊人的效果。
+        <li>HTTP 1.0 仅仅提供了最基本的认证，这时候用户名和密码还未经加密，因此很容易收到窥探</li>
+        <li>HTTP 1.0 被设计用来使用短链接，即每次发送数据都会经过 TCP 的三次握手和四次挥手，效率比较低。</li>
+        <li>HTTP 1.0 只使用 header 中的 If-Modified-Since 和 Expires 作为缓存失效的标准。</li>
+        <li>HTTP 1.0 不支持断点续传，也就是说，每次都会传送全部的页面和数据。</li>
+        <li>HTTP 1.0 认为每台计算机只能绑定一个 IP，所以请求消息中的 URL 并没有传递主机名（hostname）。</li>
+    </ul>
+    <p>http1.1：</p>
+    <ul>
+        HTTP 1.1 是 HTTP 1.0 开发三年后出现的，也就是 1999 年，它做出了以下方面的变化
+        <li>HTTP 1.1 使用了摘要算法来进行身份验证</li>
+        <li>TTP 1.1 默认使用长连接，长连接就是只需一次建立就可以传输多次数据，传输完成后，只需要一次切断连接即可。长连接的连接时长可以通过请求头中的 keep-alive 来设置</li>
+        <li>HTTP 1.1 中新增加了 E-tag，If-Unmodified-Since, If-Match, If-None-Match 等缓存控制标头来控制缓存失效。</li>
+        <li>HTTP 1.1 支持断点续传，通过使用请求头中的 Range 来实现。</li>
+        <li>HTTP 1.1 使用了虚拟网络，在一台物理服务器上可以存在多个虚拟主机（Multi-homed Web Servers），并且它们共享一个IP地址。</li>
+    </ul>
+    <p>http2.0：</p>
+    <ul>
+        HTTP 2.0 是 2015 年开发出来的标准，它主要做的改变如下
+        <li>头部压缩，由于 HTTP 1.1 经常会出现 User-Agent、Cookie、Accept、Server、Range 等字段可能会占用几百甚至几千字节，而 Body 却经常只有几十字节，所以导致头部偏重。HTTP 2.0 使用 HPACK 算法进行压缩。</li>
+        <li>二进制格式，HTTP 2.0 使用了更加靠近 TCP/IP 的二进制格式，而抛弃了 ASCII 码，提升了解析效率</li>
+        <li>强化安全，由于安全已经成为重中之重，所以 HTTP2.0 一般都跑在 HTTPS 上。</li>
+        <li>多路复用，即每一个请求都是是用作连接共享。一个请求对应一个id，这样一个连接上可以有多个请求。</li>
+    </ul>
+    </details>
+
+13. 常用的 HTTP 请求头？
+    <details>
+    <summary>Ans</summary>
+    <p>Date: 一个通用标头，可以出现在请求标头和响应标头中，表示的是格林威治标准时间，这个时间要比北京时间慢八个小时。</p>
+    <p>Upgrade: 升级为其他协议</p>
+    <p></p>
+    <p>Accept：告诉服务器能够发送哪些媒体类型</p>
+    <p>Accept-Charset：告诉服务器能够发送哪些字符集</p>
+    <p>Accept-Encoding：告诉服务器能够发送哪些编码方式</p>
+    <p>Accept-Language：告诉服务器能够发送哪些语言</p>
+    <p>Authorization：告诉服务器能够发送哪些授权信息</p>
+    <p>Cache-Control：告诉服务器哪些缓存行为是允许的</p>
+    <p>Connection：告诉服务器是否需要持久连接</p>
+    <p>Cookie：告诉服务器之前请求过的信息</p>
+    <p>Host：告诉服务器请求的主机名</p>
+    <p>Origin：告诉服务器请求的来源信息</p>
+    <p>Referer：告诉服务器请求的来源页面</p>
+    <p>User-Agent：告诉服务器客户端的信息</p>
+    </details>
+
+14. 常用的 HTTP 状态码？
+    <details>
+    <summary>Ans</summary>
+    <p>200：请求成功</p>
+    <p>301：永久重定向</p>
+    <p>302：临时重定向</p>
+    <p>400：请求错误</p>
+    <p>401：未授权</p>
+    <p>403：禁止访问</p>
+    <p>404：未找到</p>
+    <p>500：服务器错误</p>
+    <p>502：网关错误</p>
+    <p>503：服务不可用</p>
+    <p>504：网关超时</p>
+    </details>
+
+15. 地址栏输入URL发生了什么？
+    <details>
+    <summary>Ans</summary>
+    <p>1. 浏览器查找域名的 IP 地址：当用户在地址栏输入 URL 后，浏览器会首先查找域名的 IP 地址。浏览器会先查看本地 DNS 缓存(浏览器缓存->hosts)，如果找到对应的 IP 地址，则直接使用；如果没有找到，则向 DNS 服务器发送请求，获取域名的 IP 地址。</p>
+    <p>首先，查询请求会先找到本地 DNS 服务器来查询是否包含 IP 地址，如果本地 DNS 无法查询到目标 IP 地址，就会向根域名服务器发起一个 DNS 查询。</p>
+    <p>在由根域名服务器 -> 顶级域名服务器 -> 权威 DNS 服务器后，由权威服务器告诉本地服务器目标 IP 地址，再有本地 DNS 服务器告诉用户需要访问的 IP 地址。</p>
+    <p>2. 浏览器需要和目标服务器建立 TCP 连接，需要经过三次握手的过程</p>
+    <p>在建立连接后，浏览器会向目标服务器发起 HTTP-GET 请求，包括其中的 URL，HTTP 1.1 后默认使用长连接，只需要一次握手即可多次传输数据。</p>
+    <p>如果目标服务器只是一个简单的页面，就会直接返回。但是对于某些大型网站的站点，往往不会直接返回主机名所在的页面，而会直接重定向。返回的状态码就不是 200 ，而是 301,302 以 3 开头的重定向码，浏览器在获取了重定向响应后，在响应报文中 Location 项找到重定向地址，浏览器重新第一步访问即可。</p>
+    <p>然后浏览器重新发送请求，携带新的 URL，返回状态码 200 OK，表示服务器可以响应请求，返回报文。</p>
+    [详细了解参考](https://blog.csdn.net/Newbie___/article/details/107212575)
+    </details>
+
+16. 为什么post是两个TCP包呢？
+    <details>
+    <summary>Ans</summary>
+    <p>post 先去检测一下服务器能够正常应答，然后再把data携带进去，如果应答不了，就没有了第二步数据传输。就好像送快递一样，送之前先打电话，确认是否在家，在家再送过去，避免白跑一趟，资源浪费。</p>
     </details>
 
 #### 微服务
@@ -613,12 +792,169 @@ author: feng6917
     wire 是Google 开发的 自动依赖注入框架，专门用于 Go 语言。wire 通过 代码生成而非运行时反射 来实现依赖注入，这与许多其他语言中的依赖注入框架不同。这种方法使得注入的代码在编译时就已经确定，从而提高了性能并保证了代码的可维护性。
     </details>
 
-#### Gin
+#### 消息队列
 
-#### 数据库
-
-1. 数据库事务的四大特性是什么？
+1. 消息队列了解么？
     <details>
+    <summary>Ans</summary>
+    消息队列是 中间件 是分布式系统中重要的组件，主要解决应用解耦，异步消息，流量削峰等问题，实现高性能，高可用，可伸缩和最终一致性架构。目前使用较多的消息队列有RabbitMQ,Kafka,NSQ。
+    </details>
+
+2. 消息队列应用场景
+    <details>
+    <summary>Ans</summary>
+    <p>1. 异步处理</p>
+    用户注册后，需要发注册邮件和注册短信。传统做法有两种 1. 串行 2. 并行。可以利用消息队列 异步进行处理。
+    <p>2. 应用解耦</p>
+    用户下单，订单系统需要通知库存系统。传统做法，订单系统调用库存系统的接口。可以利用消息队列，订单系统发送一个下单消息到消息队列，库存系统订阅下单消息，获取下单消息，进行库存处理。好处，解耦，库存系统挂掉不影响订单系统正常使用。
+    <p>3. 流量削峰</p>
+    秒杀活动，一般会因为流量过大，导致流量暴增，应用挂掉，为解决这个问题，一般需要在应用前端加入消息队列。1. 可以控制活动的人数 2. 可以缓解短时间内高流量压垮应用
+    <p>4. 日志处理</p>
+    日志处理是指将消息队列用在日志处理中，比如Kafka的应用。解决大量日志传输问题。
+    <p>5. 消息通讯</p>
+    消息通讯是指，消息队列一般都内置了高效的通信机制，因此也可以用在纯的消息通讯。比如点对点消息队列，聊天室等。
+    </details>
+
+3. MQ 选型对比？
+    <details>
+    <summary>Ans</summary>
+    <p>Kafka是linkedin开源的MQ系统，主要特点是基于Pull的模式来处理消息消费，追求高吞吐量，一开始的目的就是用于日志收集和传输，0.8开始支持复制，不支持事务，适合产生大量数据的互联网服务的数据收集业务。</p>
+    <p>RabbitMQ是使用Erlang语言开发的开源消息队列系统，基于AMQP协议来实现。AMQP的主要特征是面向消息、队列、路由（包括点对点和发布/订阅）、可靠性、安全。AMQP协议更多用在企业系统内，对数据一致性、稳定性和可靠性要求很高的场景，对性能和吞吐量的要求还在其次。</p>
+    <p>RabbitMQ/Kafka 都能提供消息队列服务，但有很大的区别。</p>
+    <p>在面向服务架构中通过消息代理（比如 RabbitMQ / Kafka等），使用生产者-消费者模式在服务间进行异步通信是一种比较好的思想。</p>
+    <p>因为服务间依赖由强耦合变成了松耦合。消息代理都会提供持久化机制，在消费者负载高或者掉线的情况下会把消息保存起来，不会丢失。就是说生产者和消费者不需要同时在线，这是传统的请求-应答模式比较难做到的，需要一个中间件来专门做这件事。其次消息代理可以根据消息本身做简单的路由策略，消费者可以根据这个来做负载均衡，业务分离等。</p>
+    <p>缺点也有，就是需要额外搭建消息代理集群（但优点是大于缺点的 ） 。</p>
+    <p>RabbitMQ 支持 AMQP（二进制），STOMP（文本），MQTT（二进制），HTTP（里面包装其他协议）等协议。Kafka 使用自己的协议。</p>
+    <p>Kafka 自身服务和消费者都需要依赖 Zookeeper。</p>
+    <p>RabbitMQ 在有大量消息堆积的情况下性能会下降，Kafka不会。毕竟AMQP设计的初衷不是用来持久化海量消息的，而Kafka一开始是用来处理海量日志的。</p>
+    <ul>
+        <li>RabbitMq比kafka成熟，在可用性上，稳定性上，可靠性上，RabbitMq超过kafka。</li>
+        <li>Kafka设计的初衷就是处理日志的，可以看做是一个日志系统，针对性很强，所以它并没有具备一个成熟MQ应该具备的特性。</li>
+        <li>Kafka的性能（吞吐量、tps）比RabbitMq要强，这篇文章的作者认为，两者在这方面没有可比性。</li>
+    </ul>
+    </details>
+
+#### Docker
+
+1. 什么是Docker、容器、镜像？
+    <details>
+    <summary>Ans</summary>
+    Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口。
+    <p>容器技术是轻量级的虚拟化技术，容器之间共享宿主机的内核，容器之间相互隔离，每个容器有自己的文件系统，容器之间进程相互隔离，互不影响。</p>
+    <p>镜像是一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含运行某个软件所需的所有内容，包括代码、运行时、库、环境变量和配置文件。</p>
+    </details>
+
+2. Docker 和 虚拟机有啥不同？
+    <details>
+    <summary>Ans</summary>
+    <p>docker 是轻量级的沙盒，在其中运行的只是应用，虚拟机里面还有额外的系统。</p>
+    </details>
+
+3. Docker 安全么？
+    <details>
+    <summary>Ans</summary>
+    docker 利用了 Linux 内核中很多安全特性来保证不同容器之间的隔离，并且通过签名机制来对镜像进行验证。大量生产环境的部署证明，docker 虽然隔离性无法与虚拟机相比，但仍然具有极高的安全性。
+    </details>
+
+4. 如何清理后台停止的容器？
+    <details>
+    <summary>Ans</summary>
+    docker rm $(docker ps -a -q -f status=exited)
+    </details>
+
+5. 如何查看镜像支持的环境变量？
+    <details>
+    <summary>Ans</summary>
+    可以使用 docker run image env 命令
+    </details>
+
+6. 当启动容器的时候提示，exec format error? 如何解决？
+    <details>
+    <summary>Ans</summary>
+    <p>exec format error 是因为容器镜像的操作系统和宿主机的操作系统不兼容导致的，比如容器镜像是基于 Linux 的，而宿主机是 Windows，或者容器镜像是基于 64 位的，而宿主机是 32 位的。</p>
+    <p>解决方法：</p>
+    <ul>
+        <li>更换宿主机的操作系统，使其与容器镜像的操作系统兼容。</li>
+        <li>更换容器镜像，使其与宿主机的操作系统兼容。</li>
+        <li>使用 Docker 的多架构支持，将容器镜像转换为与宿主机的操作系统兼容的格式。</li>
+    </ul>
+    </details>
+
+7. 本地的镜像文件都存放在哪里？
+    <details>
+    <summary>Ans</summary>
+    <p>在 Linux 系统中，Docker 镜像文件默认存放在 /var/lib/docker 目录下，具体位置在 /var/lib/docker/overlay2 目录下。</p>
+    <p>在 Windows 系统中，Docker 镜像文件存放在 C:\ProgramData\Docker\windowsfilter 目录下。</p>
+    </details>
+
+8. 如何退出一个镜像bash，而不终止它？
+    <details>
+    <summary>Ans</summary>
+    按 Ctrl+p，后按 Ctrl+q，如果按 Ctrl+c 会使容器内的应用进程终止，进而会使 容器终止。
+    </details>
+
+9. 退出容器时自动删除？
+    <details>
+    <summary>Ans</summary>
+    -rm ; docker run -rm -it ubuntu
+    </details>
+
+10. 如何批量清理临时镜像文件？
+    <details>
+    <summary>Ans</summary>
+    docker rmi $(docker images -f dangling=true -q)
+    </details>
+
+11. docker 镜像应该遵循哪些原则？
+    <details>
+    <summary>Ans</summary>
+    整体上，尽量保持镜像功能上的明确和内容的精简。
+    <ul>
+        <li>尽量选取满足需求但较小的基础系统镜像</li>
+        <li>清理编译生成文件、安装包的缓存等临时文件</li>
+        <li>安装各个软件时需要指定准确的版本号，并避免引入不必要依赖</li>
+        <li>从安全角度考虑，应用尽量使用系统的库和依赖</li>
+        <li>使用dockerfile 创建镜像时，添加.dockerignore或使用干净的工作目录</li>
+    </ul>
+    </details>
+
+12. 容器退出后，通过docker ps 命令看不到，数据会丢失么？
+    <details>
+    <summary>Ans</summary>
+    容器退出后，数据不会丢失，除非你明确删除了容器。容器退出后，容器内的数据仍然存在，可以通过docker start命令重新启动容器，或者使用docker attach命令重新连接到容器。
+    <hr>
+    使用 docker ps -a 查看
+    </details>
+
+13. 如何停止所有正在运行的容器？
+    <details>
+    <summary>Ans</summary>
+    使用 docker kill $(docker ps -q) 命令
+    </details>
+
+14. 如何删除所有正在运行的容器？
+    <details>
+    <summary>Ans</summary>
+    使用 docker rm $(docker ps -q) 命令
+    </details>
+
+15. 很多应用容器都是默认后台运行的，怎么查看它们的输出和日志信息？
+    <details>
+    <summary>Ans</summary>
+    使用 docker logs container_id
+    </details>
+
+16. 如何在控制容器占用系统资源(CPU、内存)的限制？
+    <details>
+    <summary>Ans</summary>
+    使用 docker run 命令的 -m 或 --memory 参数来限制容器的内存使用量，使用 --cpus 参数来限制容器的 CPU 使用量。
+    </details>
+
+17. 仓库、注册服务器、注册索引有什么关系？
+    <details>
+    <summary>Ans</summary>
+    仓库（Repository）是存储镜像的地方，注册服务器（Registry）是存储仓库的服务器，注册索引（Index）是用于搜索和查找仓库的目录。
+    </details>
 
 #### 常用词汇理解
 
@@ -647,6 +983,29 @@ author: feng6917
     </ul>
     </details>
 
+2. Keycloak 是什么？
+    <details>
+    <summary>Ans</summary>
+    Keycloak是一个开源的身份和访问管理解决方案，它提供了诸如单点登录（SSO）、多因素认证、用户管理、权限管理等功能。Keycloak可以帮助开发人员轻松地集成身份验证和授权功能到他们的应用程序中，而无需自己编写复杂的身份验证和授权逻辑。
+    [详细了解参考](https://blog.csdn.net/m0_63144319/article/details/138858366)
+    </details>
+
+3. 单点登录 SSO?
+    <details>
+    <summary>Ans</summary>
+    单点登录（Single Sign-On，SSO）是一种身份验证和授权机制，允许用户在一个地方登录，然后访问多个应用程序或系统，而无需在每个应用程序或系统中单独登录。单点登录的主要目标是简化用户身份验证过程，提高用户体验，并减少管理成本。
+    </details>
+
+4. 设计模式？
+    <details>
+    <summary>Ans</summary>
+    设计模式（Design Pattern）是解决特定问题的经过验证的解决方案，它们在软件开发中得到了广泛的应用。设计模式可以帮助开发人员更好地理解和解决常见的问题，提高代码的可维护性和可扩展性。
+    <p>个人理解，设计模式相当于一种特殊的方法，把一些常用的解决方法归纳出来，形成一种固定的模式，方便以后使用。<p>
+    在项目中有使用到的模式，单例模式（数据库池 单例，唯一DB 进行操作）；工厂模式（多平台上传数据，OSS，MINIO，Hw等，统一实现上传等方法，避免紧密耦合）；适配器模式（协议结构体与内部对象的转换器，不用考虑参数增删，做到兼容）
+    <hr>
+    [详细了解参考](https://juejin.cn/post/7095581880200167432)
+    </details>
+
 [返回上级](https://feng6917.github.io/language-gulang/#面试题)
 
 [Go Learn](https://feng6917.github.io/language-gulang/#目录)
@@ -656,3 +1015,5 @@ author: feng6917
 
 - [Go常见面试题【由浅入深】2022版](https://zhuanlan.zhihu.com/p/471490292)
 - [WebSocket 面试题](https://www.cnblogs.com/zhaozhitong/p/12450124.html)
+- [100%的面试官都会问的HTTP面试题](https://zhuanlan.zhihu.com/p/135947893)
+- [面试官：消息队列使用场景有哪些？](https://cloud.tencent.com/developer/article/1961095)
