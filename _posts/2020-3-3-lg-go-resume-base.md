@@ -14,7 +14,12 @@ author: feng6917
 
 #### 目录
 
-[Go基础](#go基础)
+- [Go基础](#go基础)
+- [网络](#网络)
+- [微服务](#微服务)
+- [消息队列](#消息队列)
+- [Docker](#docker)
+[]()
 
 [常用词汇理解](#常用词汇理解)
 
@@ -954,6 +959,42 @@ author: feng6917
     <details>
     <summary>Ans</summary>
     仓库（Repository）是存储镜像的地方，注册服务器（Registry）是存储仓库的服务器，注册索引（Index）是用于搜索和查找仓库的目录。
+    </details>
+
+18. 如何更改docker的默认存储设置？
+    <details>
+    <summary>Ans</summary>
+    可以通过修改 Docker 的配置文件来更改默认存储设置。在 Linux 系统中，Docker 的配置文件通常位于 /etc/docker/daemon.json。在 Windows 系统中，Docker 的配置文件通常位于 C:\ProgramData\Docker\config\daemon.json。
+
+    可以使用软连接
+    </details>
+
+19. 如何将一台宿主机的 docker 环境迁移到另外一台宿主机?
+    <details>
+    <summary>Ans</summary>
+    可以通过以下步骤将一台宿主机的 Docker 环境迁移到另外一台宿主机：
+    <ul>
+        <li>备份宿主机的 Docker 数据。可以使用以下命令将 Docker 数据备份到指定目录：
+            <pre>
+            docker save -o /path/to/backup.tar $(docker images -q)
+            </pre>
+        </li>
+        <li>将备份文件复制到目标宿主机。可以使用 scp 或其他文件传输工具将备份文件复制到目标宿主机。
+            <pre>
+            scp /path/to/backup.tar user@target-host:/path/to/backup.tar
+            </pre>
+        </li>
+        <li>在目标宿主机上加载备份文件。使用以下命令在目标宿主机上加载备份文件：
+            <pre>
+            docker load -i /path/to/backup.tar
+            </pre>
+        </li>
+        <li>启动容器。使用以下命令启动容器：
+            <pre>
+            docker start container_id
+            </pre>
+        </li>
+    </ul>
     </details>
 
 #### 常用词汇理解
