@@ -943,9 +943,9 @@ collation-server=utf8mb4_unicode_ci</code></pre>
     <summary>Ans</summary>
     <p>以下情况下创建了索引但无法使用：</p>
     <ul>
-        <li>查询条件中使用了函数或表达式，无法使用索引。</li>
-        <li>查询条件中使用了OR操作符，无法使用索引。</li>
-        <li>查询条件中使用了LIKE操作符，且通配符不在最左侧，无法使用索引。</li>
+        <li>查询条件中使用了函数或表达式，无法使用索引。（函数表达式或操作符生效情况下）</li>
+        <li>查询条件中使用了OR操作符，无法使用索引。（另外的条件生效情况下，即有值）</li>
+        <li>查询条件中使用了LIKE操作符，且通配符在最左侧，无法使用索引。</li>
         <li>查询条件中使用了NOT操作符，无法使用索引。</li>
         <li>查询条件中使用了!=操作符，无法使用索引。</li>
     </ul>
@@ -973,6 +973,38 @@ collation-server=utf8mb4_unicode_ci</code></pre>
     <details>
     <summary>Ans</summary>
     <p>%表示任意多个字符，_表示任意一个字符。</p>
+    </details>
+
+66. 如何优化数据库（表设计及SQL优化）？
+    <details>
+    <summary>Ans</summary>
+    <p>1. 表设计优化：</p>
+    <ul>
+        <li>使用合适的数据类型，避免使用过大的数据类型。</li>
+        <li>合理使用索引，避免创建过多的索引。</li>
+        <li>避免使用外键约束，外键约束会降低查询性能。</li>
+        <li>避免使用触发器、存储过程等复杂操作，它们会降低查询性能。</li>
+        <li>减少表关联，加入冗余字段</li>
+        <li>尽量把字段设置为NOT NULL</li>
+        <li>主从复制，读写分离，分库分表</li>
+    </ul>
+    <p>2. SQL优化：</p>
+    <ul>
+        <li>避免使用SELECT *，只查询需要的列。</li>
+        <li>避免使用LIKE操作符，可以使用全文索引代替。</li>
+    </ul>
+    [MySQL EXPLAIN type类型说明](https://blog.csdn.net/qq_27676247/article/details/79387637)
+    <hr>
+    由上至下，性能从最差到最好
+    <ul>
+        <li>ALL 全表扫描，扫描全表来找到匹配的行</li>
+        <li>Index 索引全扫描，遍历整个索引来查找最匹配的行</li>
+        <li>range 索引范围扫描，常见于<、>、between 等操作符</li>
+        <li>ref 使用非唯一性索引或者唯一性索引的前缀扫描，返回匹配某个单独值得记录行。</li>
+        <li>eq_ref 相对于red来说使用得是唯一索引，对于每个索引键值，只有唯一得一条匹配记录</li>
+        <li>const/system 单表中最多只有一条匹配行，查询起来非常迅速，所以这个匹配行中其他列中得值可以被优化器在当前查询中当作常量来处理。</li>
+        <li>NULL，mysql 不用访问表或索引就直接能得到结果。</li>
+    </ul>
     </details>
 
 [返回上级](https://feng6917.github.io/language-golang/#面试题)

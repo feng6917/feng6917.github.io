@@ -718,6 +718,69 @@ author: feng6917
     <p>如果key 过期时间 过于集中，到过期的那个时间点，redis 可能会出现短暂的卡顿现象。一般需要在时间上加一个随机值，使得过期时间分散一些。</p>
     </details>
 
+41. Redis 缓存
+    <details>
+    <summary>Ans</summary>
+    redis是内存中的数据结构存储系统，一个key-value类型的非关系型数据库，可持久化的数据库，相对于关系型数据库，性能高，因此我们一般用redis来做缓存使用；并且redis支持丰富的数据类型，比较容易解决各种问题，因此redis可以用来作注册中心，数据库、缓存和消息中间件。redis values 可以是字符串（String），哈希（Hash），列表（List），集合（Set）和有序集合（Sorted Set）等数据类型。
+
+    <ul>
+        <li>string: 一个key对应一个value</li>
+        <li>hash: 它的key是string类型，value 是一个map(key-value),适合存储对象。</li>
+        <li>list: 按照插入顺序的字符串链表（双向链表），主要命令是LPUSH和RPUSH，能够支持反向查找和遍历。</li>
+        <li>Set： 用哈希表类型的字符串序列，没有顺序，集合成员是唯一的，没有重复数据，底层主要是由一个value永远为null的hashmap来实现的。</li>
+        <li>Zset: 和set类型基本一致，不过它会给每个元素关联一个double类型的分数(score),这样就可以为成员排序，并且插入是有序的。</li>
+    </ul>
+    </details>
+
+42. Memcache 和 redis的区别:
+    <details>
+    <summary>Ans</summary>
+    数据支持的类型： redis 不仅仅支持简单的k/v类型的数据，同事还支持list、set、zset、hash等数据结构的存储；memcache 只支持简单的k/v类型的数据，key和value都是字符串类型。
+    <hr>
+    可靠性：memcache 不支持数据持久化，断电后重启后数据丢失，但其稳定性是有保证的；redis支持数据持久化和数据恢复，允许单点故障，但是同时也会付出性能的代价。
+    <hr>
+    性能上：对于存储大数据，memcache 的性能要高于redis.
+    </details>
+
+43. redis的安全机制（你们公司redis的安全这方面怎么考虑的？）
+    <details>
+    <summary>Ans</summary>
+    <p>漏洞介绍：redis 默认情况下，会绑定再bing 0.0.0.0:6379, 这样就会将redis的服务暴露到公网上，如果在没有开启认证的情况下，可以导致任意用户在访问目标服务器的情况下，未授权就可访问redis以及读取redis的数据，攻击者就可以在未授权访问redis的情况下可以利用redis的相关方法，成功在redis服务器上写入公钥，进而可以直接使用私钥进行直接登录目标主机。</p>
+    解决方案：
+    <ul>
+        <li>禁止一些高危命令。修改redis.conf文件，用来禁止远程修改DB文件地址</li>
+        <li>以低权限运行redis服务。为redis服务创建单独的用户和根目录，并且配置禁止登录</li>
+        <li>为redis添加密码验证，修改redis.conf文件，添加requirepass mypassword</li>
+        <li>禁止外网访问redis,修改redis.conf文件，添加或修改bind 127.0.0.1,使得redis服务只在当前主机使用;</li>
+        <li>做log监控，即使发现攻击</li>
+    </ul>
+    </details>
+
+44. redis的哨兵机制？
+    <details>
+    <summary>Ans</summary>
+    <p>监控：监控主数据库和从数据库是否正常运行</p>
+    <p>提醒：当被监控的某个redis出现问题的时候，哨兵可以通过API想管理员或其他程序发送通知</p>
+    <p>自动故障转移：主数据库出现故障时，可以自动将从数据库转化为主数据库，实现自动切换；</p>
+    <p>如果master 主服务器设置了密码，记得在哨兵的配置文件(sentinel.conf)中配置访问密码</p>
+    <p></p>
+
+    <p></p>
+    </details>
+
+45. redis 对于生存时间的应用
+    <details>
+    <summary>Ans</summary>
+    <p>redis 可以使用expire命令设置一个键的生存时间，到时间后自动删除</p>
+    应用场景：
+    <ul>
+        <li>设置限制的优惠活动的信息</li>
+        <li>一些及时需要更新的数据，积分排行榜</li>
+        <li>手机验证码的时间</li>
+        <li>限制网站访客访问频率</li>
+    </ul>
+    </details>
+
 [返回上级](https://feng6917.github.io/language-golang/#面试题)
 
 [Go Learn](https://feng6917.github.io/language-golang/#目录)
