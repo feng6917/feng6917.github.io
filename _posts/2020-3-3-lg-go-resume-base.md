@@ -3,7 +3,7 @@ layout: post
 title: "面试题-八股文问题"
 date:   2020-3-3
 tags: 
-  - Gulang
+  - Golang
 comments: true
 author: feng6917
 ---
@@ -28,7 +28,6 @@ author: feng6917
 #### Go基础
 
 1. = 和 := 的区别
-
     <details>
     <summary>Ans</summary>
     = 赋值变量，赋值操作符
@@ -39,7 +38,6 @@ author: feng6917
     </details>
 
 2. 指针的作用
-
     <details>
     <summary>Ans</summary>
     <ul>
@@ -533,6 +531,12 @@ author: feng6917
     <p>context 的作用就是在不同的goroutine之间 同步请求特定的数据，取消信号以及处理请求的截至日期。</p>
     </details>
 
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
+
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
+
 #### 网络
 
 1. grpc 是什么？
@@ -765,6 +769,12 @@ author: feng6917
     <summary>Ans</summary>
     <p>post 先去检测一下服务器能够正常应答，然后再把data携带进去，如果应答不了，就没有了第二步数据传输。就好像送快递一样，送之前先打电话，确认是否在家，在家再送过去，避免白跑一趟，资源浪费。</p>
     </details>
+
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
+
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### 微服务
 
@@ -999,7 +1009,7 @@ author: feng6917
     <summary>Ans</summary>
     当一台服务器的性能达到极限时，我们可以使用服务器集群来提高网站的整体性能。那么，在服务器集群中，需要有一台服务器充当调度者的角色，用户的所有请求都会首先由它接收，调度者再根据每台服务器的负载情况讲请求分配给某一后端服务器去处理。
     <hr>
-    1. http 重定向负载均衡
+    <p>1.http 重定向负载均衡</p>
         <p>原理：当用户向服务器发起请求时，请求首先被集群调度者截获；调度者根据某种分配策略，选择一台服务
         器，并将选中的服务器的IP地址封装在HTTP响应消息头部的Location字段中，并将响应消息的状态码设为
         302，最后将这个响应消息返回给浏览器。当浏览器收到响应消息后，解析Location字段，并向该URL发起请
@@ -1011,7 +1021,7 @@ author: feng6917
         览器需要每次请求两次服务器才能拿完成一次访问，性能较差。而且调度服务器在调度时，无法知道当前用户
         将会对服务器造成多大的压力，只不过是把请求次数平均分配给每台服务器罢了，浏览器会与后端服务器直接交互。</p>
     <hr>
-    2. 反向代理负载均衡
+    <p>2. 反向代理负载均衡</p>
         <p>原理：反向代理服务器是一个位于实际服务器之前的服务器，所有向我们网站发来的请求都首先要经过反向代
         理服务器，服务器根据用户的请求要么直接将结果返回给用户，要么将请求交给后端服务器处理，再返回给用
         户。反向代理服务器就可以充当服务器集群的调度者，它可以根据当前后端服务器的负载情况，将请求转发给
@@ -1044,7 +1054,7 @@ author: feng6917
         </ul>
         <p></p>
     <hr>
-    3. IP负载均衡。
+    <p>3. IP负载均衡。</p>
     <ul>
         <li>通过NAT实现负载均衡：响应报文一般比较大，每一次都需要NAT转换的话，大流量的时候，会导致调度器成为一个瓶颈。</li>
         <li>通过直接路由实现负载均衡</li>
@@ -1054,8 +1064,15 @@ author: feng6917
 22. 分布式事务 异步通信问题解决方案。
     <details>
     <summary>Ans</summary>
-    1. 延迟队列。 2. 定时轮询扫描。
+    <p>1. 延迟队列。</p>
+    <p>2. 定时轮询扫描。</p>
     </details>
+
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
+
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### 消息队列
 
@@ -1132,6 +1149,12 @@ author: feng6917
     <hr>
     分布式，主要还是从部署的角度，将应用按照访问压力进行归类，主要目标是充分利用服务器的资源，避免资源分配不均
     </details>
+
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
+
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### Docker
 
@@ -1291,10 +1314,15 @@ author: feng6917
     </ul>
     </details>
 
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
+
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
+
 #### 常用词汇理解
 
 1. QPS、TPS、RT、并发数理解和性能优化
-
     <details>
     <summary>Ans</summary>
     QPS (Queries Per Second) 每秒查询数
