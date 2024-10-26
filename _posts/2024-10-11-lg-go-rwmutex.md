@@ -29,7 +29,7 @@ author: feng6917
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
 
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### 二、RWMutex 数据结构
 
@@ -120,7 +120,7 @@ author: feng6917
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
 
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### 三、场景分析
 

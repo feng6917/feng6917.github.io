@@ -127,7 +127,7 @@ author: feng6917
 2. html 语法
     <hr />
 
-    <hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+    <hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### 七、折叠
 

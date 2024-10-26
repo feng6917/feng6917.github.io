@@ -64,7 +64,7 @@ type Context interface {
 
     有一种context，它不是用于控制呈梳妆分布的goroutine,而是用于在树状分布的goroutine间传递消息。Value()方法就是用于此种类型的context，该方法根据key值查询map中的value.
 
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
@@ -140,7 +140,7 @@ struct cancelCtx, timeCtx, valueCtx都继承于Context。
 - WithTimeout()
     > WithTimeout()实际调用了WithDeadline,二者实现原理一致。
 
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>

@@ -33,7 +33,7 @@ author: feng6917
 
 注意，对于函数外部没有引用的对象，也有可能放在堆中，比如内存过大超过栈的存储能力。
 
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### 二、逃逸场景
 
@@ -179,7 +179,7 @@ author: feng6917
     ./main.go:14:9: func literal escapes to heap
     ```
 
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>

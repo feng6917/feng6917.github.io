@@ -33,7 +33,7 @@ author: feng6917
     <a href="#目录" style="text-decoration: none;">返回目录</a>
 </div>
 
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### 利用Cron实现定时备份
 
@@ -107,7 +107,7 @@ author: feng6917
     <a href="#目录" style="text-decoration: none;">返回目录</a>
 </div>
 
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 参考链接：
 

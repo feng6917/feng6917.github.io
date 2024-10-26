@@ -41,7 +41,7 @@ P的个数在程序启动时决定，默认情况下等同于CPU得核数，由�
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
 
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### 二、Goroutine 调度策略
 

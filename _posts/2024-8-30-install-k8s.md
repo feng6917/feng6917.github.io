@@ -42,12 +42,11 @@ author: feng6917
     > kubectl version -o json # 显示版本信息
     ```
 
-
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
 
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### Centos7.9 部署 Kubeadmin
 
@@ -1032,12 +1031,11 @@ author: feng6917
 
 > centos 安装 k8s 基本参考 【kubernetes 最新版安装单机版 v1.21.5】，之所以 cpoy 一遍文章内容，主要担心原文丢失！！
 
-
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
 
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### 安装包 部署 K8s 集群
 >

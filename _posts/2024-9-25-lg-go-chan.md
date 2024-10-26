@@ -26,7 +26,7 @@ author: feng6917
   - 无缓冲的 `Channel` 在发送和接收操作之间没有缓冲区，因此发送操作和接收操作必须同时进行，否则会阻塞。
   - 而有缓冲的 `Channel` 在发送和接收操作之间有一个缓冲区，因此发送操作和接收操作可以异步进行，只有当缓冲区满时发送操作才会阻塞，只有当缓冲区空时接收操作才会阻塞。
 
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### 二、Channel 结构
 
@@ -99,7 +99,7 @@ author: feng6917
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
 
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### 三、Channel 读写
 
@@ -156,7 +156,7 @@ author: feng6917
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### 四、Channel 常见用法
 
@@ -263,7 +263,7 @@ author: feng6917
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
 
-<hr style="background-color: blue;border: none;height: 10px;opacity: .1;width: 100%" />
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
 #### 五、Channel 应用
 
