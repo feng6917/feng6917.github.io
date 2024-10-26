@@ -1007,6 +1007,16 @@ collation-server=utf8mb4_unicode_ci</code></pre>
     </ul>
     </details>
 
+67. 大数据量有索引为什么请求时间仍然很长？
+    <details>
+    <summary>Ans</summary>
+    <p>大数据量有索引为什么请求时间仍然很长？</p>
+    <p>1. 索引失效或者没有使用最右索引</p>
+    <p>2. 索引没有覆盖到查询的字段</p>
+    <p>3. 查询的数据量过大或者查询过于复杂（多表关联、聚合等），导致查询时间过长</p>
+    <p>4. 数据库服务器性能不足，导致查询时间过长</p>
+    </details>
+
 [返回上级](https://feng6917.github.io/language-golang/#面试题)
 
 [Go Learn](https://feng6917.github.io/language-golang/#目录)

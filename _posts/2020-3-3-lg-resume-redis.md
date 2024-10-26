@@ -781,6 +781,53 @@ author: feng6917
     </ul>
     </details>
 
+46. redis 實現消息队列的几种方式？
+    <details>
+    <summary>Ans</summary>
+    <p>1. list结构：使用lpush和rpop实现消息队列，使用lpush将消息放入队列，使用rpop从队列中取出消息。</p>
+    <p>2. sorted set结构：使用zadd和zrangebyscore实现消息队列，使用zadd将消息放入队列，使用zrangebyscore从队列中取出消息。</p>
+    <p>3. pub/sub：发布订阅模式，发送者（pub）发送消息，订阅者（sub）接收消息。</p>
+    </details>
+
+47. redis stream 队列？
+    <details>
+    <summary>Ans</summary>
+    <p>Redis Stream 是 Redis 5.0 版本新增加的数据结构。</p>
+    <p>Redis Stream 主要用于消息队列（MQ，Message Queue），Redis 本身是内存数据库，而消息队列通常用于存储临时数据，因此 Redis Stream 将消息存储在内存中，以实现高速的消息读取。</p>
+    <p>Redis Stream 提供了消息的持久化和主备复制功能，这样 Redis Stream 就可以实现更可靠的消息队列。</p>
+    基本命令：
+    <ul>
+        <li>创建stream：XADD key ID field value [field value ...]</li>
+        <li>消费stream：XREAD [COUNT count] [BLOCK milliseconds] STREAMS key [key ...] ID [ID ...]
+        （1. 从0条消息读取 2. 从 指定位置读取 3. 一直阻塞读取 4. 从 起始-结束位置 读取若干条）
+        </li>
+        <li>删除stream：XDEL key ID [ID ...]</li>
+        <li>删除所有已消费的消息：XTRIM key MAXLEN [~] count</li>
+    </ul>
+    xgroup 消费者组：
+    <ul>
+        <li>创建消费者组：XGROUP CREATE key groupname id-or-$</li>
+        <li>读取消费者组中的消息：XREADGROUP GROUP groupname consumer [COUNT count] [BLOCK milliseconds] [NOACK] STREAMS key [key ...] ID [ID ...]</li>
+        <li>确认消息：XACK key group id [id ...]</li>
+        <li>查看消费者组中的消息：XINFO GROUPS key</li>
+        <li>查看消费者组中的消费者：XINFO CONSUMERS key groupname</li>
+        <hr>
+        <li>Pending 等待列表: 通过xreadgroup 读取消息时消息会分配给对应的消费者，每个消费者都内部维护一个pending列表用于保存接收到的消息，当消息ack后会从pending列表内移除，也就是说 pending 列表内维护的是所有未 ack 的消息的ID。</li>
+        <li>
+            消息转移：
+            <p>当消费者接收到消息却不能正确消费时（报错或其他原因），可以使用 XCLAIM 将消息转移给其他消费者消费，需要设置组、转移的目标消费者和消息ID，同时需要提供IDLE（已被读取时长），只有超过这个时长，才能被转移。</p>
+            <p>通过 Xclaim 转移的消息只是将消息移入另一个消费者的pending列表，消费者并不能通过xreadgroup读取到消息，只能通过xpending读取到。</p>
+        </li>
+    </ul>
+    </details>
+
+48. redis 百万级别数据比较?
+    <details>
+    <summary>Ans</summary>
+    <p>1. 使用redis的set数据结构，将数据存入set中，然后使用sinter命令获取交集。</p>
+    <p>2. 使用redis的zset数据结构，将数据存入zset中，然后使用zinter命令获取交集。</p>
+    </details>
+
 [返回上级](https://feng6917.github.io/language-golang/#面试题)
 
 [Go Learn](https://feng6917.github.io/language-golang/#目录)

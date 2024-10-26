@@ -531,6 +531,30 @@ author: feng6917
     <p>context 的作用就是在不同的goroutine之间 同步请求特定的数据，取消信号以及处理请求的截至日期。</p>
     </details>
 
+52. go 切片可以赋值给数组么？
+    <details>
+    <summary>Ans</summary>
+    <p>不可以，切片和数组是不同的类型，不能直接赋值。</p>
+    </details>
+
+53. goroutine 如何关闭？
+    <details>
+    <summary>Ans</summary>
+    <p>1. chan 关闭chan</p>
+    <p>2. chan 轮询，类似信号方法</p>
+    <p>3. context cancel</p>
+    </details>
+
+54. 如何理解CSP(不要使用共享内存来通信，通过通信来共享内存)？
+    <details>
+    <summary>Ans</summary>
+    前后两个通信的概念不同，内存能够通过多个线程读到，修改内存数据，即可达到通过内存来通信。
+    <hr>
+    在go中，一个内存由一个线程来负责，另外一个线程要操作这块内存，需要当前线程让渡所有权，这个所有权的让渡过程是"通信"。
+    <hr>
+    本质上，两种模式谋求的都是同一时刻只有一个线程在操作同一块内存，以保护逻辑的原子性。后者通过引入所有权的概念，channel和临时变量，简化了操作约定。
+    </details>
+
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
@@ -1142,12 +1166,13 @@ author: feng6917
     <p>3.2 消息消费时，保证消息幂等性</p>
     </details>
 
-6. SOA和分布式的区别？
+6. kafka 数据存储在什么地方？
     <details>
     <summary>Ans</summary>
-    SOA，将工程拆分成服务层、表现层两个工程，服务层中包含业务逻辑，只需要对外提供服务即可。表现层只需要处理和页面的交互，业务逻辑都是调用服务层的服务来实现。
-    <hr>
-    分布式，主要还是从部署的角度，将应用按照访问压力进行归类，主要目标是充分利用服务器的资源，避免资源分配不均
+    <p>Kafka 数据存储在 Kafka 代理节点上的磁盘上。每个 Kafka 代理节点都被称为一个 broker。每个 broker 负责存储一个或多个 partition（分区）的数据。</p>
+    <p>在 Kafka 中，数据被组织成 topic（主题），每个 topic 可以有一个或多个 partition。每个 partition 是一个有序的、不可变的消息序列，这些消息被连续地追加到 partition 的末尾。每个 partition 都有一个唯一的编号，这个编号从 0 开始。</p>
+    <p>每个 partition 的数据存储在 broker 的磁盘上，具体位置由 broker 的配置决定。默认情况下，Kafka 将数据存储在 broker 的 log.dirs 配置指定的目录中。这个配置可以是一个目录的路径，也可以是一个目录路径的列表。如果配置的是一个目录路径的列表，Kafka 将在列表中的目录中选择一个目录来存储数据。</p>
+    <p>每个 partition 的数据由多个 segment（段）组成，每个 segment 包含一系列连续的消息。每个 segment 都有一个唯一的编号，这个编号从 0 开始。每个 segment 都有一个 .log 文件和一个 .index 文件，其中 .log 文件存储实际的</p>
     </details>
 
 <div style="text-align: right;">
@@ -1350,7 +1375,7 @@ author: feng6917
     <details>
     <summary>Ans</summary>
     Keycloak是一个开源的身份和访问管理解决方案，它提供了诸如单点登录（SSO）、多因素认证、用户管理、权限管理等功能。Keycloak可以帮助开发人员轻松地集成身份验证和授权功能到他们的应用程序中，而无需自己编写复杂的身份验证和授权逻辑。
-    [详细了解参考](https://blog.csdn.net/m0_63144319/article/details/138858366)
+    <a href="https://blog.csdn.net/m0_63144319/article/details/138858366">详细了解参考</a>
     </details>
 
 3. 单点登录 SSO?
@@ -1366,7 +1391,7 @@ author: feng6917
     <p>个人理解，设计模式相当于一种特殊的方法，把一些常用的解决方法归纳出来，形成一种固定的模式，方便以后使用。<p>
     在项目中有使用到的模式，单例模式（数据库池 单例，唯一DB 进行操作）；工厂模式（多平台上传数据，OSS，MINIO，Hw等，统一实现上传等方法，避免紧密耦合）；适配器模式（协议结构体与内部对象的转换器，不用考虑参数增删，做到兼容）
     <hr>
-    [详细了解参考](https://juejin.cn/post/7095581880200167432)
+    <a href="https://juejin.cn/post/7095581880200167432">详细了解参考</a>
     </details>
 
 5. 跨域？
