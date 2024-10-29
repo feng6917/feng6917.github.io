@@ -1017,6 +1017,25 @@ collation-server=utf8mb4_unicode_ci</code></pre>
     <p>4. 数据库服务器性能不足，导致查询时间过长</p>
     </details>
 
+68. MySQL为什么用B+树而不是B树？
+    <details>
+    <summary>Ans</summary>
+    <p>MySQL使用B+树而不是B树的原因是B+树更适合数据库的存储和查询需求。</p>
+    <p>B+树的特点：</p>
+    <ul>
+        <li>所有数据都存储在叶子节点上，非叶子节点只存储索引。</li>
+        <li>叶子节点之间有指针相连，方便范围查询。</li>
+        <li>查询效率高，查询时间与树的高度成正比。</li>
+    </ul>
+    <p>数据库的存储和查询需求：</p>
+    <ul>
+        <li>数据库需要存储大量的数据，B+树可以有效地利用磁盘空间。</li>
+        <li>数据库需要进行范围查询，B+树的叶子节点之间有指针相连，方便范围查询。</li>
+        <li>数据库需要高效地查询数据，B+树的查询效率高，查询时间与树的高度成正比。</li>
+    </ul>
+    <a href="https://www.jianshu.com/p/7ce804f97967">参考连接</a>
+    </details>
+
 [返回上级](https://feng6917.github.io/language-golang/#面试题)
 
 [Go Learn](https://feng6917.github.io/language-golang/#目录)

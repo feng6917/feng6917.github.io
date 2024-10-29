@@ -278,22 +278,22 @@ author: feng6917
         <li>内存回收 标记清除、三色标记、+ 混合写屏障法</li>
     </ul>
     参考：
-    [内存分配](https://feng6917.github.io/lg-go-gc-1/)
-    [内存回收](https://feng6917.github.io/lg-go-gc-2/)
+    <a href="https://feng6917.github.io/lg-go-gc-1/">内存分配</a>
+    <a href="https://feng6917.github.io/lg-go-gc-2/">内存回收</a>
     </details>
 
 29. mutex有几种模式？分别是什么？
     <details>
     <summary>Ans</summary>
     两种模式：正常模式和饥饿模式。
-    参考：[Mutex](https://feng6917.github.io/lg-go-mutex/)
+    <a href="https://feng6917.github.io/lg-go-mutex/">参考</a>
     </details>
 
 30. go 如何进行调度的？详细说一下
     <details>
     <summary>Ans</summary>
     <p>GMP</p>
-    参考：[goroutine](https://feng6917.github.io/lg-go-goroutine/)
+    <a href="https://feng6917.github.io/lg-go-goroutine/">参考</a>
     </details>
 
 31. go 什么时候发生阻塞，阻塞时，调度器会怎么做？
@@ -783,7 +783,7 @@ author: feng6917
     <p>在建立连接后，浏览器会向目标服务器发起 HTTP-GET 请求，包括其中的 URL，HTTP 1.1 后默认使用长连接，只需要一次握手即可多次传输数据。</p>
     <p>如果目标服务器只是一个简单的页面，就会直接返回。但是对于某些大型网站的站点，往往不会直接返回主机名所在的页面，而会直接重定向。返回的状态码就不是 200 ，而是 301,302 以 3 开头的重定向码，浏览器在获取了重定向响应后，在响应报文中 Location 项找到重定向地址，浏览器重新第一步访问即可。</p>
     <p>然后浏览器重新发送请求，携带新的 URL，返回状态码 200 OK，表示服务器可以响应请求，返回报文。</p>
-    [详细了解参考](https://blog.csdn.net/Newbie___/article/details/107212575)
+    <a href="https://blog.csdn.net/Newbie___/article/details/107212575">详细了解参考</a>
     </details>
 
 16. 为什么post是两个TCP包呢？
