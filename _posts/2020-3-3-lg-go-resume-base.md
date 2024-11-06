@@ -55,7 +55,7 @@ author: feng6917
 >
 > Go语言没有内置的异常类型。在Go语言中，错误是通过返回值来处理的，而不是通过异常来处理的。这种错误处理方式被称为返回错误模式。
 
-##### 5. 什么是协程（Goroutine）?
+###### 5. 什么是协程（Goroutine）?
 
 1. goroutine是一种轻量级的线程,由go运行时管理，而不是由操作系统管理。
 2. goroutine可以看作用户态的线程，它们共享相同的地址空间，但它们之间没有共享的栈，因此它们之间切换开销非常小。
@@ -249,278 +249,297 @@ Go语言的内存管理机制主要基于Tcmalloc（Thread-Caching Malloc）算�
 
 4. **内存池**：Go语言使用内存池来减少内存分配和回收的开销。内存池将内存划分为不同的区域，每个区域用于存储特定大小的对象。当需要分配内存时，内存池会从合适的区域中获取内存，而不是直接从全局内存分配器中获取。当不再需要内存时，内存池会将内存返回到合适的区域中，而不是直接将内存归还给全局内存分配器。
 
-<hr>
+###### 29. mutex有几种模式？分别是什么？
 
-29. mutex有几种模式？分别是什么？
-    <details>
-    <summary>Ans</summary>
-    两种模式：正常模式和饥饿模式。
-    <a href="https://feng6917.github.io/lg-go-mutex/">参考</a>
-    </details>
+mutex 是 Go 语言中的一种同步原语，用于保护共享资源，防止多个 goroutine 同时访问。它是一种互斥锁，即同一时间只有一个 goroutine 可以持有该锁，其他 goroutine 需要等待锁被释放后才能继续执行。
 
-30. Go 如何进行调度的？详细说一下
-    <details>
-    <summary>Ans</summary>
-    <p>GMP</p>
-    <a href="https://feng6917.github.io/lg-go-goroutine/">参考</a>
-    </details>
+1. 正常模式
+    - **等待队列**：等待获取互斥锁的goroutine按照先进先出（FIFO）的顺序排队。
+    - **竞争机制**：当一个goroutine被唤醒并试图获取互斥锁时，它与其他新到达的goroutine竞争锁的拥有权。新到达的goroutine有优势，因为它们已经在CPU上运行，并且可能有很多这样的goroutine。因此，被唤醒的goroutine有很大机会失败，并会被重新排队到等待队列的前面。
+    - **切换到饥饿模式**：如果一个goroutine等待超过1毫秒仍未获取到互斥锁，则互斥锁会切换到饥饿模式。
 
-31. Go 什么时候发生阻塞，阻塞时，调度器会怎么做？
-    <details>
-    <summary>Ans</summary>
-    <ul>
-        <li>原子、互斥量或通道操作导致goroutine阻塞，调度器将把当前阻塞的goroutine从本地运行队列LRQ换出，并重新调度其它goroutine；</li>
-        <li>网络请求和IO导致的阻塞，Go提供了网络轮询器（Netpoller）来处理，后台用epoll等技术实现IO多路复用。</li>
-        <li>channel阻塞：当goroutine读写channel发生阻塞时，会调用gopark函数，该G脱离当前的M和P，调度器将新的G放入当前M。</li>
-    </ul>
-    </details>
+2. 饥饿模式
+    - **直接传递所有权**：在饥饿模式下，互斥锁的所有权直接从释放锁的goroutine传递给等待队列中的第一个goroutine。
+    - **新goroutine的等待**：新到达的goroutine不会尝试获取互斥锁，即使它看起来是解锁状态，也不会自旋。相反，它们会排队到等待队列的末尾。
+    - **切换回正常模式**：如果一个goroutine获取了互斥锁，并且发现它是队列中的最后一个等待者，或者它等待的时间少于1毫秒，那么互斥锁会切换回正常操作模式。
 
-32. 如果一个G一直占用占用资源怎么办？
-    <details>
-    <summary>Ans</summary>
-    <ul>
-        <li>如果有个goroutine一直占用资源，那么GMP模型会从正常模式转变为饥饿模式（类似于mutex），允许其它goroutine使用work stealing抢占（禁用自旋锁）。</li>
-        <li>work stealing算法指，一个线程如果处于空闲状态，则帮其它正在忙的线程分担压力，从全局队列取一个G任务来执行，可以极大提高执行效率。</li>
-    </ul>
-    </details>
+3. `mutex.state`是32位的整型变量，内部实现时把该变量分成四份，用于记录Mutex的四种状态
+    - **mutexLocked**：表示互斥锁是否被锁定，1表示锁定，0表示未锁定。
+    - **mutexWoken**：表示是否唤醒过goroutine，1表示已经唤醒过，0表示没有唤醒过。
+    - **mutexStarving**：表示是否处于饥饿模式，1表示处于饥饿模式，0表示不处于饥饿模式。
+    - **mutexWaiterShift**：表示等待队列的长度，即等待获取互斥锁的goroutine的数量。
 
-33. goroutine 什么时候会发生泄露？
-    <details>
-    <summary>Ans</summary>
-    goroutine泄漏是指goroutine创建后，由于某种原因一直无法结束，导致资源无法释放。
-    <p>暂时性泄露：</p>
-    <ul>
-        <li>获取长字符串中的一段长字符未释放</li>
-        <li>获取长slice的一段导致长slice未释放</li>
-        <li>在长slice新建slice导致泄露</li>
-    </ul>
-    string相比切片少了一个容量的cap字段，可以把string当成一个只读的切片类型。获取长string或者切片中的一段内容，由于新生成的对象和老的string或者切片共用一个内存空间，会导致老的string和切片资源暂时得不到释放，造成短暂的内存泄漏
-    <p>永久性泄露：</p>
-    <ul>
-        <li>goroutine 永久阻塞而导致泄露</li>
-        <li>time.Ticker未关闭导致泄露</li>
-        <li>不正确使用Finalizer(Go版本的析构函数)导致泄露</li>
-    </ul>
-    </details>
+###### 30. Go 如何进行调度的？详细说一下？
 
-34. Go 竞态条件了解么？
-    <details>
-    所谓竞态竞争，就是当两个或以上的goroutine访问相同资源时，对资源进行读/写。
-    <p>比如 <code>var a int = 0</code>,有两个协程分别对 a+=1, 我们发现最后 a 不一定为2，这就是竞态竞争。</p>
-    <p>通常我们可以用<code>Go run -race xx.go</code> 来进行检测</p>
-    <p>解决方法是，对临界资源上锁，或者使用原子操作(atomics)，原子操作的开销小于上锁。还可以使用channel.</p>
-    </details>
+1. **Goroutine**：Goroutine是Go语言中的轻量级线程，它由Go运行时管理，而不是由操作系统管理。Goroutine的创建、销毁和切换开销非常小，因此可以创建大量的Goroutine。
 
-35. 若干个goroutine，有一个panic怎么办？
-    <details>
-    <summary>Ans</summary>
-    <p>有一个 panic，那么剩余的 goroutine 也会退出，程序退出。</p>
-    <p>如果不想程序退出，那么必须通过调用recover() 方法来捕获 panic 并恢复将要崩掉的程序。</p>
-    </details>
+2. **Processor**：Processor是Go语言调度器的基本执行单元，它负责执行Goroutine。每个Processor都有一个本地队列，用于存储等待执行的Goroutine。当Processor没有可执行的Goroutine时，它会从全局队列中获取Goroutine来执行。
 
-36. defer 可以捕捉goroutine的子goroutine么?
-    <details>
-    <summary>Ans</summary>
-    不可以。它们处于不同的调度器P中。对于子goroutine，必须通过 recover() 机制来进行恢复，然后结合日志进行打印(或者通过channel传递error).
-    </details>
+3. **M（Machine）**：Machine是Golang调度器中的执行线程，它负责将Goroutine映射到操作系统线程上。每个M都有自己的调用栈和寄存器状态。调度器会根据需要创建或销毁M，以适应并发任务的数量和系统负载。
 
-37. Go 是怎么做参数校验的？
-    <details>
-    <summary>Ans</summary>
-    Go 采用 validator 库进行参数校验，它支持多种校验规则，比如：required、email、min、max、len、oneof等。
+> `goroutine`的调度器使用了一种称为工作窃取（work stealing）和让出（hand off）的机制来提高并发性能。以下是一些关于工作窃取和让出的要点：
 
-    <p>它具有以下独特功能：</p>
-    <ul>
-        <li>使用验证Tag或自定义validator进行跨字段Field和跨结构体验证。</li>
-        <li>允许切片、数组和哈希表，多维字段的任何或所有级别进行校验。</li>
-        <li>能够对哈希表key和value进行验证。</li>
-        <li>通过在验证之前确定它的基础类型来处理类型接口。</li>
-        <li>别名验证标签，允许将多个验证映射到单个标签，以便更轻松地定义结构体上的验证。</li>
-        <li>gin web 框架的默认验证器</li>
-    </ul>
-    </details>
+1. 工作窃取：当处理器没有可执行的goroutine时，它会从其他处理器的本地队列中窃取goroutine来执行。这种设计可以避免某些处理器空闲，从而提高并发性能。工作窃取是一种常见的并发算法，它可以在多个任务队列之间平衡负载。
 
-38. 中间件用过么？
-    <details>
-    <summary>Ans</summary>
-    中间件是一种拦截器，它可以在请求到达目标方法之前，对请求进行拦截，也可以在目标方法执行之后，对响应进行拦截。中间件可以用于日志记录、身份验证、权限检查、参数校验等场景。
-    </details>
+2. 让出：当处理器在执行一个goroutine时，如果该goroutine需要等待某些事件的发生，例如等待I/O操作完成，那么处理器会主动让出该goroutine的执行，以便其他goroutine可以执行。这种设计可以避免某些goroutine长时间等待，从而提高并发性能。让出是一种常见的并发算法，它可以在多个任务之间平衡负载。
 
-39. Go 解析tag是如何实现的？
-    <details>
-    <summary>Ans</summary>
-    <p>在编译阶段，编译器会将tag解析为结构体字段的反射信息，并存储在结构体字段的反射信息中。</p>
-    <p>在运行阶段，通过反射获取结构体字段的反射信息，从而获取tag信息。</p>
-    </details>
+###### 31. Go 什么时候发生阻塞，阻塞时，调度器会怎么做？
 
-40. 项目如何使用信号进行优雅的启停？
-    <details>
-    <summary>Ans</summary>
-    <p>在程序启动时，监听系统信号，当收到系统信号时，执行相应的操作，比如：数据库连接、开启http服务、开启grpc服务等。</p>
-    <p>在程序退出时，关闭所有资源，比如：关闭数据库连接、关闭文件句柄、关闭http服务、关闭grpc服务等。</p>
-    </details>
+1. 等待I/O操作：当goroutine执行I/O操作时，例如读取或写入文件、发送或接收网络数据等，它可能会被阻塞，直到操作完成。
 
-41. 持久化怎么做的？
-    <details>
-    <summary>Ans</summary>
-    <p>持久化是将数据存储到磁盘，以便在程序退出后仍然可以访问数据。在Go中，可以使用文件、数据库、缓存等存储方式来实现持久化。</p>
-    <p>文件持久化：将数据存储到文件中，可以使用os包中的函数来读写文件。（1. 直接存储 2. 序列化成固定协议）</p>
-    <p>数据库持久化：将数据存储到数据库中，可以使用数据库驱动程序来连接数据库，并执行SQL语句来操作数据。</p>
-    <p>缓存持久化：将数据存储到缓存中，可以使用缓存服务，如Redis、Memcached等，来存储数据。</p>
-    </details>
+2. 等待锁：当goroutine尝试获取一个已经被其他goroutine持有的锁时，它可能会被阻塞，直到锁被释放。
 
-42. Channel 死锁的场景？
-    <details>
-    <summary>Ans</summary>
-    <p>Channel 死锁是指两个或多个 goroutine 在等待对方释放资源时，导致程序无法继续执行的情况。</p>
-    <p>常见的死锁场景有：</p>
-    <ul>
-        <li>当一个 channel 中没有数据，直接读取时</li>
-        <li>当 channel 数据满了，再尝试写数据时</li>
-        <li>向一个关闭的channel 写数据</li>
-    </ul>
-    </details>
+3. 等待通道操作：当goroutine在等待从通道接收数据，或者向通道发送数据时，它可能会被阻塞，直到操作完成。
 
-43. 对已经关闭的chan进行读写会出现什么情况？
-    <details>
-    <summary>Ans</summary>
-    <p>向已经关闭的 channel 写数据会导致 panic。</p>
-    <p>从已经关闭的 channel 读数据，如果 channel 中还有数据，则可以正常读取，如果 channel 中没有数据，则返回零值。</p>
-    </details>
+4. 等待系统调用：当goroutine执行系统调用时，例如创建进程、打开文件等，它可能会被阻塞，直到系统调用完成。
 
-44. 说受atomic底层是怎么实现的？
-    <details>
-    <summary>Ans</summary>
-    <p>atomic 底层使用的是 CPU 提供的原子操作指令, 这些指令可以在不使用锁的情况下，保证对内存的原子操作，从而实现并发安全。</p>
-    <p>通过源码可知，atomic采用CAS(CompareAndSwap)的方式实现的。所谓的CAS就是使用了CPU的原子性操作。在操作共享变量时，CAS不需要对其进行加锁，而是通过类似于乐观锁的方式进行检测，总是假设被操作的值未曾改变(即旧值相等),并一旦确认这个假设的真实性就立即进行值替换。本质上是不断占用CPU资源来避免加锁的开销。</p>
-    </details>
+当goroutine发生阻塞时，Go 调度器会进行以下操作：
 
-45. channel 底层实现，是否线程安全？
-    <details>
-    <summary>Ans</summary>
-    <p>channel 内部是一个环形链表，内部包含buf, sendx, recvx,lock, recvq, sendq 几个部分</p>
-    <p>buf 是有缓冲的channel所特有的结构，用来存储缓存数据。是个循环链表。</p>
-    <ul>
-        <li>sendx和recvx用于记录buf这个循环链表中的发送和接收的index</li>
-        <li>lock是个互斥锁</li>
-        <li>recvq,sendq 分别是接收或者发送的goroutine抽象出来的结构体(sudog)的队列。是个双向链表。</li>
-    </ul>
-    </details>
+1. 保存goroutine的状态：当goroutine发生阻塞时，Go调度器会保存goroutine的当前状态，包括寄存器的值、程序计数器、栈指针等。
 
-46. map 的底层实现？
-    <details>
-    <summary>Ans</summary>
-    <p>map 是 Go 语言中的一种数据结构，用于存储键值对。map 的底层实现是哈希表。</p>
-    <p>里面最重要的是buckets(桶), buckets是一个指针，最终它指向的是一个结构体</p>
-    <p>每个bucket固定包含8个key和value,实现bmap是一个固定大小的连续内存块，分为四部分，每个条目的状态，8个key值，8个value值，指向下个bucket的指针。</p>
-    <p>创建哈希表使用的是 makemap 函数. map 的一个关键点在于，哈希函数的选择。在程序启动时，会检测cpu是否aes，如果支持则使用，不支持则使用 memhash, 这是函数在 alginit() 中完成。</p>
-    <p>map 查找就是将key哈希后得到的64位用最后8个比特位计算在哪个桶，在bucket中，从前往后找到第一个空位。这样，在查找某个key时，先找到对应的桶，再去遍历 bucket 中的key。</p>
-    </details>
+2. 将goroutine放入等待队列：Go调度器会将goroutine放入相应的等待队列中，例如I/O等待队列、锁等待队列、通道等待队列等。
+
+3. 选择新的goroutine执行：Go调度器会从其他处理器中选择一个goroutine来执行。如果其他处理器没有可执行的goroutine，那么Go调度器会从全局队列中获取goroutine来执行。
+
+4. 恢复goroutine的状态：当goroutine从阻塞状态恢复时，Go调度器会恢复goroutine的当前状态，然后goroutine会继续执行。
+
+###### 32. 如果一个G一直占用占用资源怎么办？
+
+如果一个goroutine（G）一直占用资源，可能会导致其他goroutine无法执行，从而影响程序的并发性能。
+
+1. **使用超时**：你可以为goroutine设置一个超时时间，如果goroutine在超时时间内没有完成，那么你可以中断它的执行。例如，你可以使用context包来设置超时时间。
+
+2. **使用信号量**：你可以使用信号量来限制goroutine的并发数量。例如，你可以使用sync.WaitGroup来等待goroutine完成，或者使用sync.Mutex和sync.Cond来实现一个计数信号量。
+
+3. **使用抢占式调度**：Go语言调度器使用抢占式调度来避免某些goroutine长时间占用CPU。当goroutine执行的时间过长时，Go运行时会主动抢占它的执行，以便其他goroutine可以执行。
+
+###### 33. goroutine 什么时候会发生泄露？
+
+goroutine泄漏是指goroutine创建后，由于某种原因一直无法结束，导致资源无法释放。
+
+暂时性泄露：
+
+1. 获取长字符串中的一段长字符未释放
+2. 获取长slice的一段导致长slice未释放
+3. 在长slice新建slice导致泄露
+
+永久性泄露：
+
+1. goroutine 永久阻塞而导致泄露
+2. time.Ticker未关闭导致泄露
+
+###### 34. Go 竞态条件了解么？
+
+竞态条件（Race Condition）是指多个goroutine同时访问和修改共享资源，导致程序的行为不确定。以下是一些关于竞态条件的要点：
+
+- **共享资源**：在Go语言中，goroutine可以访问和修改共享资源，例如全局变量、映射和切片等。如果一个goroutine在修改共享资源时，其他goroutine也在修改共享资源，那么就会发生竞态条件。
+
+- **不确定的行为**：当多个goroutine同时访问和修改共享资源时，程序的行为是不确定的。例如，一个goroutine可能会读取到一个未初始化的变量，或者一个goroutine可能会覆盖另一个goroutine的修改。
+
+- **检测竞态条件**：Go语言提供了一个名为race detector的工具，用于检测竞态条件。你可以使用go run -race命令来运行程序，并使用go test -race命令来运行测试。如果程序中存在竞态条件，那么race detector会打印出相关的信息。
+
+- **避免竞态条件**：为了避免竞态条件，你应该使用同步机制来保护共享资源。例如，你可以使用sync.Mutex或sync.RWMutex来保护共享变量，或者使用sync.WaitGroup来等待goroutine完成。
+
+###### 35. 若干个goroutine，有一个panic怎么办？
+
+如果一个goroutine发生panic，那么它会停止执行，并且会向其所在的goroutine发送一个panic信号。
+
+如果这个goroutine没有处理这个panic信号，那么panic会继续向上层goroutine传播，直到被捕获或导致程序崩溃。
+
+> 为了避免这种情况，可以使用defer语句和recover函数来捕获panic，并处理它。
+
+###### 36. defer 可以捕捉goroutine的子goroutine么?
+
+不可以。
+
+1. 它们处于不同的调度器P中。对于子goroutine，必须通过 `recover()` 机制来进行恢复，然后结合日志进行打印。
+
+2. 或者通过channel传递error，然后通过channel接收error，进行打印。
+
+###### 37. Go 是怎么做参数校验的？
+
+1. **类型断言**：你可以使用类型断言来检查参数的类型。例如，你可以使用value, ok := interface{}(parameter).(Type)来检查参数是否为特定类型。
+
+2. **类型检查**：你可以使用类型检查来检查参数的类型。例如，你可以使用reflect.TypeOf(parameter) == reflect.TypeOf(Type)来检查参数是否为特定类型。
+
+3. **自定义函数**：你可以编写自定义函数来检查参数的值。例如，你可以编写一个函数来检查参数是否为非负数，或者参数是否为有效的电子邮件地址。
+
+4. **第三方库**：有一些第三方库提供了更强大的参数校验功能。例如，go-playground/validator库可以用于校验结构体的字段，go-playground/validator.v10库可以用于校验结构体的字段。
+
+###### 38. 中间件用过么？
+
+中间件是一种拦截器，它可以在请求到达目标方法之前，对请求进行拦截，也可以在目标方法执行之后，对响应进行拦截。
+
+中间件可以用于日志记录、身份验证、权限检查、参数校验等场景。
+
+###### 39. Go 解析tag是如何实现的？
+
+1. 在编译阶段，编译器会将tag解析为结构体字段的反射信息，并存储在结构体字段的反射信息中。
+
+2. 在运行阶段，通过反射获取结构体字段的反射信息，从而获取tag信息。
+
+###### 40. 项目如何使用信号进行优雅的启停？
+
+1. 在程序启动时，监听系统信号，当收到系统信号时，执行相应的操作，比如：数据库连接、开启http服务、开启grpc服务等。
+
+2. 在程序退出时，关闭所有资源，比如：关闭数据库连接、关闭文件句柄、关闭http服务、关闭grpc服务等。
+
+###### 41. 持久化怎么做的？
+
+持久化是将数据存储到磁盘，以便在程序退出后仍然可以访问数据。在Go中，可以使用文件、数据库、缓存等存储方式来实现持久化。
+
+- **文件持久化**：将数据存储到文件中，可以使用os包中的函数来读写文件。（1. 直接存储 2. 序列化成固定协议）
+
+- **数据库持久化**：将数据存储到数据库中，可以使用数据库驱动程序来连接数据库，并执行SQL语句来操作数据。
+
+- **缓存持久化**：将数据存储到缓存中，可以使用缓存服务，如Redis、Memcached等，来存储数据。
+
+###### 42. Channel 死锁的场景？
+
+Channel 死锁是指两个或多个 goroutine 在等待对方释放资源时，导致程序无法继续执行的情况。
+
+常见的死锁场景有：
+
+1. 当一个 channel 中没有数据，直接读取时。
+2. 当 channel 数据满了，再尝试写数据时。
+3. 向一个关闭的channel 写数据。
+
+###### 43. 对已经关闭的chan进行读写会出现什么情况？
+
+1. 向已经关闭的 channel 写数据会导致 panic。
+2. 从已经关闭的 channel 读数据;
+    - 如果 channel 中还有数据，则可以正常读取。状态为True。
+    - 如果 channel 中没有数据，则返回零值。状态为False。
+
+###### 44. 说受atomic底层是怎么实现的？
+
+atomic 底层使用的是 CPU 提供的原子操作指令, 这些指令可以在不使用锁的情况下，保证对内存的原子操作，从而实现并发安全。
+
+通过源码可知，atomic采用CAS(CompareAndSwap)的方式实现的。
+
+所谓的CAS就是使用了CPU的原子性操作。在操作共享变量时，CAS不需要对其进行加锁，而是通过类似于乐观锁的方式进行检测，总是假设被操作的值未曾改变(即旧值相等),并一旦确认这个假设的真实性就立即进行值替换。本质上是不断占用CPU资源来避免加锁的开销。
+
+###### 45. channel 底层实现，是否线程安全？
+
+通道（channel）是一种用于在goroutine之间进行通信的数据结构。通道的底层实现是基于环形队列和互斥锁的，它确保了线程安全。
+
+以下是一些关于通道的要点：
+
+- **环形队列**：通道的底层实现是一个环形队列，它用于存储发送到通道的数据。当通道的缓冲区已满时，发送操作会阻塞，直到有接收操作发生。同样，当通道为空时，接收操作会阻塞，直到有发送操作发生。
+
+- **互斥锁**：通道使用互斥锁来保护对环形队列的访问。当一个goroutine在发送或接收数据时，它会获取互斥锁，然后访问环形队列。当其他goroutine尝试发送或接收数据时，它们会等待互斥锁被释放。
+
+- **线程安全**：由于通道的底层实现使用了互斥锁，因此它是线程安全的。多个goroutine可以同时发送或接收数据，而不会发生竞态条件。
+
+###### 46. map 的底层实现？
+
+map是一种用于存储键值对的数据结构。map的底层实现是基于哈希表（hash table）的。
+
+以下是一些关于map的底层实现的要点：
+
+- **哈希表**：map的底层实现是一个哈希表，它使用哈希函数将键转换为哈希值，然后根据哈希值将键值对存储在哈希表中的适当位置。
+
+- **桶**：哈希表由多个桶组成，每个桶可以存储多个键值对。当哈希函数将键转换为哈希值时，哈希表会根据哈希值将键值对存储在适当的桶中。
+    1. 每个bucket固定包含8个key和value,实现bmap是一个固定大小的连续内存块，分为四部分，每个条目的状态，8个key值，8个value值，指向下个bucket的指针。
+
+- **链表**：如果两个键的哈希值相同，那么它们会被存储在同一个桶中。在这种情况下，哈希表会使用链表来存储这些键值对。链表中的每个节点都包含一个键值对。
+
+- **扩容**：当哈希表的负载因子（即键值对的数量除以桶的数量）超过一定阈值时，哈希表会进行扩容。扩容会创建一个新的哈希表，并将旧的哈希表中的键值对复制到新的哈希表中。扩容可以减少哈希冲突，提高哈希表的性能。
+
+> map 查找就是将key哈希后得到的64位用最后8个比特位计算在哪个桶，在bucket中，从前往后找到第一个空位。这样，在查找某个key时，先找到对应的桶，再去遍历 bucket 中的key。
 
 47. select 的实现原理？
-    <details>
-    <summary>Ans</summary>
-    <p>select 最重要的 scase 数据结构</p>
-    <p>scase.c 为当前case语句所操作的channel指针，这也说明了一个case语句只能操作一个channel.</p>
-    <p>scase.elem 表示缓冲区地址：</p>
-    <ul>
-        <li>caseRecv: scase.elem 表示读出channel的数据存放地址</li>
-        <li>caseSend: scase.elem 表示将要写入channel的数据存放地址</li>
-    </ul>
-    <p>select 的主要实现位于 select.Go 函数，主要功能如下</p>
-    <ol>
-        <li>锁定scase语句中所有的channel</li>
-        <li>按照随机顺序检测scase的channel是否ready
-            <ol>
-                <li>如果case可读，则读取channel中数据，解锁所有的channel,然后返回（case index, true）</li>
-                <li>如果case可写，则将数据写入channel，解锁所有的channel，然后返回（case index, false）</li>
-                <li>所有的case 都未ready, 则解锁所有的channel, 然后返回（default index，false）</li>
-            </ol>
-        </li>
-        <li>所有的case都未ready, 且没有default语句
-            <ol>
-                <li>将当前协程加入到所有channel的等待队列</li>
-                <li>(等待)协程转入阻塞，等待被唤醒</li>
-            </ol>
-        </li>
-        <li>唤醒后返回channel对应的case index
-            <ol>
-                <li>如果是读操作，解锁所有的channel，然后返回（case index, true）</li>
-                <li>如果是写操作，解锁所有的channel，然后返回（case index, false）</li>
-            </ol>
-        </li>
-    </ol>
-    </details>
 
-48. interface 底层实现？（待补充）
-    <details>
-    <summary>Ans</summary>
-    <p>接口由两种类型实现 iface 和 eface。iface 是包含方法的接口，而 eface 不包含方法。</p>
-    <p>iface tab表示接口的具体结构类型，而data是接口的值。</p>
-    <p>eface 使用_type 直接表示类型，这样就无法使用方法。</p>
-    <p></p>
-    <p></p>
-    </details>
+select是一种用于处理多个通道的语句。select的底层实现是基于轮询和通道的，它确保了线程安全。以下是一些关于select的要点：
 
-48. reflect 底层实现？（待补充）
-    <details>
-    <summary>Ans</summary>
-    <p>reflect 包实现了运行时反射，允许程序操作任意类型的对象。</p>
-    <p>反射三大法则：</p>
-    <ul>
-        <li>反射从接口映射到反射对象</li>
-        <li>反射从反射对象映射到接口值</li>
-        <li>只有值可以修改，才可以修改反射对象</li>
-    </ul>
-    <p>type用于获取当前值的类型，value用于获取当前的值。</p>
-    <p></p>
-    </details>
+- **轮询**：select会轮询每个通道，看是否有数据可以读取或写入。如果有，那么select会立即处理该通道，并返回相应的结果。如果没有，那么select会等待，直到有数据可以读取或写入。
 
-49. Go 调试/分析 工具用过哪些？
-    <details>
-    <summary>Ans</summary>
-    <p>pprof：用于性能调优，针对CPU,内存和并发</p>
-    <p>race：用于竞争检测</p>
-    <p>godoc: 生成go文档</p>
-    </details>
+- **通道**：select可以处理多个通道，包括无缓冲通道和有缓冲通道。对于无缓冲通道，select会立即处理该通道。对于有缓冲通道，select会等待，直到缓冲区有数据或可以写入数据。
 
-50. 进程被kill, 如何保证所有goroutine顺利退出
-    <details>
-    <summary>Ans</summary>
-    <p>使用context包，通过context.WithCancel()创建一个可取消的context，然后通过context.WithTimeout()设置超时时间，当超时或者被取消时，所有goroutine都会收到通知，然后退出。</p>
-    <p>goroutine 监听SIGKILL信号，一旦收到SIGKILL，则立即退出。</p>
-    </details>
+- **超时**：select可以设置超时时间。如果超时时间到达，那么select会返回一个特殊的值，表示超时。
 
-51. context 了解么？
-    <details>
-    <summary>Ans</summary>
-    <p>context 是 Go 语言中用于在多个 goroutine 之间传递上下文信息，相同的 context 可以传递给运行在不同 goroutine 中的函数，上下文对于多个 goroutine 同时使用是安全的，context 包定义了上下文类型，可以使用background, TODO 创建一个上下文，在函数调用链之间传播 context， 也可以使用WithDeadLine, WithTimeout, WithCancel 或 WithValue 创建的修改副本替换它。</p>
-    <p>context 的作用就是在不同的goroutine之间 同步请求特定的数据，取消信号以及处理请求的截至日期。</p>
-    </details>
+- **线程安全**：由于select会轮询每个通道，因此它是线程安全的。多个goroutine可以同时调用select，而不会发生竞态条件。
 
-52. Go 切片可以赋值给数组么？
-    <details>
-    <summary>Ans</summary>
-    <p>不可以，切片和数组是不同的类型，不能直接赋值。</p>
-    </details>
+###### 48. interface 底层实现？（待补充）
 
-53. goroutine 如何关闭？
-    <details>
-    <summary>Ans</summary>
-    <p>1. chan 关闭chan</p>
-    <p>2. chan 轮询，类似信号方法</p>
-    <p>3. context cancel</p>
-    </details>
+接口由两种类型实现 iface 和 eface。iface 是包含方法的接口，而 eface 不包含方法。
 
-54. 如何理解CSP(不要使用共享内存来通信，通过通信来共享内存)？
-    <details>
-    <summary>Ans</summary>
-    前后两个通信的概念不同，内存能够通过多个线程读到，修改内存数据，即可达到通过内存来通信。
-    <hr>
-    在go中，一个内存由一个线程来负责，另外一个线程要操作这块内存，需要当前线程让渡所有权，这个所有权的让渡过程是"通信"。
-    <hr>
-    本质上，两种模式谋求的都是同一时刻只有一个线程在操作同一块内存，以保护逻辑的原子性。后者通过引入所有权的概念，channel和临时变量，简化了操作约定。
-    </details>
+- **iface**: tab表示接口的具体结构类型，而data是接口的值
+- **eface**: 使用_type 直接表示类型，这样就无法使用方法。
+
+###### 48. reflect 底层实现？（待补充）
+
+reflect 包实现了运行时反射，允许程序操作任意类型的对象。
+
+反射三大法则：
+
+1. 反射从接口映射到反射对象。
+2. 反射从反射对象映射到接口值。
+3. 只有值可以修改，才可以修改反射对象。
+
+> type用于获取当前值的类型，value用于获取当前的值。
+
+###### 49. Go 调试/分析 工具用过哪些？
+
+1. **pprof**：pprof是Go语言内置的性能分析工具，它可以生成程序的CPU和内存使用情况的报告。你可以使用go tool pprof命令来查看和分析这些报告。
+
+2. **trace**：trace是Go语言内置的跟踪工具，它可以生成程序的执行情况的报告，包括goroutine的创建和销毁，阻塞和唤醒，系统调用等。你可以使用go tool trace命令来查看和分析这些报告。
+
+3. **go test**：go test是一个用于运行Go测试的工具，它可以运行单元测试，基准测试和示例测试。你可以使用go test命令来运行测试，并使用-race标志来检测竞态条件。
+
+4. **golint**：golint是一个用于检查Go代码风格的工具，它可以检测出代码中的风格问题，例如未使用的变量，未初始化的变量，错误的类型转换等。你可以使用golint命令来运行代码风格检查。
+
+###### 50. 进程被Kill, 如何保证所有goroutine顺利退出?
+
+如果一个进程被Kill，那么所有的goroutine都会被强制终止，无法保证它们顺利退出。
+
+1. **使用context包**：你可以使用context包来传递取消信号。当进程被Kill时，你可以创建一个context.Context对象，并使用context.WithCancel函数来创建一个可取消的上下文。然后，你可以将这个上下文传递给每个goroutine，并在goroutine中定期检查上下文的取消状态。如果上下文被取消，那么goroutine可以优雅地退出。
+
+2. **使用信号处理**：你可以使用os/signal包来监听操作系统信号。当进程被Kill时，操作系统会发送一个SIGTERM信号。你可以使用signal.Notify函数来监听SIGTERM信号，并在收到信号时取消上下文或关闭通道，从而通知goroutine退出。
+
+###### 51. context 了解么？
+
+context 是 Go 语言中用于在多个 goroutine 之间传递上下文信息，相同的 context 可以传递给运行在不同 goroutine 中的函数，上下文对于多个 goroutine 同时使用是安全的。
+
+context 包定义了上下文类型，可以使用background, TODO 创建一个上下文，在函数调用链之间传播 context，也可以使用WithDeadLine, WithTimeout, WithCancel 或 WithValue 创建的修改副本替换它。
+
+context 的作用就是在不同的goroutine之间 同步请求特定的数据，取消信号以及处理请求的截至日期。
+
+###### 52. Go 切片可以赋值给数组么？
+
+不可以。
+
+切片和数组是不同的类型，不能直接赋值。
+
+###### 53. goroutine 如何关闭？
+
+1. **使用context包**：你可以使用context包来传递取消信号。当goroutine需要退出时，你可以创建一个context.Context对象，并使用context.WithCancel函数来创建一个可取消的上下文。然后，你可以将这个上下文传递给每个goroutine，并在goroutine中定期检查上下文的取消状态。如果上下文被取消，那么goroutine可以优雅地退出。
+
+2. **使用channel**：你可以使用channel来通知goroutine退出。当goroutine需要退出时，你可以创建一个channel，并将这个通道传递给每个goroutine。然后，你可以向通道发送一个特殊的值，例如nil，来通知goroutine退出。在goroutine中，你可以定期检查通道的状态，如果通道被关闭，那么goroutine可以优雅地退出。
+
+###### 54. 如何理解CSP(不要使用共享内存来通信，通过通信来共享内存)？
+
+前后两个通信的概念不同，内存能够通过多个线程读到，修改内存数据，即可达到通过内存来通信。
+
+在go中，一个内存由一个线程来负责，另外一个线程要操作这块内存，需要当前线程让渡所有权，这个所有权的让渡过程是"通信"。
+
+本质上，两种模式谋求的都是同一时刻只有一个线程在操作同一块内存，以保护逻辑的原子性。后者通过引入所有权的概念，channel和临时变量，简化了操作约定。
+
+###### 55. map 并发读写会怎样？
+
+1. **并发读写**：当多个goroutine同时读取和修改map时，可能会发生竞态条件。例如，一个goroutine可能在另一个goroutine读取map的同时修改map，导致读取到的值是不确定的。
+
+2. **未定义的行为**：由于map的并发读写可能会导致竞态条件，因此Go语言规范没有定义map的并发读写的行为。这意味着，如果你在并发读写map时没有使用同步机制，那么程序的行为是不确定的。
+
+3. **使用互斥锁**：为了避免map的并发读写，你应该使用互斥锁来保护对map的访问。例如，你可以使用sync.Mutex或sync.RWMutex来保护map，或者使用sync.Map来处理并发读写。
+
+###### 56. context.WithTimeout() 如何实现？
+
+> WithTimeout 和 WithDeadline 创建的是 timeCtx，timerCtx 基于 cancelCtx，多了一个 time.Timer 和 deadline。
+
+1. **实现原理**：context.WithTimeout()函数的实现原理是使用一个定时器来设置一个超时时间，并在超时时间到达时取消上下文。当上下文被取消时，所有等待该上下文的goroutine都会收到一个取消信号，从而可以优雅地退出。
+
+2. **使用场景**：context.WithTimeout()函数通常用于设置一个超时时间，以防止goroutine无限期地等待。例如，你可以使用context.WithTimeout()函数来设置一个超时时间，以防止goroutine无限期地等待一个网络请求的响应。
 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
