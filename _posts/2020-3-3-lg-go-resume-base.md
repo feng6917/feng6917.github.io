@@ -2255,7 +2255,7 @@ TiDB 的这种设计实际上是一种多主架构，因为每个 TiKV 节点都
 
 1. 查看MySQL的运行状态：可以使用`SHOW STATUS`命令查看MySQL的运行状态，包括连接数、查询数、缓存命中率等。
 2. 查看MySQL的慢查询日志：可以使用`SHOW VARIABLES LIKE 'slow_query_log'`命令查看MySQL的慢查询日志是否开启，如果开启，可以使用`SHOW SLOW QUERIES`命令查看慢查询日志。
-3. 使用MySQL的监控工具：可以使用MySQL的监控工具，使用Prometheus和Grafana，来监控MySQL的性能和健康情况。
+3. 使用MySQL的监控工具：可以使用MySQL的监控工具，使用Prometheus和Grafana，来监控MySQL的性能和健康情况。[部署流程参考](https://www.bilibili.com/video/BV17T4y1r7W4/)
     - Prometheus：这是一个开源的系统监控和警报工具包，可以用来收集和存储时间序列数据。
     - Grafana：这是一个开源的度量分析和可视化套件，可以用来展示Prometheus收集的数据。
     - 你可以通过Prometheus的MySQL exporter来收集MySQL的性能指标，然后使用Grafana来可视化这些数据。
