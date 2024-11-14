@@ -8,7 +8,7 @@
 
 1. 熟悉常用web框架，使用过gin,kratos。
 
-    1. 一个基本的框架需要具备哪些功能？
+    1. 一个基本的框架需要具备哪些功能？  
 
     2. 掌握gin框架，gin 中的特性，handlerchain? context? redix tree?
         1. redix tree?
