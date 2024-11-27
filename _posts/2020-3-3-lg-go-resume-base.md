@@ -1355,6 +1355,30 @@ kafka 相当于一条溪流，RocketMQ 相当于一个高压水枪。
 3. 零拷贝：Kafka 使用零拷贝技术，将数据直接从磁盘传输到网络，避免了数据在内存中的拷贝，从而提高了性能。
 4. 批量发送：Kafka 支持批量发送消息，可以将多条消息一起发送，减少了网络传输的次数，从而提高了性能。
 
+###### 22. RocketMQ 消息存储与检索原理
+
+- Commitlog: 这是一个目录,其中包含具体的commitlog文件.文件名长度为20个字符,文件名由该文件保存消息的最大物理offset值在高位补零组成.每个文件大小一般是1GB,可以通过mapedFileSizeCommitLog进行配置.
+    ![img](../images/2020-3-3/59.jpg)
+    1. 目录下有多个文件,其实commitLog只有一个文件,为了方便保存和读写被切分为多个子文件,所有的子文件通过其保存的第一个和最后一个消息的物理点进行连接.
+    2. Broker按照时间和物理的offset顺序写commitlog文件,每次写的时候需要加锁,每个commit log子文件的大小默认时1GB,可以通过mapedFileSizeCommitLog进行配置.当一个commitlog写满后,创建一个新的commitLog,继续上一个commitLog的offset写操作,知道写满换成下一个文件.所有commitLog子文件之间的Offset是连续的,所以最后一个CommitLog总是被写入的.
+- Consumequeue: 这是一个目录,包含该broker上所有的topic对应的消费队列文件信息.消费队列文件的格式为"./consumequeue/Topic名字/queue id/具体消费队列文件".每个消费队列其实是commitlog的一个索引,提供给消费者做拉取消息,更新点位使用.
+    ![img](../images/2020-3-3/61.jpg)
+  - 索引处理过程
+    ![img](../images/2020-3-3/62.jpg)
+
+- index: 这是一个目录,全部的文件都是按照消息key创建的Hash索引.文件名是用创建时的时间戳命名的.
+    1. 每个index file文件名包含文件头, hash槽位,索引数据.每个文件的hash槽位个数,索引数据个数都是固定的.hash槽位可以通过broker启动参数 maxhashSlotNum进行配置,默认是500万,索引数据个数可以通过broker启动参数 maxIndexNum进行配置,默认是200万.
+    2. 每个index file文件包含文件头,hash槽位,索引数据.每个文件的的hash槽位个数,索引数据个数是固定的.
+    3. hash 索引存在碰撞冲突,使用的是链表方式解决.
+  - 索引处理过程
+    ![img](../images/2020-3-3/63.jpg)
+- Config: 这是一个目录,保存了当前Broker中全部的Topic,订阅关系和消费进度.这些数据Broker会定时从内存持久化到硬盘,以便宕机后恢复.
+- abort: Broker 是否异常关闭的标志.正常关闭时该文件会被删除,异常关闭时则不会,当Broker重新启动时,根据是否异常宕机决定是否需要重新构建index索引等操作.
+- checkpoint: Broker最近一次正常运行时的状态,比如最后一次正常刷盘的时间,最后一次正确索引的时间等.
+
+- rocketMQ 消息的构成
+![img](../images/2020-3-3/60.jpg)
+
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
@@ -1748,6 +1772,49 @@ KEFK：
 1. CND 负载均衡，红包提前处理生成静态红包列表， 不同部分的红包存储在不同地区服务器。
 2. 服务内部Redis集群存储红包，请求进来后进队列，异步校验权限，通过后，使用Lua脚本从list中pop元素，返回页面&入MySQL数据库（需要考虑一致性），加入到消息队列，供用户查询。
 3. 限流等中间件，无状态服务弹性伸缩，考虑。
+
+###### 23. 时序数据库influxDB
+
+- 时序数据库是专门用来处理时间序列数据的数据库，时间序列数据指的是以时间为主键的数据，如股票价格，服务器性能指标, 日志等。
+- 为什么不用关系型数据库
+  - 写入性能：关系型数据库(数索引)写入,有可能会触发叶裂变,从而产生对磁盘的随机读写,降低读写速度.
+  - 数据价值: 时序数据库一般用于指标监控场景,这个场景的数据有一个非常明显的特点就是冷热差别明显.热数据保存在内存,冷数据压缩进磁盘.
+  - 时间不可倒流,数据只写不改: 时序数据是描述一个实体在不同时间所处的不同状态.
+- 关键词:
+  - influxDB 行协议:
+    1. 行协议是influxDB的写入协议,数据格式为:
+
+    ```
+    <measurement>[,<tag_key>=<tag_value>[,<tag_key>=<tag_value>]] <field_key>=<field_value>[,<field_key>=<field_value>] [<timestamp>]
+    ```
+
+    ![img](../images/2020-3-3/64.jpg)
+    - measurement: 测量名称,类似于关系型数据库中的表
+    - tag: 标签集,类似于关系型数据库中的索引,可以加快查询速度
+    - field: 字段集,类似于关系型数据库中的字段,但是field的值只能是字符串,数字,布尔值,浮点数
+    - timestamp: 时间戳,可选,不指定则默认为当前时间
+    - 空格:
+    ![img](../images/2020-3-3/65.jpg)
+    2. 结构化数据:point,series,shard,retention policy
+    ![img](../images/2020-3-3/66.jpg)
+- 双索引设计
+  - 除了可以将measurement,tag_set和field视为索引,时间戳也可以作为索引,但是时间戳是默认的索引,不需要额外指定.
+  - 一般查找流程
+        1. 先指定要从哪个存储桶查询数据
+        2. 指定数据的时间范围
+        3. 指定measurement,tag_set 和 field 说明我要查询哪个序列
+- TSM 存储引擎
+
+    tsm tree 是 influxDB 根据实际需求在 LSM Tree 的基础上稍作修改优化而来. TSM 主要由 cache, wal, tsm file, compactor 组成.
+    ![img](../images/2020-3-3/67.jpg)
+  - cache: 内存中存储的数据,写入数据时首先会写入到 cache 中,cache 中的数据会按照时间顺序排序.
+  - wal: write ahead log,预写日志
+        1. wal 文件的内容与内存中的cache是一致的,其作用就是为了持久化数据,当系统崩溃时,可以从 wal 文件中恢复数据.
+        2. 写入数据时首先会写入到 wal 中,当 cache 中的数据量达到一定阈值时,会将 cache 中的数据持久化到 tsm file 中,同时删除 wal 中的数据.
+  - tsm file: tsm file 是持久化到磁盘上的数据文件,每个 tsm file 中存储了多个 series 的数据,每个 series 的数据按照时间顺序排序.
+  - compactor: compactor 是 influxDB 的后台进程
+        1. cache中的数据大小达到阈值后,进行快照,之后转存到一个新的tsm文件中.
+        2. 合并当前的tsm文件,将多个小的tsm文件合并成一个,使每一个文件尽量达到单个文件的最大大小,减少文件的数量,并且一些数据的删除操作也是在这个时候完成.
 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
@@ -2557,7 +2624,7 @@ MySQL默认的字符集是latin1，不支持存储emoji表情，需要将字符�
 
 [img](../images/2020-3-3/46.jpg)
 
-查看方式：explain、explain extend。
+查看方式：explain、explain extend(提供额外的查询信息), explain analyze(8.0 引入,可以分析和理解查询的执行时间和成本)。
 
 EXPLAIN可以用来查看SQL语句的执行计划。
 
