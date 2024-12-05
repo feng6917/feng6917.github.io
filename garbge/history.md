@@ -7,8 +7,13 @@
 #### 简历剖析
 
 tidb
-fastdfs
+fastdfs 分布式文件系统
+seaweedfs
 minio
+服务网格istio
+CRI 协议
+
+权限系统比较
 
 多沟通，多思考，多对比
 --------
