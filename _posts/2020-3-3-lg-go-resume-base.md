@@ -627,11 +627,12 @@ HTTP 主要分为三部分： 超文本、传输、协议
 
 TCP/IP网络模型：
 
-<img src="../images/2020-3-3/15.jpg" /><img src="../images/2020-3-3/16.jpg" />
+![img](../images/2020-3-3/15.jpg)
+![img](../images/2020-3-3/16.jpg)
 
 https 就是身披了一层 SSL 的 http，它比 http 多了一层 SSL 安全层，所以 https 是安全的 http 协议。
 
-<img src="../images/2020-3-3/17.jpg" />
+![img](../images/2020-3-3/17.jpg)
 
 http 和 https 的区别：
 
@@ -699,11 +700,11 @@ TCP 是一种面向连接的、可靠的、基于字节流的传输层通信协�
 
 三次握手：
 
-<img src="../images/2020-3-3/18.jpg" />
+![img](../images/2020-3-3/18.jpg)
 
 四次挥手：
 
-<img src="../images/2020-3-3/19.jpg" />
+![img](../images/2020-3-3/19.jpg)
 
 ###### 12. 简述 http1.0/1.1/2.0 的区别？
 
@@ -1980,7 +1981,7 @@ B树和B+树的区别主要有两点：
 
 两者的结构图如下：
 
-- <img src="../images/2020-3-3/6.jpg"  alt="B树">
+- ![img](../images/2020-3-3/6.jpg)
 
 ###### 11. MySQL 什么情况下会出现索引失效?
 
@@ -2025,11 +2026,11 @@ B树适用于随机检索，而B+树适用于随机检索和顺序检索。
 
 InnoDB索引：
 
-- <img src="../images/2020-3-3/7.jpg"  alt="B+树索引">
+- ![img](../images/2020-3-3/7.jpg)
 
 MyISAM索引：
 
-- <img src="../images/2020-3-3/8.jpg"  alt="B+树索引">
+- ![img](../images/2020-3-3/8.jpg)
 
 ###### 14. 什么是覆盖索引？
 
@@ -2342,7 +2343,7 @@ varchar表示变长，char表示长度固定。
 
 ###### 38. MySQL 中 drop、delete、truncate的区别？
 
-<img src="../images/2020-3-3/9.jpg">
+![img](../images/2020-3-3/9.jpg)
 
 一般来讲，删除整个表，使用drop。删除表的部分数据使用delete。保留表结构删除表的全部数据使用truncate。
 
@@ -2520,7 +2521,7 @@ MySQL在进行比较的时候，NULL会参与字段的比较，因为NULL是一�
 
   - 优点：简单易实现。
   - 缺点：在高并发下存在瓶颈。系统结构图如下：
-<img src="../images/2020-3-3/10.jpg">
+![img](../images/2020-3-3/10.jpg)
 
 - **Redis生成ID**：
 
@@ -2860,7 +2861,7 @@ Redis则是分布式缓存，在多实例情况下，每个实例都共享一份
 - 都是基于C语言实现
 
 不同点：
-    <img src="../images/2020-3-3/11.jpg">
+    ![img](../images/2020-3-3/11.jpg)
 
 ###### 5. Redis 是单线程还是多线程？Redis 为什么这么快？
 
@@ -2898,7 +2899,8 @@ AOF则是将Redis的操作日志以追加的方式写入文件中，恢复时是
 ###### 8. Redis的数据类型有哪些？
 
 Redis支持五种数据类型：`String（字符串）`，`Hash（哈希）`，`List（列表）`，`Set（集合）`和`Zset（有序集合）`。还有三种不那么常见的数据类型：`HyperLogLog（基数统计）`，`Bitmap（位图）`和`Stream（流）`。
-<img src="../images/2020-3-3/12.jpg">
+
+![img](../images/2020-3-3/12.jpg)
 
 Bitmap:
 
