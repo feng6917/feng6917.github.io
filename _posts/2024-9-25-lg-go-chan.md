@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Golang 常见数据结构 之 Channel"
+title: "Channel"
 date:   2024-9-25
 tags: 
   - Golang
@@ -12,13 +12,13 @@ author: feng6917
 
 ### 目录
 
-- [一、什么是 Channel](#一什么是-channel)
+- [一、Channel](#一channel)
 - [二、Channel 结构](#二channel-结构)
 - [三、Channel 读写](#三channel-读写)
 - [四、Channel 常见用法](#四channel-常见用法)
 - [五、Channel 应用](#五channel-应用)
 
-#### 一、什么是 Channel
+#### 一、Channel
 
 - `Channel` 是 Go 语言中的一种数据类型，用于在不同的 Goroutine 之间进行通信和同步。它是一种特殊的类型，可以用来传递数据，也可以用来传递信号。如果需要跨进程通信，建议使用分布式系统的方法来解决。
 
@@ -26,51 +26,54 @@ author: feng6917
   - 无缓冲的 `Channel` 在发送和接收操作之间没有缓冲区，因此发送操作和接收操作必须同时进行，否则会阻塞。
   - 而有缓冲的 `Channel` 在发送和接收操作之间有一个缓冲区，因此发送操作和接收操作可以异步进行，只有当缓冲区满时发送操作才会阻塞，只有当缓冲区空时接收操作才会阻塞。
 
+- 如何理解不要通过共享内存来通信，而要通过通信来共享内存？
+  - 在 Go 语言中，通过共享内存来通信是一种并发编程的方式，它允许不同的 Goroutine 之间共享数据。然而，这种方式可能会导致数据竞争和死锁等问题，因此 Go 语言推荐使用 `Channel` 来进行通信，而不是共享内存。
+  - 前后两个通信的概念不同
+    - 内存能够被多个线程读到，修改内存数据，即可达到通过内存达到通信的目的。
+    - 在go中，一个内存由一个线程来负责，另外一个线程要操作这块内存，需要当前线程让渡所有权，这个所有权的让渡过程是"通信"。
+
 <hr style="background-color: blue;border: none;height: 15px;width: 100%" />
 
-#### 二、Channel 结构
+#### 二、基础结构
 
-1. chan 的数据结构
-
-    ```
+```
     type hchan struct {
-    qcount   uint           // 队列中存储的总数据量，当前队列中剩余元素个数。
-    dataqsiz uint           // 环形队列的大小，即循环队列中可以存储的最大元素个数。
-    buf      unsafe.Pointer // 环形队列指针
-    elemsize uint16 // 元素大小
-    closed   uint32 // Channel 是否关闭
-    elemtype *_type // 元素类型
-        // send/recv 可以看作针对这个队列操作，向这个队列Send(发送)消息，即写消息；从这个队列Recv(接受)消息，即读消息。
-    sendx    uint   // 队列下标，指元素写入时放到队列中的位置
-    recvx    uint   // 队列下标，指元素从队列的哪个位置读出
-    recvq    waitq  // 等待读消息的goroutine队列
-    sendq    waitq  // 等待写消息的goroutine队列
+        qcount   uint           // 队列中存储的总数据量，当前队列中剩余元素个数。
+        dataqsiz uint           // 环形队列的大小，即循环队列中可以存储的最大元素个数。
+        buf      unsafe.Pointer // 环形队列指针
+        elemsize uint16 // 元素大小
+        closed   uint32 // Channel 是否关闭
+        elemtype *_type // 元素类型
+            // send/recv 可以看作针对这个队列操作，向这个队列Send(发送)消息，即写消息；从这个队列Recv(接受)消息，即读消息。
+        sendx    uint   // 队列下标，指元素写入时放到队列中的位置
+        recvx    uint   // 队列下标，指元素从队列的哪个位置读出
+        recvq    waitq  // 等待读消息的goroutine队列
+        sendq    waitq  // 等待写消息的goroutine队列
 
-    // lock protects all fields in hchan, as well as several
-    // fields in sudogs blocked on this channel.
-    //
-    // Do not change another G's status while holding this lock
-    // (in particular, do not ready a G), as this can deadlock
-    // with stack shrinking.
-    lock mutex // 互斥锁，不允许并发读写
+        // lock protects all fields in hchan, as well as several
+        // fields in sudogs blocked on this channel.
+        //
+        // Do not change another G's status while holding this lock
+        // (in particular, do not ready a G), as this can deadlock
+        // with stack shrinking.
+        lock mutex // 互斥锁，不允许并发读写
     }
-    ```
+```
 
-2. 环形队列
+1. 环形队列(buf)
 
     > chan 内部实现了一个环形队列作为其缓冲区，队列的长度是创建时指定的。
 
     > 下图展示了一个可缓冲6个元素的channel，类型为int的示意图:
+        ![img](../images/2024-9-25/3.jpg)
 
-    ![img](../images/2024-9-25/3.jpg)
+        - qcount: 表示队列中还有3个元素；
+        - dataqsiz: 表示队列能容纳6个元素；
+        - buf 环形队列的指针，指向队列的内存，这里队列还剩下3个int类型的元素；
+        - sendx: 表示队列下一个写入的位置，这里是队列的索引5；
+        - recvx: 表示队列下一个读取的位置，这里是队列的索引2。
 
-    - qcount: 表示队列中还有3个元素；
-    - dataqsiz: 表示队列能容纳6个元素；
-    - buf 环形队列的指针，指向队列的内存，这里队列还剩下3个int类型的元素；
-    - sendx: 表示队列下一个写入的位置，这里是队列的索引5；
-    - recvx: 表示队列下一个读取的位置，这里是队列的索引2。
-
-3. 等待队列
+2. 等待队列
     > 从channel读数据，如果channel缓冲区为空或者没有缓冲区，当前goroutine会被阻塞。
     >
     > 向channel写数据，如果channel缓冲区已满或者没有缓冲区，当前goroutine会被阻塞。
