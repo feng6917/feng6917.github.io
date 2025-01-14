@@ -13,7 +13,7 @@ author: feng6917
 ### 目录
 
 - [一、Channel](#一channel)
-- [二、Channel 结构](#二channel-结构)
+- [二、基础结构](#二基础结构)
 - [三、Channel 读写](#三channel-读写)
 - [四、Channel 常见用法](#四channel-常见用法)
 - [五、Channel 应用](#五channel-应用)
@@ -40,23 +40,16 @@ author: feng6917
     type hchan struct {
         qcount   uint           // 队列中存储的总数据量，当前队列中剩余元素个数。
         dataqsiz uint           // 环形队列的大小，即循环队列中可以存储的最大元素个数。
-        buf      unsafe.Pointer // 环形队列指针
-        elemsize uint16 // 元素大小
-        closed   uint32 // Channel 是否关闭
-        elemtype *_type // 元素类型
-            // send/recv 可以看作针对这个队列操作，向这个队列Send(发送)消息，即写消息；从这个队列Recv(接受)消息，即读消息。
-        sendx    uint   // 队列下标，指元素写入时放到队列中的位置
-        recvx    uint   // 队列下标，指元素从队列的哪个位置读出
-        recvq    waitq  // 等待读消息的goroutine队列
-        sendq    waitq  // 等待写消息的goroutine队列
-
-        // lock protects all fields in hchan, as well as several
-        // fields in sudogs blocked on this channel.
-        //
-        // Do not change another G's status while holding this lock
-        // (in particular, do not ready a G), as this can deadlock
-        // with stack shrinking.
-        lock mutex // 互斥锁，不允许并发读写
+        buf      unsafe.Pointer // 环形队列指针，指向存放数据的内存区域。
+        elemsize uint16         // 元素大小
+        closed   uint32         // Channel 是否关闭
+        elemtype *_type         // 元素类型
+                                // send/recv 可以看作针对这个队列操作，向这个队列Send(发送)消息，即写消息；从这个队列Recv(接受)消息，即读消息。
+        sendx    uint           // 队列下标，指元素写入时放到队列中的位置
+        recvx    uint           // 队列下标，指元素从队列的哪个位置读出
+        recvq    waitq          // 等待读消息的goroutine队列
+        sendq    waitq          // 等待写消息的goroutine队列
+        lock mutex              // 互斥锁，不允许并发读写
     }
 ```
 
@@ -74,14 +67,13 @@ author: feng6917
         - recvx: 表示队列下一个读取的位置，这里是队列的索引2。
 
 2. 等待队列
-    > 从channel读数据，如果channel缓冲区为空或者没有缓冲区，当前goroutine会被阻塞。
-    >
-    > 向channel写数据，如果channel缓冲区已满或者没有缓冲区，当前goroutine会被阻塞。
+    - 阻塞：
+        - 从channel读数据，如果channel缓冲区为空或者没有缓冲区
+        - 向channel写数据，如果channel缓冲区已满或者没有缓冲区
 
-    > 被阻塞的goroutine将会被挂在channel的等待队列中：
-    >> 因**读**阻塞的goroutine会被挂在**recvq**队列中；会被向channel**写**数据的goroutine唤醒。
-    >>
-    >> 因**写**阻塞的goroutine会被挂在**sendq**队列中；会被从channel**读**数据的goroutine唤醒。
+    - 被阻塞的goroutine将会被挂在channel的等待队列中：
+      - 因**读**阻塞的goroutine会被挂在**recvq**队列中；会被向channel**写**数据的goroutine唤醒。
+      - 因**写**阻塞的goroutine会被挂在**sendq**队列中；会被从channel**读**数据的goroutine唤醒。
 
     > 下图展示了一个没有缓冲区的channel,有几个goroutine阻塞等待读数据。
         ![img](../images/2024-9-25/4.jpg)
@@ -89,14 +81,14 @@ author: feng6917
     注意，一般情况下recvq和sendq至少有一个为空。只有一个例外，那就是同一个goroutine使用select语句向channel一边写数据，一边读数据。
 
 4. 类型信息
-    > 一个channel 只能传递一种类型的值，类型信息存储在hchan结构体中的elemtype字段。
+    一个channel 只能传递一种类型的值，类型信息存储在hchan结构体中的elemtype字段。
 
     - elemtype *_type // 元素类型, 用于数据传递过程中的赋值
     - elemsize uint16 // 元素大小, 内存对齐, 用于buf中定位元素位置
 
 5. 锁
 
-    > 一个channel同时仅允许被一个goroutine读写，为了保证这个特性，channel内部实现了一个互斥锁，对channel的读写操作均需要先获取这个锁。
+    一个channel同时仅允许被一个goroutine读写，为了保证这个特性，channel内部实现了一个互斥锁，对channel的读写操作均需要先获取这个锁。
 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
@@ -108,43 +100,41 @@ author: feng6917
 
 1. 创建 channel
 
-    > 创建channel 的过程实际上是初始化hchan结构体的过程，底层会根据传入的参数初始化hchan结构体中的各个字段。
+    创建channel 的过程实际上是初始化hchan结构体的过程，底层会根据传入的参数初始化hchan结构体中的各个字段。
 
-    > 其中类型信息和缓冲区长度由make语句传入，buf的大小则与元素大小和缓冲区长度共同决定。
+    其中类型信息和缓冲区长度由make语句传入，buf的大小则与元素大小和缓冲区长度共同决定。
 
-    > 创建channel的伪代码如下所示：
+    创建channel的伪代码如下所示：
 
     ```
-        func makechan(t *chantype, size int) *hchan{
-            var c *hchan
-            c = new(hchan)
-            c.buf = malloc(元素类型大小*size)
-            c.elemsize = uint16(元素类型大小)
-            c.elemtype = 元素类型
-            c.dataqsiz = uint(size)
-            return c
-        }
+    func makechan(t *chantype, size int) *hchan{
+        var c *hchan
+        c = new(hchan)
+        c.buf = malloc(元素类型大小*size)
+        c.elemsize = uint16(元素类型大小)
+        c.elemtype = 元素类型
+        c.dataqsiz = uint(size)
+        return c
+    }
     ```
 
 2. 向channel 写数据
 
-    > 向channel写数据时，会先根据channel的类型检查写入数据的类型是否正确，不正确会panic。
-    >
-    > 如果等待接收队列recvq不为空，说明缓冲区中没有数据或者没有缓冲区，此时直接从receq取出G，并把数据写入，最后把该G唤醒，结束发送过程。
-    >
-    > 如果缓冲区有空余位置，将数据写入缓冲区，结束发送进程。
-    >
-    > 如果缓冲区没有空余位置，将发送数据写入G，将当前G加入sendq，进入睡眠，等待被读groutine唤醒。
-    >
+    向channel写数据时，会先根据channel的类型检查写入数据的类型是否正确，不正确会panic。
+
+    如果等待接收队列recvq不为空，说明缓冲区中没有数据或者没有缓冲区，此时直接从receq取出G，并把数据写入，最后把该G唤醒，结束发送过程。
+
+    如果缓冲区有空余位置，将数据写入缓冲区，结束发送进程。
+
+    如果缓冲区没有空余位置，将发送数据写入G，将当前G加入sendq，进入睡眠，等待被读groutine唤醒。
 
 3. 从channel 读数据
 
-    > 从channel读数据时，会先根据channel的类型检查读取数据的类型是否正确，不正确会panic。
-    >
-    > 1. 如果等待发送队列sendq不为空，且没有缓冲区，直接从sendq中取出G，把G中数据读出，最后把G唤醒，结束读取过程。
-    > 2. 如果等待发送队列sendq不为空，此时说明缓冲区已满，从缓冲区中首部读出数据，把G中数据写入缓冲区尾部，把G唤醒，结束读取过程。
-    > 3. 如果缓冲区中有数据，则从缓冲区取出数据，结束读取过程。
-    > 4. 将当前goroutine加入recv1，进入睡眠，等待被写goroutine唤醒。
+    从channel读数据时，会先根据channel的类型检查读取数据的类型是否正确，不正确会panic。
+    1. 如果等待发送队列sendq不为空，且没有缓冲区，直接从sendq中取出G，把G中数据读出，最后把G唤醒，结束读取过程。
+    2. 如果等待发送队列sendq不为空，此时说明缓冲区已满，从缓冲区中首部读出数据，把G中数据写入缓冲区尾部，把G唤醒，结束读取过程。
+    3. 如果缓冲区中有数据，则从缓冲区取出数据，结束读取过程。
+    4. 将当前goroutine加入recv1，进入睡眠，等待被写goroutine唤醒。
 
 4. 关闭channel
 
@@ -277,6 +267,34 @@ author: feng6917
 - Goroutine 的同步：`Channel` 还可以用于 Goroutine 的同步，例如可以使用 `Channel` 来等待多个 Goroutine 的完成。当一个 Goroutine 完成任务后，可以向 `Channel` 发送一个信号，其他 Goroutine 可以通过 `Channel` 接收这个信号，从而实现同步。
 
 - Goroutine 的取消：`Channel` 还可以用于 Goroutine 的取消，例如可以使用 `Channel` 来通知 Goroutine 停止执行。当一个 Goroutine 需要停止执行时，可以向 `Channel` 发送一个信号，其他 Goroutine 可以通过 `Channel` 接收这个信号，从而实现取消。
+
+  ``` go
+  package main
+
+  import (
+   "fmt"
+   "time"
+  )
+  
+  func main() {
+   ch := make(chan bool)
+   defer close(ch)
+  
+   go func(ch chan bool) {
+    for {
+     select {
+     case <-ch:
+      fmt.Println("收到消息")
+      break
+     default:
+      fmt.Println("没收到消息")
+     }
+    }
+   }(ch)
+   time.Sleep(time.Second)
+   ch <- true // 发送消息
+  }
+  ```
 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
