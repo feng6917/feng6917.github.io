@@ -237,3 +237,6 @@ author: feng6917
 
 - 网页方式
   ![alt text](../images/2025-1-13/image.png)
+
+- 文章分享
+  <https://www.52pojie.cn/forum.php?mod=viewthread&tid=1998711&page=1&extra=#pid52197275>  
