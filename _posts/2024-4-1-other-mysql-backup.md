@@ -3,7 +3,7 @@ layout: post
 title: "MySQL 数据备份"
 date:   2024-4-1
 tags: 
-  - 数据库
+  - 杂七杂八
 comments: true
 author: feng6917
 ---
