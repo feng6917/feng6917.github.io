@@ -3,7 +3,7 @@ layout: post
 title: "番茄小说下载"
 date:   2025-1-13
 tags: 
-  - dev
+  - 杂七杂八
 comments: true
 author: feng6917
 ---
@@ -170,14 +170,35 @@ author: feng6917
         data += "标签:" + req.BookData.Tags + "\n"
         abstract := strings.Replace(req.BookData.Abstract, "\n", "\n      ", -1)
         data += ("简介:" + abstract + "\n    \n")
+
+        // 追加写入内容
+        fname := filepath.Join("./books", req.BookData.BookName+".txt")
+        // jname := filepath.Join("./books", req.BookData.BookName+".json")
+        f, err := os.Create(fname)
+        if err != nil {
+            logrus.Errorf("create file error: %v", err)
+            return ""
+        }
+        defer f.Close()
+
+        // 3. 写入小说首部
+        f.WriteString(data)
+
         // 并发下载小说内容
         wg := sync.WaitGroup{}
-        wg.Add(len(req.Zhangjie.An))
         // 并发下载小说内容
-        ch := make(chan string, 5)
+        ch := make(chan string, 1)
+        // 获取并发下载量
+        concurrency := config.Concurrency
+        if concurrency == 0 {
+            concurrency = 5
+        }
+        
+        limit := make(chan struct{}, concurrency)
         for k, v := range req.Zhangjie.An {
+            wg.Add(1)
             go func(k int, v SearchAn) {
-                defer wg.Done()
+                limit <- struct{}{}
                 // 下载章节内容
                 txt := downZjText(v.ZjId)
                 // 章节内容字符转换
@@ -185,6 +206,9 @@ author: feng6917
                 // 拼接章节内容
                 req.Zhangjie.An[k].Data = ntxt
                 ch <- v.ZjStr
+                // 结束执行
+                <-limit
+                wg.Done()
             }(k, v)
         }
         var successCount int
@@ -198,12 +222,17 @@ author: feng6917
         }
         wg.Wait()
         close(ch)
+
+        // 4. 保存小说
+        // jm := make(map[string]string)
         // 组装小说内容
         for _, v := range req.Zhangjie.An {
             // 添加标题
-            data += ("第" + v.ZjStr + "章 " + v.Title)
+            tmp := "第" + v.ZjStr + "章 " + v.Title
             // 添加内容
-            data += (v.Data + "\n")
+            // jm[tmp] = v.Data
+            tmp += (v.Data + "\n")
+            f.WriteString(tmp)
         }
         return data
     }

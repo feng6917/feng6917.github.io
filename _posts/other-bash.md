@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "Windows 一些脚本"
+title: "一些脚本"
 date:   2024-4-1
 tags: 
-  - 脚本
+  - 杂七杂八
 comments: true
 author: feng6917
 ---

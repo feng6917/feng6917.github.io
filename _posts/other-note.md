@@ -3,7 +3,7 @@ layout: post
 title: "搭建 github.io 记录"
 date:   2024-8-21
 tags: 
-  - 笔记
+  - 杂七杂八
 comments: true
 author: feng6917
 ---
@@ -28,7 +28,6 @@ author: feng6917
   ![img](../images/2024-8-21/1.png)
 - 仓库名修改为自己的 github 账号名
   ![img](../images/2024-8-21/2.png)  
-
 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
@@ -103,7 +102,6 @@ author: feng6917
     这是我的第一篇文章的内容。
 
   ```
-
 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>

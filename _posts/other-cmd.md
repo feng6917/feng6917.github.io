@@ -3,12 +3,12 @@ layout: post
 title: "一些常见命令记录"
 date:   2024-4-1
 tags: 
-  - 命令
+  - 杂七杂八
 comments: true
 author: feng6917
 ---
 
-`一些操作命令记录，持续更新 ...`
+`一些操作命令记录，持续更新`
 
 <!-- more -->
 
@@ -753,13 +753,6 @@ author: feng6917
   git stash drop
   ```
 
-- 设置代理
-
-  ```
-  git config --global http.proxy socks5://127.0.0.1:1080
-  git config --global https.proxy socks5://127.0.0.1:1080
-  ```
-
 - 创建 submodule
 
   `git submodule add <submodule_url>`
@@ -838,6 +831,13 @@ author: feng6917
   git rebase --continue
   ```
 
+- 移除提交内容，如提交大文件无法上传，需要将其移除
+
+  ```
+  # 移除文件
+  git filter-branch -f --index-filter 'git rm --cached --ignore-unmatch local/1-6/124.mp4'
+  ```  
+
 - 设置代理
 
   ```
@@ -850,6 +850,9 @@ author: feng6917
   # 设置代理
   git config --global http.proxy '127.0.0.1:7890'
   git config --global https.proxy '127.0.0.1:7890'
+
+  git config --global http.proxy socks5://127.0.0.1:1080
+  git config --global https.proxy socks5://127.0.0.1:1080
   ```
 
 - Git 建议使用提交规范

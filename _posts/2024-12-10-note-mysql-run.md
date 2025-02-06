@@ -3,7 +3,7 @@ layout: post
 title: "读MySQL是怎样运行的笔记"
 date:   2024-12-10
 tags: 
-  - 书籍
+  - 笔记
 comments: true
 author: feng6917
 ---

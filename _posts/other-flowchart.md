@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "一些常见的系统图绘制"
+title: "常见的程序图绘制"
 date:   2024-10-10
 tags: 
-  - dev
+  - 杂七杂八
 comments: true
 author: feng6917
 ---
