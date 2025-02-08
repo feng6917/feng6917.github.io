@@ -92,7 +92,6 @@ author: feng6917
    4. 发送数据：当请求完成时，系统会将 Trace 的数据发送到追踪系统。追踪系统会将这些数据存储起来，并提供一个 Web 界面来查看追踪数据。
    5. 查看数据：你可以使用追踪系统的 Web 界面来查看 Trace 的数据。你可以查看 Trace 的路径，每个步骤的开始时间、结束时间和持续时间，以及错误信息等。
 
-##### 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
@@ -101,7 +100,7 @@ author: feng6917
 
 ##### Tags
 
-> 每个 Span 可以有多个键值 K/V 对形式的 Tags，Tags 是没有时间戳的，支持简单的对 Span 进行注解和补充。Tags 是一个 K/V 类型的键值对，用户可以自定义该标签并保存。主要用于链路追踪结果对查询过滤。如某 Span 是调用 Redis ，而可以设置 `redis` 的标签，这样通过搜索 `redis` 关键字，可以查询出所有相关的 Span 以及 trace；又如 `http.method="GET",http.status_code=200`，其中 key 值必须为字符串，value 必须是字符串，布尔型或者数值型。Span 中的 Tag 仅自己可见，不会随着 SpanContext 传递给后续 Span。
+每个 Span 可以有多个键值 K/V 对形式的 Tags，Tags 是没有时间戳的，支持简单的对 Span 进行注解和补充。Tags 是一个 K/V 类型的键值对，用户可以自定义该标签并保存。主要用于链路追踪结果对查询过滤。如某 Span 是调用 Redis ，而可以设置 `redis` 的标签，这样通过搜索 `redis` 关键字，可以查询出所有相关的 Span 以及 trace；又如 `http.method="GET",http.status_code=200`，其中 key 值必须为字符串，value 必须是字符串，布尔型或者数值型。Span 中的 Tag 仅自己可见，不会随着 SpanContext 传递给后续 Span。
 
  ```
  span.SetTag("http.method","GET")
@@ -110,7 +109,7 @@ author: feng6917
 
 ##### Logs
 
-> Logs 也是一个 K/V 类型的键值对，与 Tags 不同的是，Logs 还会记录写入 Logs 的时间，因此
+Logs 也是一个 K/V 类型的键值对，与 Tags 不同的是，Logs 还会记录写入 Logs 的时间，因此
 Logs 主要用于记录某些事件发生的时间。
 
 ```
@@ -121,31 +120,35 @@ span.LogFields(
 )
 ```
 
-> Opentracing 给出了一些惯用的 Tags 和 Logs，[链接](https://github.com/opentracing/specification/blob/master/semantic_conventions.md)
+Opentracing 给出了一些惯用的 Tags 和 Logs，[链接](https://github.com/opentracing/specification/blob/master/semantic_conventions.md)
 
 ##### SpanContext
->
-> 核心字段
 
-> 每个 Span 必须提供方法访问 SpanContext，SpanContext 代表跨越进程边界（在不同的 Span 中传递信息），传递到下级 Span 的状态。SpanContext 携带着一些用于跨服务通信的（跨进程）数据，主要包含：
+核心字段
 
-> 该 Span 的唯一标识信息，如：`span_id`、`trace_id`、`parent_id` 或 `sampled` 等
+每个 Span 必须提供方法访问 SpanContext，SpanContext 代表跨越进程边界（在不同的 Span 中传递信息），传递到下级 Span 的状态。SpanContext 携带着一些用于跨服务通信的（跨进程）数据，主要包含：
+
+该 Span 的唯一标识信息，如：`span_id`、`trace_id`、`parent_id` 或 `sampled` 等
 
 ##### Baggage Items
->
-> 为整条追踪连保存跨服务（跨进程）的 K/V 格式的用户自定义数据
 
-> Baggage Items 与 Tags 类似，也是 K/V 键值对。与 tags 不同的是：Baggage Items 的 Key 和 Value 都只能是 string 格式，Baggage items 不仅当前 Span 可见，其会随着 SpanContext 传递给后续所有的子 Span。要小心谨慎的使用 Baggage Items：因为在所有的 Span 中传递这些 Key/Value 会带来不小的网络和 CPU 开销。Baggage 是存储在 SpanContext 中的一个键值对集合。它会在一条追踪链路上的所有 Span 内全局传输，包含这些 Span 对应的 SpanContexts
+为整条追踪连保存跨服务（跨进程）的 K/V 格式的用户自定义数据
+
+Baggage Items 与 Tags 类似，也是 K/V 键值对。
+
+与 tags 不同的是：Baggage Items 的 Key 和 Value 都只能是 string 格式，Baggage items 不仅当前 Span 可见，其会随着 SpanContext 传递给后续所有的子 Span。
+
+要小心谨慎的使用 Baggage Items：因为在所有的 Span 中传递这些 Key/Value 会带来不小的网络和 CPU 开销。Baggage 是存储在 SpanContext 中的一个键值对集合。它会在一条追踪链路上的所有 Span 内全局传输，包含这些 Span 对应的 SpanContexts。
 
 ##### References
 
-> （引用关系）
+（引用关系）
 
-> Opentracing 定义了两种引用关系: ChildOf 和 FollowFrom，分别来看：
+OpenTracing 定义了两种引用关系: ChildOf 和 FollowFrom，分别来看：
 
 - ChildOf: 父 Span 的执行依赖子 Span 的执行结果时，此时子 Span 对父 Span 的引用关系是 ChildOf。比如对于一次 RPC 调用，服务端的 Span（子 Span）与客户端调用的 Span（父 Span）是 ChildOf 关系。
 
-- FollowFrom：父 Span 的执不依赖子 Span 执行结果时，此时子 Span 对父 Span 的引用关系是 FollowFrom。FollowFrom 常用于异步调用的表示，例如消息队列中 Consumerspan 与 Producerspan 之间的关系。
+- FollowFrom：父 Span 的执不依赖子 Span 执行结果时，此时子 Span 对父 Span 的引用关系是 FollowFrom。FollowFrom 常用于异步调用的表示，例如消息队列中 ConsumerSpan 与 ProducerSpan 之间的关系。
   
 ##### Trace
 
@@ -154,7 +157,6 @@ span.LogFields(
 
 > Trace 通常由多个 Span 组成，每个 Span 表示一个步骤。以下是一个 Trace 的基本流程
 
-##### 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
@@ -243,7 +245,6 @@ span.LogFields(
      
      ```
 
-##### 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
@@ -299,7 +300,6 @@ span.LogFields(
      
      ```
 
-##### 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
@@ -361,7 +361,6 @@ span.LogFields(
      
      ```
 
-##### 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
@@ -410,7 +409,6 @@ span.LogFields(
      }
      ```
 
-##### 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
@@ -476,7 +474,6 @@ span.LogFields(
      
      ```
 
-##### 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
@@ -485,8 +482,8 @@ span.LogFields(
 
 ##### metadata 发送方及接收使用方式
 
-  > 通过 metadata 我们可以将上一个进程中的全局对象透传到下一个被调用的进程。 type MD map[string][]string
-  >
+通过 metadata 我们可以将上一个进程中的全局对象透传到下一个被调用的进程。 type MD map[string][]string
+  
 - client(发送方):
 
   ```
@@ -557,7 +554,6 @@ span.LogFields(
 
 - `Extract(format.Carrier)`：一般从媒介（通常是 HTTP 头）获取跟踪上下文，常用于服务端。
 
-##### 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
