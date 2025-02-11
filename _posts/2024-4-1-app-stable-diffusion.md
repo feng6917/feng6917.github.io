@@ -3,7 +3,7 @@ layout: post
 title: "Stable Diffusion 文生图实践记录"
 date:   2024-9-12
 tags: 
-  - 杂七杂八
+  - 应用软件
 comments: true
 author: feng6917
 ---
