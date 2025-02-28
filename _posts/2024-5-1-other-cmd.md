@@ -242,13 +242,14 @@ author: feng6917
 - 空间占用
 
   ```  
-  # 查询文件 空间占用
-  [root@k8s-master-147 glusterVol]# du -sh model/
-  997M model/
   # 空间使用率
   [root@k8s-master-7 ~]# df ./myz/ -h
   Filesystem               Size  Used Avail Use% Mounted on
   /dev/mapper/centos-root   50G   41G  9.7G  81% /
+  
+  # 查询文件，文件夹 空间占用
+  [root@k8s-master-147 glusterVol]# du -sh model/
+  997M model/
   ```
 
 - 系统情况
@@ -322,10 +323,15 @@ author: feng6917
   NAME="eth0"
   UUID="b8e6a5c2-9a0d-4c2f-9b6b-9d8f8a6f8a6f" # 修改为eth0的UUID
   DEVICE="eth0"
+  # 指定网卡设备是否在系统启动时自动激活
   ONBOOT="yes"
+  # IP地址
   IPADDR="192.168.0.253"
+  # 掩码
   NETMASK="255.255.255.0"
+  # 网关
   GATEWAY="192.168.0.1"
+  # DNS
   DNS1="114.114.114.114"
   DNS2="8.8.8.8"
   ```
@@ -335,7 +341,14 @@ author: feng6917
   ```
   # 重启网络
   [root@k8s-master-253 ~]# systemctl restart network
+  # 启动或者关闭网络
   [root@k8s-master-253 ~]# ifdown ifcfg-eth0 && sudo ifup ifcfg-eth0
+  ```
+
+- ntfs 网盘挂载
+
+  ```
+  https://www.cnblogs.com/Firlsy/p/17379714.html
   ```
 
 <div style="text-align: right;">
