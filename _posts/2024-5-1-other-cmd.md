@@ -22,6 +22,8 @@ author: feng6917
 - [Docker](#docker)
 - [Git](#git)
 - [Visual Studio Code](#visual-studio-code)
+- [CURL](#curl)
+- [XShell](#xshell)
 
 #### Win
 
