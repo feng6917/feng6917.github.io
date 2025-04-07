@@ -147,6 +147,9 @@ author: feng6917
 
     # tail 命令可用于查看文件的内容，有一个常用的参数 -f 常用于查阅正在改变的日志文件。
     tail -f --since 1s logs.txt
+
+    # 查看服务位置
+    which nginx # 查看服务配置文件位置
   ```
 
 - 拷贝文件
@@ -500,6 +503,28 @@ author: feng6917
   ```
   helm uninstall chart-name --namespace namespace-name
   (helm v3.0) helm uninstall chart-name -n namespace
+  ```
+
+- helmfile
+
+  ```
+  helmfile.yml
+  
+  releases:
+    - name: storeproxy
+      namespace: singer
+      chart: "../services/store_proxy"
+      values:
+      - "../services/store_proxy/values.yaml"
+      wait: false
+      atomic: false
+  ```
+
+  ```
+  # 部署
+  helmfile -f helmfile.yaml apply
+  # 移除
+  helmfile -f helmfile.yaml delete
   ```
 
 <div style="text-align: right;">
@@ -1126,6 +1151,24 @@ author: feng6917
 
   ```
 
+<div style="text-align: right;">
+    <a href="#目录" style="text-decoration: none;">Top</a>
+</div>
+
+#### XShell
+
+- ctrl + l 清屏
+- ctrl + a 光标移到行首
+- ctrl + e 光标移到行尾
+- ctrl + c 终止当前命令
+- ctrl + z 暂停当前命令
+- ctrl + r 搜索历史命令
+- ctrl + u 删除光标到行首的内容
+- ctrl + k 删除光标到行尾的内容
+- ctrl + w 删除光标左边的单词
+- ctrl + y 粘贴 ctrl + u 或 ctrl + k 删除的内容
+- ctrl + t 交换光标左右两边的字符
+  
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
