@@ -465,6 +465,21 @@ author: feng6917
 
   ```
 
+- k8s nginx 服务代理转发
+
+  ```
+    // 获取真实IP地址
+    externalTrafficPolicy: LocalexternalTrafficPolicy: Local
+
+    type: NodePort
+    // 代理转发
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Original-User-Agent $http_user_agent;
+    proxy_set_header X-Forwarded-Proto $scheme;
+     
+  ```  
+
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
