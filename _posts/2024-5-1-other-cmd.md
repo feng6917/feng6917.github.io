@@ -139,6 +139,12 @@ author: feng6917
     # 查询大文件并排序
     find / -type f -size +1G  -print0 | xargs -0 du -h | sort -nr
 
+    # 匹配格式：list20240[0-4]*.tar.gz（0-4代表1-4月）
+    ls -l list20240[0-4]*.tar.gz
+
+    # 安全删除（显示删除过程，确认无误后执行）
+    rm -v list20240[0-4]*.tar.gz
+
     cat  由第一行开始显示文件内容
     tac  从最后一行开始显示，可以看出 tac 是 cat 的倒着写！
     nl   显示的时候，顺道输出行号！
@@ -255,6 +261,8 @@ author: feng6917
   # 查询文件，文件夹 空间占用
   [root@k8s-master-147 glusterVol]# du -sh model/
   997M model/
+
+  du -h --max-depth=2 ./
   ```
 
 - 系统情况
@@ -1121,6 +1129,33 @@ author: feng6917
   1. 运行镜像 docker run -it xxx:xxx /bin/bash
   2. root@7e7570d0a997:/# 执行相应操作（下载安装等）
   3. 打包镜像 docker commit -m "操作内容" 7e7570d0a997 xxx:xxx
+  ```
+
+- docker 无法拉取镜像
+  Error response from daemon: Get <https://registry.zhst.com/v2/>: x509: certificate signed by unknown authority
+
+  ```
+    修改 /etc/docker/daemon.json
+    "insecure-registries" : ["registry.zhst.com"], //添加配置
+  ```  
+
+- docker compose
+
+  ```
+  # 启动服务 -d 守护进程 后台运行
+  docker-compose up -d 
+  # 启动指定服务
+  docker-compose up -d service_name
+  # 停止服务
+  docker-compose down
+  # 查看服务状态
+  docker-compose ps
+  # 查看服务日志
+  docker-compose logs
+  # 查看服务配置
+  docker-compose config
+  # 查看服务镜像 
+  docker-compose images
   ```
 
 <div style="text-align: right;">
