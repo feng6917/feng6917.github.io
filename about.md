@@ -8,4 +8,4 @@ permalink: /about/
 
 ![img](./images/2024-10-12/555.gif_s400x0)
 
-[<strong><font face="逐浪像素字" color=red size=6>简历直通车</font></strong>](https://feng6917.github.io/resume/)
+<!-- [<strong><font face="逐浪像素字" color=red size=6>简历直通车</font></strong>](https://feng6917.github.io/resume/) -->
