@@ -40,6 +40,8 @@ author: feng6917
 1. 指针逃逸
 
     Go可以返回局部变量指针，这其实是一种典型的变量指针逃逸案例。
+    变量的生命周期超出了创建它的函数范围
+    变量被返回或在闭包中被引用
 
     ```go
     package main
@@ -99,6 +101,66 @@ author: feng6917
     ./main.go:4:5: inlining call to foo
     ./main.go:4:5: make([]int, 10000, 10000) escapes to heap
     ./main.go:8:11: make([]int, 10000, 10000) escapes to heap
+    ```
+
+    ```
+    针对切片长度导致的逃逸可以进行三种方式优化：1. 小切片 2. 切片重用 3. 使用切片池
+        // 2. 切片重用的示例
+        func sliceReuseDemo() {
+            fmt.Println("=== 切片重用示例 ===")
+            
+            // 创建一个较大的切片作为缓冲池
+            buffer := make([]int, 0, 10000)
+            
+            // 模拟多次使用同一个切片
+            for i := 0; i < 3; i++ {
+                // 重置切片，但保留底层数组
+                buffer = buffer[:0]
+                
+                // 填充数据
+                for j := 0; j < 10000; j++ {
+                    buffer = append(buffer, j)
+                }
+                
+                fmt.Printf("第%d次使用，长度: %d, 容量: %d\n", i+1, len(buffer), cap(buffer))
+            }
+        }
+
+        // 3. 对象池（sync.Pool）示例
+        type SliceBuffer struct {
+            data []int
+        }
+
+        var slicePool = sync.Pool{
+            New: func() interface{} {
+                return &SliceBuffer{
+                    data: make([]int, 0, 10000),
+                }
+            },
+        }
+
+        func poolDemo() {
+            fmt.Println("\n=== 对象池示例 ===")
+            
+            // 模拟多次从池中获取和放回对象
+            for i := 0; i < 3; i++ {
+                // 从池中获取对象
+                buf := slicePool.Get().(*SliceBuffer)
+                
+                // 重置切片
+                buf.data = buf.data[:0]
+                
+                // 填充数据
+                for j := 0; j < 10000; j++ {
+                    buf.data = append(buf.data, j)
+                }
+                
+                fmt.Printf("第%d次使用，长度: %d, 容量: %d\n", i+1, len(buf.data), cap(buf.data))
+                
+                // 使用完后放回池中
+                slicePool.Put(buf)
+            }
+        }
     ```
 
 3. 动态类型逃逸
