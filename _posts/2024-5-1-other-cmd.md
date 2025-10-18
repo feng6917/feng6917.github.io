@@ -24,6 +24,7 @@ author: feng6917
 - [Visual Studio Code](#visual-studio-code)
 - [CURL](#curl)
 - [XShell](#xshell)
+- [MySQL](#mysql)
 
 #### Win
 
@@ -158,6 +159,10 @@ author: feng6917
 
     # 查看服务位置
     which nginx # 查看服务配置文件位置
+
+    # 统计文件夹内存占用
+    du -s 20000* | awk '{sum += $1} END {print sum/1024 "M"}'
+    du -s $(ls -d [0-9]* 2>/dev/null | grep -E '^[0-9]{1,5}$') | awk '{sum += $1} END {print sum/1024 "M"}'
   ```
 
 - 拷贝文件
@@ -488,6 +493,50 @@ author: feng6917
      
   ```  
 
+- k8s 删除搜索到pod
+
+  ```
+    kubectl -n hummingbird get po | grep device | awk '{print $1}' | xargs kubectl -n hummingbird delete po
+  ```  
+
+- k8s 重建pv、pvc，清理硬盘空间
+  
+  0. 停止相关服务，编辑deploy/sts 副本数改为0，把pod停掉
+  1. 备份数据（如果数据重要）
+  2. 停止并删除卷
+
+      ```
+      gluster volume stop nsqd-0
+      gluster volume delete nsqd-0
+      ```  
+
+  3. 清理brick目录
+
+      ```
+      rm -rf /data/gluster/brick/nsqd-0/*
+      ```  
+
+  4. 重新创建卷
+
+      ```
+      gluster volume create nsqd-0 transport tcp k8s-master-157:/data_hdd/data2/glusterVol/nsqd-0
+      ```
+
+  5. 设置卷选项（可选，根据原来的配置）
+  6. 启动卷
+
+      ```
+      gluster volume start nsqd-0
+      ```  
+
+  7. 检查卷状态
+
+      ```
+      gluster volume info nsqd-0
+      ```  
+
+  8. 重新启动相关服务
+
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
@@ -519,20 +568,25 @@ author: feng6917
 - 安装chart
 
   ```
+
   helm install -name chart-name --namespace namespace-name chart-path/
   (helm v3.0) helm install chart-name chart-path/ -n namespace
+
   ```
 
 - 卸载chart
 
   ```
+
   helm uninstall chart-name --namespace namespace-name
   (helm v3.0) helm uninstall chart-name -n namespace
+
   ```
 
 - helmfile
 
   ```
+
   helmfile.yml
   
   releases:
@@ -543,13 +597,19 @@ author: feng6917
       - "../services/store_proxy/values.yaml"
       wait: false
       atomic: false
+
   ```
 
   ```
-  # 部署
+
+# 部署
+
   helmfile -f helmfile.yaml apply
-  # 移除
+
+# 移除
+
   helmfile -f helmfile.yaml delete
+
   ```
 
 <div style="text-align: right;">
@@ -563,6 +623,7 @@ author: feng6917
 - 高亮标注：
 
   ```
+
       # TODO： 标记代码中要实现的功能或任务
       # FIXME：标记代码中需要修复的问题或缺陷
       # NOTE：提供额外的注释或提示信息，帮助理解代码意图或涉及决策
@@ -1220,6 +1281,23 @@ author: feng6917
 - ctrl + w 删除光标左边的单词
 - ctrl + y 粘贴 ctrl + u 或 ctrl + k 删除的内容
 - ctrl + t 交换光标左右两边的字符
+
+#### MySQL
+
+- 查看数据库sleep连接数及清理
+
+  ```
+  # 查看数据库连接数
+  SHOW STATUS WHERE `variable_name` = 'Threads_connected';
+  # 查看连接详细信息
+  SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST;
+  # 组装SQL语句 命令Sleep 且 时间大于1s的连接
+  SELECT GROUP_CONCAT(CONCAT('KILL ', id) SEPARATOR ';') AS kill_commands
+  FROM information_schema.processlist
+  WHERE command = 'Sleep' AND time > 1;
+  # 根据结果 杀掉所有连接
+  KILL 79;KILL 78;KILL 74;KILL 76;KILL 18;KILL 3348;KILL 3346;KILL 4554
+  ```
   
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
