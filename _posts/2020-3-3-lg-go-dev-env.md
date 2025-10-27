@@ -24,6 +24,8 @@ author: feng6917
 
 - [编译](#编译)
 
+- [Web Grpc](#web-grpc)
+
 #### 安装包下载
 
 1. 请求 [下载地址](https://go.dev/dl/) 进行 安装包下载
@@ -226,6 +228,11 @@ author: feng6917
         SET GOARCH=amd64
         go build -o appName main.go
       ```
+
+#### Web Grpc
+
+1. [扩展程序导出](https://www.bilibili.com/opus/575052862027578581)
+2. [Google 导出和安装 扩展程序](https://www.cnblogs.com/CRobot/p/18820596)
 
 [Go Learn](https://feng6917.github.io/language-golang/#目录)
 
