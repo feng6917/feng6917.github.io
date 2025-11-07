@@ -187,3 +187,33 @@ author: feng6917
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
+
+<h2 style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">一、Lua 脚本与 Redis</h2>
+
+<!-- 目录容器 -->
+<div style="position: fixed; bottom: 240px; right: 10px; width: 240px; height: 320px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;">
+<strong>目录</strong>
+<ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
+    <li style="list-style-type: none;"><a href="#c-0-0">一、Lua 脚本与 Redis</a></li>
+    <ul style="padding-left: 15px; list-style-type: none;">
+<li style="list-style-type: none;"><a href="#c-1-0">1.1 为什么要在 Redis 中使用 Lua 脚本？</a></li>
+</ul>
+    <li style="list-style-type: none;"><a href="#c-1-1">二、go-redis 执行 Lua 脚本</a></li>
+<ul style="padding-left: 15px; list-style-type: none;">
+    <li style="list-style-type: none;"><a href="#c-2-0">2.1 在 Go 中执行 Lua 脚本</a></li>
+</ul>
+<li style="list-style-type: none;"><a href="#c-2-1">三、Redis 的 Script Load 及其应用</a></li>
+<ul style="padding-left: 15px; list-style-type: none;">
+    <li style="list-style-type: none;"><a href="#c-3-0">3.1 Script Load 是什么？</a></li>
+    <li style="list-style-type: none;"><a href="#c-3-1">3.2 Script Load 的应用场景</a></li>
+    <li style="list-style-type: none;"><a href="#c-3-2">3.3 Go-redis 示例：使用 Script Load 优化</a></li>
+</ul>
+<li style="list-style-type: none;"><a href="#c-3-3">四、Go 语言中的 embed 特性</a></li>
+<ul style="padding-left: 15px; list-style-type: none;">
+    <li style="list-style-type: none;"><a href="#c-4-0">4.1 embed 是什么？</a></li>
+    <li style="list-style-type: none;"><a href="#c-4-1">4.2 embed 的应用场景</a></li>
+    <li style="list-style-type: none;"><a href="#c-4-2">4.3 使用 go:embed 优化 Lua 脚本管理</a></li>
+</ul>
+<li style="list-style-type: none;"><a href="#c-4-3">五、总结</a></li>
+</ul>
+</div>
