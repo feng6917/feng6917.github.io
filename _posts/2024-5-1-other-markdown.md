@@ -10,133 +10,116 @@ author: feng6917
 
 <!-- more -->
 
-### 目录
+<h2 id="c-1-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">一、图片</h2>
 
-- [一、图片](#一图片)
-- [二、跳转](#二跳转)
-- [三、引用](#三引用)
-- [四、代码块](#四代码块)
-- [五、表格](#五表格)
-- [六、间隔线](#六间隔线)
-- [七、折叠][#七折叠]
-- [八、输入密码查看页面](#八输入密码查看页面)
+<h3 id="c-1-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">1.1 markdown 语法</h3>
 
-#### 一、图片
+![图片](../images/2024-10-12/1.jpg)
 
-1. markdown 语法
+<h3 id="c-1-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">1.2 html 语法</h3>
 
-    ![图片](../images/2024-10-12/1.jpg)
-
-2. html 语法
-
-    <img src="../images/2024-10-12/1.jpg" alt="图片" />
+<img src="../images/2024-10-12/1.jpg" alt="图片" />
 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
 
-#### 二、跳转
+<h2 id="c-2-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">二、跳转</h2>
 
-1. markdown 语法
+<h3 id="c-2-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">2.1 markdown 语法</h3>
 
-    [目录](#目录)
+[目录](#目录)
 
-2. html 语法
+<h3 id="c-2-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">2.2 html 语法</h3>
 
-    <a href="#目录" style="text-decoration: none;">目录</a>
+<a href="#目录" style="text-decoration: none;">目录</a>
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
+<h2 id="c-3-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">三、引用</h2>
 
-#### 三、引用
+<h3 id="c-3-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">3.1 markdown 语法</h3>
 
-1. markdown 语法
-    > 引用内容
+> 引用内容
 
-2. html 语法
-    <blockquote>
-        <p>引用内容</p>
-    </blockquote>
+<h3 id="c-3-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">3.2 html 语法</h3>
+
+<blockquote>
+    <p>引用内容</p>
+</blockquote>
 
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
 
-#### 四、代码块
+<h2 id="c-4-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">四、代码块</h2>
 
-1. markdown 语法
+<h3 id="c-4-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">4.1 markdown 语法</h3>
 
-    ```go
-    func main() {
-        fmt.Println("hello world")
-    }
-    ```
+```go
+func main() {
+    fmt.Println("hello world")
+}
+```
 
-2. html 语法
-    <pre><code class="language-go">func main() {
-        fmt.Println("hello world")
-    }</code></pre>
+<h3 id="c-4-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">4.2 html 语法</h3>
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
+<pre><code class="language-go">func main() {
+    fmt.Println("hello world")
+}</code></pre>
 
-#### 五、表格
+<h2 id="c-5-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">五、表格</h2>
 
-1. Markdown 表格语法
+<h3 id="c-5-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">5.1 markdown 语法</h3>
 
-    | 表头1 | 表头2 | 表头3 |
-    | ----- | ----- | ----- |
-    | 内容1 | 内容2 | 内容3 |
-    | 内容4 | 内容5 | 内容6 |
+| 表头1 | 表头2 | 表头3 |
+| ----- | ----- | ----- |
+| 内容1 | 内容2 | 内容3 |
+| 内容4 | 内容5 | 内容6 |
 
-2. html 语法
-    <table>
-        <thead>
-            <tr>
-                <th>表头1</th>
-                <th>表头2</th>
-                <th>表头3</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>内容1</td>
-                <td>内容2</td>
-                <td>内容3</td>
-            </tr>
-            <tr>
-                <td>内容4</td>
-                <td>内容5</td>
-                <td>内容6</td>
-            </tr>
-        </tbody>
-    </table>
+<h3 id="c-5-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">5.2 html 语法</h3>
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
+<table>
+    <thead>
+        <tr>
+            <th>表头1</th>
+            <th>表头2</th>
+            <th>表头3</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>内容1</td>
+            <td>内容2</td>
+            <td>内容3</td>
+        </tr>
+        <tr>
+            <td>内容4</td>
+            <td>内容5</td>
+            <td>内容6</td>
+        </tr>
+    </tbody>
+</table>
 
-#### 六、间隔线
+<h2 id="c-6-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">六、间隔线</h2>
 
-1. markdown 语法
+<h3 id="c-6-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">6.1 markdown 语法</h3>
 
-    ---
+---
 
-2. html 语法
-    <hr />
+<h3 id="c-6-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">6.2 html 语法</h3>
 
-    <hr style="background-color: blue;border: none;height: 15px;width: 100%" />
+<hr />
 
-#### 七、折叠
+<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
+
+<h2 id="c-7-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">七、折叠</h2>
 
     <details>
         <summary>点击展开</summary>
         <p>内容</p>
     </details>
 
-#### 八、输入密码查看页面
+<h2 id="c-8-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">八、输入密码查看页面</h2>
+
 >
 > 把js代码放到首位，pass1 为设置的登录密码.
 
@@ -184,36 +167,42 @@ author: feng6917
     </SCRIPT>
 ```
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
-<h2 style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">一、Lua 脚本与 Redis</h2>
-
 <!-- 目录容器 -->
 <div style="position: fixed; bottom: 240px; right: 10px; width: 240px; height: 320px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;">
-<strong>目录</strong>
-<ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
-    <li style="list-style-type: none;"><a href="#c-0-0">一、Lua 脚本与 Redis</a></li>
-    <ul style="padding-left: 15px; list-style-type: none;">
-<li style="list-style-type: none;"><a href="#c-1-0">1.1 为什么要在 Redis 中使用 Lua 脚本？</a></li>
-</ul>
-    <li style="list-style-type: none;"><a href="#c-1-1">二、go-redis 执行 Lua 脚本</a></li>
-<ul style="padding-left: 15px; list-style-type: none;">
-    <li style="list-style-type: none;"><a href="#c-2-0">2.1 在 Go 中执行 Lua 脚本</a></li>
-</ul>
-<li style="list-style-type: none;"><a href="#c-2-1">三、Redis 的 Script Load 及其应用</a></li>
-<ul style="padding-left: 15px; list-style-type: none;">
-    <li style="list-style-type: none;"><a href="#c-3-0">3.1 Script Load 是什么？</a></li>
-    <li style="list-style-type: none;"><a href="#c-3-1">3.2 Script Load 的应用场景</a></li>
-    <li style="list-style-type: none;"><a href="#c-3-2">3.3 Go-redis 示例：使用 Script Load 优化</a></li>
-</ul>
-<li style="list-style-type: none;"><a href="#c-3-3">四、Go 语言中的 embed 特性</a></li>
-<ul style="padding-left: 15px; list-style-type: none;">
-    <li style="list-style-type: none;"><a href="#c-4-0">4.1 embed 是什么？</a></li>
-    <li style="list-style-type: none;"><a href="#c-4-1">4.2 embed 的应用场景</a></li>
-    <li style="list-style-type: none;"><a href="#c-4-2">4.3 使用 go:embed 优化 Lua 脚本管理</a></li>
-</ul>
-<li style="list-style-type: none;"><a href="#c-4-3">五、总结</a></li>
-</ul>
+    <strong>目录</strong>
+        <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
+            <li style="list-style-type: none;"><a href="#c-1-0">一、图片</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;">
+                <li style="list-style-type: none;"><a href="#c-1-1">1.1 markdown-语法</a></li>
+                <li style="list-style-type: none;"><a href="#c-1-2">1.2 html-语法</a></li>
+            </ul>
+            <li style="list-style-type: none;"><a href="#c-2-0">二、跳转</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;">
+                <li style="list-style-type: none;"><a href="#c-2-1">2.1 markdown-语法</a></li>
+                <li style="list-style-type: none;"><a href="#c-2-2">2.2 html-语法</a></li>
+            </ul>
+            <li style="list-style-type: none;"><a href="#c-3-0">三、引用</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;">
+                <li style="list-style-type: none;"><a href="#c-3-1">3.1 markdown-语法</a></li>
+                <li style="list-style-type: none;"><a href="#c-3-2">3.2 html-语法</a></li>
+            </ul>
+            <li style="list-style-type: none;"><a href="#c-4-0">四、代码块</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;">
+                <li style="list-style-type: none;"><a href="#c-4-1">4.1 markdown-语法</a></li>
+                <li style="list-style-type: none;"><a href="#c-4-2">4.2 html-语法</a></li>
+            </ul>
+            <li style="list-style-type: none;"><a href="#c-5-0">五、表格</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;">
+                <li style="list-style-type: none;"><a href="#c-5-1">5.1 markdown-语法</a></li>
+                <li style="list-style-type: none;"><a href="#c-5-2">5.2 html-语法</a></li>
+            </ul>
+            <li style="list-style-type: none;"><a href="#c-6-0">六、间隔线 </a></li>
+            <ul style="padding-left: 15px; list-style-type: none;">
+                <li style="list-style-type: none;"><a href="#c-6-1">6.1 markdown-语法</a></li>
+                <li style="list-style-type: none;"><a href="#c-6-2">6.2 html-语法</a></li>
+            </ul>
+            <li style="list-style-type: none;"><a href="#c-7-0">七、折叠</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-8-0">八、输入密码查看页面</a></li>
+        </ul>
 </div>
