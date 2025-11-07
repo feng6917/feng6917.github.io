@@ -171,6 +171,44 @@ author: feng6917
           ./hello
           ```
 
+  3. git submodule
+      1. 添加子模块
+
+          ``` bash
+          git submodule add https://github.com/xxx/xxx.git
+          ```
+
+      2. 更新子模块
+
+          ``` bash
+          git submodule update --init --recursive
+          ```
+
+      3. 删除子模块
+
+          ``` bash
+          git rm --cached xxx
+          rm -rf xxx
+          rm .gitmodules
+          git commit -m "remove submodule"
+          ```
+
+  4. go.mod replace & indirect (建议使用)
+      1. replace
+
+          ``` bash
+          replace github.com/xxx/xxx => github.com/xxx/xxx v1.0.0
+          ```
+
+      2. indirect
+
+          ``` bash
+          require (
+              github.com/xxx/xxx v1.0.0
+              github.com/xxx/xxx v1.0.0 // indirect
+          )
+          ```
+
 #### 编译
 
 ---

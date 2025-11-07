@@ -537,6 +537,49 @@ author: feng6917
 
   8. 重新启动相关服务
 
+- svc 负载均衡 NodePort 方式参考
+
+  ```
+  apiVersion: v1
+
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: httptrans-internal
+      meta.helm.sh/release-namespace: hummingbird
+      service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    creationTimestamp: "2025-06-17T06:22:50Z"
+    labels:
+      app.kubernetes.io/managed-by: Helm
+    name: httptrans-internal
+    namespace: hummingbird
+    resourceVersion: "31130901"
+    uid: b7a438c1-f1e9-406c-89d8-61efcd5f328f
+  spec:
+    clusterIP: 10.96.229.81
+    clusterIPs:
+
+    - 10.96.229.81
+    externalTrafficPolicy: Cluster
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      nodePort: 31628
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      k8s-app: httptrans-internal
+    sessionAffinity: None
+    type: NodePort
+  status:
+    loadBalancer: {}
+
+  ```
+
 <div style="text-align: right;">
     <a href="#目录" style="text-decoration: none;">Top</a>
 </div>
