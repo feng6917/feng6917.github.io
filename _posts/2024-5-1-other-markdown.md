@@ -3,7 +3,7 @@ layout: post
 title: "Markdown与HTML语法技术手册"
 date:   2024-10-12
 tags: 
-  - 工具
+  - 工具类
 comments: true
 author: feng6917
 ---
@@ -194,15 +194,6 @@ ___（下划线样式）
 
 ```
 
-<hr aria-hidden="true" style="
-    border: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #1bb75c, transparent);
-    margin: 2rem 0;
-" />
-
-<div class="divider" role="separator" aria-orientation="horizontal"></div>
-
 - 技术考量：
   - 语义化分隔（role="separator"）
   - 可访问性优化（aria-hidden）
@@ -287,6 +278,8 @@ ___（下划线样式）
     </SCRIPT>
 ```
 
+<hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
+
 <!-- 目录容器 -->
 <div style="position: fixed; bottom: 240px; right: 10px; width: 240px; height: 320px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;">
     <strong>目录</strong>
@@ -327,5 +320,4 @@ ___（下划线样式）
         </ul>
 </div>
 
----
 本技术手册将持续更新，欢迎提交Issue和Pull Request
