@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "常见镜像下载及启动盘制作"
+title: "常见镜像及启动盘制作"
 date:   2025-1-10
 tags: 
   - 杂七杂八
@@ -11,49 +11,37 @@ author: feng6917
 `win、linux、kylin ...`
 
 <!-- more -->
-### 目录
+<h2 id="c-1-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;" href="https://guidest.com/cn/markdown/image/">一、镜像烧录工具</h2>
 
-- [一、镜像烧录工具](#一镜像烧录工具)
-- [二、常用镜像启动盘制作](#二常用镜像制作推荐)
-  - [Windows系统镜像(推荐使用官方安装方式)](#windows系统镜像推荐使用官方安装方式)
-  - [Centos系统镜像](#centos系统镜像推荐rufsventoy)
-  - [Kylin系统镜像](#kylin系统镜像推荐ventoy)
+<h3 id="c-1-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">1.1 Ventoy</h3>
 
-### 一、镜像烧录工具
+```
+简单来说，Ventoy是一个制作可启动U盘的开源工具。
+有了Ventoy你就无需反复地格式化U盘，你只需要把 ISO/WIM/IMG/VHD(x)/EFI 等类型的文件直接拷贝到U盘里面就可以启动了，无需其他操作。
+适合系统：https://www.ventoy.net/cn/isolist.html
+url: https://www.ventoy.net/cn/index.html
+```
 
-- Ventoy
+<h3 id="c-1-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">1.2 Rufs</h3>
 
-    ```
-    简单来说，Ventoy是一个制作可启动U盘的开源工具。
-    有了Ventoy你就无需反复地格式化U盘，你只需要把 ISO/WIM/IMG/VHD(x)/EFI 等类型的文件直接拷贝到U盘里面就可以启动了，无需其他操作。
-    适合系统：https://www.ventoy.net/cn/isolist.html
-    url: https://www.ventoy.net/cn/index.html
-    ```
+```
+Rufus 是一个开源的镜像烧录实用工具，可以帮助格式化和创建可引导 USB 闪存盘，比如 USB 随身碟、记忆棒等。Rufus 的体积非常小、但功能全面、速度较快。
+适合系统: Windows 7/8/10
+url: https://rufus.ie/zh/
+```
 
-- Rufs
+<h3 id="c-1-3" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">1.3 老毛桃、大白菜 等PE系统</h3>
 
-    ```
-    Rufus 是一个开源的镜像烧录实用工具，可以帮助格式化和创建可引导 USB 闪存盘，比如 USB 随身碟、记忆棒等。Rufus 的体积非常小、但功能全面、速度较快。
-    适合系统: Windows 7/8/10
-    url: https://rufus.ie/zh/
-    ```
+```
+老毛桃：https://www.laomaotao.net/
+大白菜: https://www.dabaicai.com/u.html
+优启通: https://www.uqitong.com/
+U启动: http://www.uqidong.com/download/
+```
 
-- 老毛桃、大白菜、优启通、U启动 等PE系统
+<h2 id="c-2-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;" href="https://guidest.com/cn/markdown/image/">二、常用镜像制作推荐</h2>
 
-    ```
-    老毛桃：https://www.laomaotao.net/
-    大白菜: https://www.dabaicai.com/u.html
-    优启通: https://www.uqitong.com/
-    U启动: http://www.uqidong.com/download/
-    ```
-
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
-### 二、常用镜像制作推荐
-
-#### Windows系统镜像(推荐使用官方安装方式)
+<h3 id="c-2-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">2.1 Windows系统镜像(推荐使用官方安装方式)</h3>
 
 1. 进入链接 <https://www.microsoft.com/zh-cn/software-download> 选择合适版本进行下载
 ![alt text](../images/2025-1-10/image.png)
@@ -98,11 +86,7 @@ author: feng6917
 
             ![alt text](../images/2025-1-10/image-13.png)  
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
-#### Centos系统镜像(推荐Rufs、Ventoy)
+<h3 id="c-2-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">2.2 Centos系统镜像(推荐Rufs、Ventoy)</h3>
 
 1. 进入链接 <https://vault.centos.org/> 选择合适版本进入
 
@@ -121,11 +105,7 @@ author: feng6917
     ![alt text](../images/2025-1-10/image-12.png)
 6. 镜像制作(推荐Rufs、Ventoy)，Rufs 参考Windows镜像制作，Ventoy参考Kylin镜像制作。
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
-#### Kylin系统镜像(推荐Ventoy)
+<h3 id="c-2-3" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">2.3 Kylin系统镜像(推荐Ventoy)</h3>
 
 1. 进去链接 <https://eco.kylinos.cn/partners/mirror.html?class_id=1> 选择不同系统及镜像进行下载，没有登录需要注册登录。
 
@@ -144,6 +124,25 @@ author: feng6917
 
     ![alt text](../images/2025-1-10/image-23.png)
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
+<hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
+
+<!-- 目录容器 -->
+<div style="position: fixed; bottom: 240px; right: 10px; width: 240px; height: 320px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;">
+    <strong>目录</strong>
+        <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
+            <li style="list-style-type: none;"><a href="#c-1-0">一、镜像烧录工具</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;">
+                <li style="list-style-type: none;"><a href="#c-1-1">1.1 Ventoy</a></li>
+                <li style="list-style-type: none;"><a href="#c-1-2">1.2 Rufs</a></li>
+                <li style="list-style-type: none;"><a href="#c-1-3">1.3 老毛桃、大白菜 等PE系统</a></li>
+            </ul>
+            <li style="list-style-type: none;"><a href="#c-2-0">二、常用镜像启动盘制作</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;">
+                <li style="list-style-type: none;"><a href="#c-2-1">2.1 Windows系统镜像</a></li>
+                <li style="list-style-type: none;"><a href="#c-2-2">2.2 Centos系统镜像</a></li>
+                <li style="list-style-type: none;"><a href="#c-2-3">2.3 Kylin系统镜像</a></li>
+            </ul>
+        </ul>
 </div>
+
+本技术手册将持续更新，欢迎提交Issue和Pull Request
