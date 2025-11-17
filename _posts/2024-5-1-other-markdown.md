@@ -513,9 +513,9 @@ Markdown 表格是一种用于组织和展示结构化数据的标记语法，�
 
 - 表格语法核心元素
   创建 Markdown表格 需要掌握三个核心符号：
-  - | (竖线) - 分隔不同的列
-  - - (连字符) - 定义表头分隔线
-  - : (冒号) - 对齐方式
+  - `|` (竖线) `-` 分隔不同的列
+  - `-` (连字符) `-` 定义表头分隔线
+  - `:` (冒号) `-` 对齐方式
 
 - 基础表格结构：
 
@@ -528,8 +528,8 @@ Markdown 表格是一种用于组织和展示结构化数据的标记语法，�
 
 - 语法要点说明
   - 表头和数据行之间必须有分隔线
-  - 分隔线至少需要三个连字符 ---
-  - 两端的竖线 | 是可选的，但建议保留以提高可读性
+  - 分隔线至少需要三个连字符 `---`
+  - 两端的竖线 `|` 是可选的，但建议保留以提高可读性
   - 不需要严格对齐，但对齐后更美观
 
 - 表格格式化技巧
@@ -620,15 +620,94 @@ Markdown 表格是一种用于组织和展示结构化数据的标记语法，�
     </tfoot>
 </table>
 
-<h2 id="c-6-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">六、内容分隔</h2>
+<h2 id="c-6-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">六、分隔线</h2>
 
-<h3 id="c-6-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">6.1 Markdown分隔线</h3>
+<h3 id="c-6-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">6.1 基础分割线语法</h3>
 
----
-***
-———————————
+1. 使用三个或更多的连字符 `-`、星号 `*` 或下划线 `_` 来创建水平分割线：
 
-<h3 id="c-6-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">6.2 HTML分隔元素</h3>
+    - 渲染效果：
+        1. ---
+        2. ***
+        3. ___
+
+2. 带文本的分割线（自定义）
+
+   由于原生Markdown不支持带文本的分割线，但可以通过HTML或CSS实现：
+
+   <div align="center">
+   <strong>· · ·</strong>
+   </div>
+
+   <p align="center">•••</p>
+
+<h3 id="c-6-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">6.2 HTML 分割线完整指南</h3>
+
+1. 基础`<hr>` 标签
+
+   <p>上面的内容</p>
+   <hr>
+   <p>下面的内容</p>
+
+2. 带样式的分割线
+
+基础样式
+
+<hr style="border: none; height: 2px; background: linear-gradient(90deg, transparent, #333, transparent);">
+
+<hr style="border: none; height: 1px; background-color: #e0e0e0;">
+
+<hr style="border: 0; border-top: 3px double #8c8c8c;">
+
+2. 渐变分割线：
+
+<hr style="border: 0;height: 1px;background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));">
+
+3. 带图标的分割线
+
+<div style="text-align: center; margin: 2rem 0;">
+
+<hr style="
+    display: inline-block;
+    width: 30%;
+    vertical-align: middle;
+    border: none;
+    height: 1px;
+    background: #ccc;
+">
+<span style="
+    display: inline-block;
+    padding: 0 1rem;
+    color: #666;
+    font-size: 1.2rem;
+">❦</span>
+<hr style="
+    display: inline-block;
+    width: 30%;
+    vertical-align: middle;
+    border: none;
+    height: 1px;
+    background: #ccc;
+">
+</div>
+
+4. 动画分割线
+
+<hr style="
+  border: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #ff6b6b);
+  background-size: 400% 400%;
+  animation: gradientShift 3s ease infinite;
+">
+
+<style>
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+</style>
 
 <hr class="section-divider" />
 
@@ -639,14 +718,86 @@ Markdown 表格是一种用于组织和展示结构化数据的标记语法，�
     margin: 2rem 0;
 " />
 
+5. 可重用的分割线类
+
+<style>
+/* 基础分割线 */
+.divider {
+  border: none;
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 2rem 0;
+}
+
+/* 渐变分割线 */
+.divider-gradient {
+  border: none;
+  height: 2px;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  margin: 2rem 0;
+}
+
+/* 虚线分割线 */
+.divider-dashed {
+  border: none;
+  height: 1px;
+  background: repeating-linear-gradient(
+    90deg,
+    #ccc,
+    #ccc 5px,
+    transparent 5px,
+    transparent 10px
+  );
+  margin: 2rem 0;
+}
+
+/* 阴影分割线 */
+.divider-shadow {
+  border: none;
+  height: 6px;
+  background: linear-gradient(180deg,
+    rgba(0,0,0,0.1) 0%,
+    transparent 50%,
+    rgba(0,0,0,0.1) 100%);
+  margin: 2rem 0;
+}
+
+/* 带文本的分割线容器 */
+.divider-with-text {
+  display: flex;
+  align-items: center;
+  margin: 2rem 0;
+  color: #666;
+}
+
+.divider-with-text::before,
+.divider-with-text::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #e0e0e0;
+}
+
+.divider-text {
+  padding: 0 1rem;
+  font-size: 0.9rem;
+}
+</style>
+
+<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp普通内容</p>
+<hr class="divider">
+<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp渐变分割线下方</p>
+<hr class="divider-gradient">
+<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp虚线分割线下方</p>
+<hr class="divider-dashed">
+
+<div class="divider-with-text">
+  <span class="divider-text">继续阅读</span>
+</div>
+
 <div class="divider" role="separator" aria-orientation="horizontal"></div>
 
 <h2 id="c-7-0" style="text-align: center; color: black; background: linear-gradient(90deg,transparent, #1bb75c 40%, transparent); margin: 1.4rem 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 14px; letter-spacing: .33px;"></h2>
-
-- 技术考量：
-  - 语义化分隔（role="separator"）
-  - 可访问性优化（aria-hidden）
-  - CSS渐变和动画效果
 
 <h2 id="c-7-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">七、交互式内容</h2>
 
@@ -753,8 +904,8 @@ Markdown 表格是一种用于组织和展示结构化数据的标记语法，�
             </ul>
             <li style="list-style-type: none;"><a href="#c-6-0">六、内容间隔 </a></li>
             <ul style="padding-left: 15px; list-style-type: none;">
-                <li style="list-style-type: none;"><a href="#c-6-1">6.1 Markdown分割线</a></li>
-                <li style="list-style-type: none;"><a href="#c-6-2">6.2 HTML分割元素</a></li>
+                <li style="list-style-type: none;"><a href="#c-6-1">6.1 基础分割线语法</a></li>
+                <li style="list-style-type: none;"><a href="#c-6-2">6.2 HTML分割线完整指南</a></li>
             </ul>
             <li style="list-style-type: none;"><a href="#c-7-0">七、交互式内容</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
