@@ -661,141 +661,141 @@ Markdown 表格是一种用于组织和展示结构化数据的标记语法，�
 
 2. 渐变分割线：
 
-<hr style="border: 0;height: 1px;background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));">
+    <hr style="border: 0;height: 1px;background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.75), rgba(0,0,0,0));">
 
 3. 带图标的分割线
 
-<div style="text-align: center; margin: 2rem 0;">
+    <div style="text-align: center; margin: 2rem 0;">
 
-<hr style="
-    display: inline-block;
-    width: 30%;
-    vertical-align: middle;
-    border: none;
-    height: 1px;
-    background: #ccc;
-">
-<span style="
-    display: inline-block;
-    padding: 0 1rem;
-    color: #666;
-    font-size: 1.2rem;
-">❦</span>
-<hr style="
-    display: inline-block;
-    width: 30%;
-    vertical-align: middle;
-    border: none;
-    height: 1px;
-    background: #ccc;
-">
-</div>
+    <hr style="
+        display: inline-block;
+        width: 30%;
+        vertical-align: middle;
+        border: none;
+        height: 1px;
+        background: #ccc;
+    ">
+    <span style="
+        display: inline-block;
+        padding: 0 1rem;
+        color: #666;
+        font-size: 1.2rem;
+    ">❦</span>
+    <hr style="
+        display: inline-block;
+        width: 30%;
+        vertical-align: middle;
+        border: none;
+        height: 1px;
+        background: #ccc;
+    ">
+    </div>
 
 4. 动画分割线
 
-<hr style="
-  border: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #ff6b6b);
-  background-size: 400% 400%;
-  animation: gradientShift 3s ease infinite;
-">
-
-<style>
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-</style>
-
-<hr class="section-divider" />
-
-<hr aria-hidden="true" style="
+    <hr style="
     border: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #1bb75c, transparent);
-    margin: 2rem 0;
-" />
+    height: 3px;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #ff6b6b);
+    background-size: 400% 400%;
+    animation: gradientShift 3s ease infinite;
+    ">
+
+    <style>
+    @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+    }
+    </style>
+
+    <hr class="section-divider" />
+
+    <hr aria-hidden="true" style="
+        border: 0;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #1bb75c, transparent);
+        margin: 2rem 0;
+    " />
 
 5. 可重用的分割线类
 
-<style>
-/* 基础分割线 */
-.divider {
-  border: none;
-  height: 1px;
-  background-color: #e0e0e0;
-  margin: 2rem 0;
-}
+    <style>
+    /* 基础分割线 */
+    .divider {
+    border: none;
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 2rem 0;
+    }
 
-/* 渐变分割线 */
-.divider-gradient {
-  border: none;
-  height: 2px;
-  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-  margin: 2rem 0;
-}
+    /* 渐变分割线 */
+    .divider-gradient {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    margin: 2rem 0;
+    }
 
-/* 虚线分割线 */
-.divider-dashed {
-  border: none;
-  height: 1px;
-  background: repeating-linear-gradient(
-    90deg,
-    #ccc,
-    #ccc 5px,
-    transparent 5px,
-    transparent 10px
-  );
-  margin: 2rem 0;
-}
+    /* 虚线分割线 */
+    .divider-dashed {
+    border: none;
+    height: 1px;
+    background: repeating-linear-gradient(
+        90deg,
+        #ccc,
+        #ccc 5px,
+        transparent 5px,
+        transparent 10px
+    );
+    margin: 2rem 0;
+    }
 
-/* 阴影分割线 */
-.divider-shadow {
-  border: none;
-  height: 6px;
-  background: linear-gradient(180deg,
-    rgba(0,0,0,0.1) 0%,
-    transparent 50%,
-    rgba(0,0,0,0.1) 100%);
-  margin: 2rem 0;
-}
+    /* 阴影分割线 */
+    .divider-shadow {
+    border: none;
+    height: 6px;
+    background: linear-gradient(180deg,
+        rgba(0,0,0,0.1) 0%,
+        transparent 50%,
+        rgba(0,0,0,0.1) 100%);
+    margin: 2rem 0;
+    }
 
-/* 带文本的分割线容器 */
-.divider-with-text {
-  display: flex;
-  align-items: center;
-  margin: 2rem 0;
-  color: #666;
-}
+    /* 带文本的分割线容器 */
+    .divider-with-text {
+    display: flex;
+    align-items: center;
+    margin: 2rem 0;
+    color: #666;
+    }
 
-.divider-with-text::before,
-.divider-with-text::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: #e0e0e0;
-}
+    .divider-with-text::before,
+    .divider-with-text::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #e0e0e0;
+    }
 
-.divider-text {
-  padding: 0 1rem;
-  font-size: 0.9rem;
-}
-</style>
+    .divider-text {
+    padding: 0 1rem;
+    font-size: 0.9rem;
+    }
+    </style>
 
-<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp普通内容</p>
-<hr class="divider">
-<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp渐变分割线下方</p>
-<hr class="divider-gradient">
-<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp虚线分割线下方</p>
-<hr class="divider-dashed">
+    <p>       普通内容</p>
+    <hr class="divider">
+    <p>       渐变分割线下方</p>
+    <hr class="divider-gradient">
+    <p>       虚线分割线下方</p>
+    <hr class="divider-dashed">
 
-<div class="divider-with-text">
-  <span class="divider-text">继续阅读</span>
-</div>
+    <div class="divider-with-text">
+    <span class="divider-text">继续阅读</span>
+    </div>
 
-<div class="divider" role="separator" aria-orientation="horizontal"></div>
+    <div class="divider" role="separator" aria-orientation="horizontal"></div>
 
 <h2 id="c-7-0" style="text-align: center; color: black; background: linear-gradient(90deg,transparent, #1bb75c 40%, transparent); margin: 1.4rem 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 14px; letter-spacing: .33px;"></h2>
 
