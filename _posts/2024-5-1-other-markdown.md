@@ -12,9 +12,9 @@ author: feng6917
 
 <!-- more -->
 
-<h2 id="c-1-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;" href="https://guidest.com/cn/markdown/image/">一、图片</h2>
+<h2 id="c-1-0" class="mh1">一、图片</h2>
 
-<h3 id="c-1-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">1.1 基础语法</h3>
+<h3 id="c-1-1" class="mh2">1.1 基础语法</h3>
 
 ```
 ![替代文字](图片路径)
@@ -32,7 +32,7 @@ author: feng6917
   - 方括号内为alt文本，对SEO和可访问性至关重要
   - 部分解析器支持花括号内的尺寸控制（非标准）
 
-<h3 id="c-1-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">1.2 实际使用示例</h3>
+<h3 id="c-1-2" class="mh2">1.2 实际使用示例</h3>
 
 本地图片示例：
 
@@ -49,7 +49,7 @@ author: feng6917
   ![网站Logo](https://dummyimage.com/largerectangle/09f/fff&text=guidest.com "网站标志")
   ```  
 
-<h3 id="c-1-3" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">1.3 路径使用推荐</h3>
+<h3 id="c-1-3" class="mh2">1.3 路径使用推荐</h3>
 
 相对路径（推荐）：
 
@@ -75,7 +75,7 @@ macOS/Linux：/Users/username/Documents/image.png
 注意路径分隔符在不同操作系统中的差异
 ```
 
-<h3 id="c-1-4" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">1.4 调整图片尺寸</h3>
+<h3 id="c-1-4" class="mh2">1.4 调整图片尺寸</h3>
 
 Markdown原生语法无法直接调整图片大小，需要使用HTML标签：
 
@@ -84,7 +84,7 @@ Markdown原生语法无法直接调整图片大小，需要使用HTML标签：
 <img src="logo.png" width="50%" alt="响应式图片">
 ```
 
-<h3 id="c-1-5" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">1.5 图片居中展示</h3>
+<h3 id="c-1-5" class="mh2">1.5 图片居中展示</h3>
 
 方法一：使用center标签
 
@@ -110,16 +110,16 @@ Markdown原生语法无法直接调整图片大小，需要使用HTML标签：
 </p>
 ```
 
-<h3 id="c-1-6" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">1.6 图文混排</h3>
+<h3 id="c-1-6" class="mh2">1.6 图文混排</h3>
 
 ```
 <img src="../images/2024-10-12/1.jpg" style="float:right; margin:0 0 1em 1em;" width="150">
 这里是环绕文字内容，图片会浮动在右侧...
 ```
 
-<h2 id="c-2-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">二、链接</h2>
+<h2 id="c-2-0" class="mh1">二、链接</h2>
 
-<h3 id="c-2-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">2.1 基础语法-内联链接</h3>
+<h3 id="c-2-1" class="mh2">2.1 基础语法-内联链接</h3>
 
 内联链接是最常用的链接方式，格式简单直观：
 
@@ -147,7 +147,7 @@ Markdown原生语法无法直接调整图片大小，需要使用HTML标签：
     对搜索引擎优化有帮助
     ```
 
-<h3 id="c-2-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">2.2 基础语法-自动链接</h3>
+<h3 id="c-2-2" class="mh2">2.2 基础语法-自动链接</h3>
 
 直接输入网址或邮箱地址，Markdown会自动识别：
 
@@ -163,7 +163,7 @@ Markdown原生语法无法直接调整图片大小，需要使用HTML标签：
   - 用尖括号：<https://www.example.com>
   - 邮箱地址：<example@email.com>
 
-<h3 id="c-2-3" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">2.3 基础语法-引用式链接</h3>  
+<h3 id="c-2-3" class="mh2">2.3 基础语法-引用式链接</h3>  
 
 - 为什么使用引用式链接？
 
@@ -191,7 +191,7 @@ Markdown原生语法无法直接调整图片大小，需要使用HTML标签：
     [1]: https://www.google.com "Google 搜索引擎"
     [wiki]: https://zh.wikipedia.org "中文维基百科"
 
-<h3 id="c-2-4" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">2.4 页面内锚点链接</h3>
+<h3 id="c-2-4" class="mh2">2.4 页面内锚点链接</h3>
 
 用于在同一文档内跳转，特别适合长文档导航：
 
@@ -219,7 +219,7 @@ Markdown原生语法无法直接调整图片大小，需要使用HTML标签：
   - 空格替换为连字符 -
   - 移除特殊字符
 
-<h3 id="c-2-5" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">2.5 自定义锚点</h3>  
+<h3 id="c-2-5" class="mh2">2.5 自定义锚点</h3>  
 
 <h2 id="architecture">技术架构设计</h2>
 
@@ -227,7 +227,7 @@ Markdown原生语法无法直接调整图片大小，需要使用HTML标签：
 
 <a href="https://example.com" target="_blank" rel="noopener noreferrer">外部链接</a>
 
-<h3 id="c-2-6" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">2.6 链接技巧</h3>
+<h3 id="c-2-6" class="mh2">2.6 链接技巧</h3>
 
 - Markdown 图片链接和链接图片
 
@@ -295,7 +295,7 @@ Markdown原生语法无法直接调整图片大小，需要使用HTML标签：
     [打开应用](myapp://deep-link/page)
   ```
 
-<h2 id="c-3-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">三、代码块</h2>
+<h2 id="c-3-0" class="mh1">三、代码块</h2>
 
 Markdown代码块允许你以适当的格式和语法高亮显示代码。它们保留空格、缩进和特殊字符，使代码易于阅读。
 
@@ -372,9 +372,9 @@ Markdown代码块允许你以适当的格式和语法高亮显示代码。它们
     }</code></pre>
     </div>
 
-<h2 id="c-4-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">四、复选框</h2>
+<h2 id="c-4-0" class="mh1">四、复选框</h2>
 
-<h3 id="c-4-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">4.1 基础复选框语法</h3>
+<h3 id="c-4-1" class="mh2">4.1 基础复选框语法</h3>
 
 Markdown 复选框是交互式元素，允许您在 Markdown 文档中创建任务列表。它们提供了一种直观的方式来跟踪项目进度、创建检查清单，并直接在文档中管理任务。
 
@@ -405,7 +405,7 @@ Markdown 复选框是交互式元素，允许您在 Markdown 文档中创建任�
   2. 大小写敏感：已选中项目使用小写 'x'
   3. 列表格式：必须遵循正确的列表语法
 
-<h3 id="c-4-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">4.2 高级格式化技巧</h3>
+<h3 id="c-4-2" class="mh2">4.2 高级格式化技巧</h3>
 
 - 优先级指示器
 
@@ -438,7 +438,7 @@ Markdown 复选框是交互式元素，允许您在 Markdown 文档中创建任�
     - [ ] ⚠️ 数据库迁移脚本待审查
     - [ ] 🔒 需要生产环境访问权限
 
-<h3 id="c-4-3" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">4.3 HTML 增强复选框</h3>
+<h3 id="c-4-3" class="mh2">4.3 HTML 增强复选框</h3>
 
 对于支持 HTML 的平台，您可以创建更复杂的复选框：
 
@@ -505,9 +505,9 @@ Markdown 复选框是交互式元素，允许您在 Markdown 文档中创建任�
 }
 ```
 
-<h2 id="c-5-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">五、表格</h2>
+<h2 id="c-5-0" class="mh1">五、表格</h2>
 
-<h3 id="c-5-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">5.1 基础表格语法</h3>
+<h3 id="c-5-1" class="mh2">5.1 基础表格语法</h3>
 
 Markdown 表格是一种用于组织和展示结构化数据的标记语法，通过简单的符号组合就能创建出整洁美观的表格。掌握Markdown表格制作技巧，能让你的文档内容更加清晰有条理，是每个内容创作者必备的技能。
 
@@ -555,7 +555,7 @@ Markdown 表格是一种用于组织和展示结构化数据的标记语法，�
   | 删除线   | `~~删除内容~~`       | ~~删除内容~~ |
   ```  
 
-<h3 id="c-5-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">5.2 高级表格</h3>
+<h3 id="c-5-2" class="mh2">5.2 高级表格</h3>
 
 - 处理长文本内容
 
@@ -591,7 +591,7 @@ Markdown 表格是一种用于组织和展示结构化数据的标记语法，�
   | \    | `\\`     | 反斜杠本身需要转义 |
   ```  
 
-<h3 id="c-5-3" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">5.3 结合 HTML 实现复杂表格</h3>
+<h3 id="c-5-3" class="mh2">5.3 结合 HTML 实现复杂表格</h3>
 
 当标准 Markdown语法 无法满足需求时，可以结合 HTML：
 
@@ -620,9 +620,9 @@ Markdown 表格是一种用于组织和展示结构化数据的标记语法，�
     </tfoot>
 </table>
 
-<h2 id="c-6-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">六、分隔线</h2>
+<h2 id="c-6-0" class="mh1">六、分隔线</h2>
 
-<h3 id="c-6-1" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">6.1 基础分割线语法</h3>
+<h3 id="c-6-1" class="mh2">6.1 基础分割线语法</h3>
 
 1. 使用三个或更多的连字符 `-`、星号 `*` 或下划线 `_` 来创建水平分割线：
 
@@ -641,7 +641,7 @@ Markdown 表格是一种用于组织和展示结构化数据的标记语法，�
 
    <p align="center">•••</p>
 
-<h3 id="c-6-2" style="-webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;">6.2 HTML 分割线完整指南</h3>
+<h3 id="c-6-2" class="mh2">6.2 HTML 分割线完整指南</h3>
 
 1. 基础`<hr>` 标签
 
@@ -797,9 +797,9 @@ Markdown 表格是一种用于组织和展示结构化数据的标记语法，�
 
     <div class="divider" role="separator" aria-orientation="horizontal"></div>
 
-<h2 id="c-7-0" style="text-align: center; color: black; background: linear-gradient(90deg,transparent, #1bb75c 40%, transparent); margin: 1.4rem 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 14px; letter-spacing: .33px;"></h2>
+<h2 style="text-align: center; color: black; background: linear-gradient(90deg,transparent, #1bb75c 40%, transparent); margin: 1.4rem 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 14px; letter-spacing: .33px;"></h2>
 
-<h2 id="c-7-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">七、交互式内容</h2>
+<h2 id="c-7-0" class="mh1">七、交互式内容</h2>
 
 <details class="technical-details" open>
     <summary class="details-summary">
@@ -814,7 +814,7 @@ Markdown 表格是一种用于组织和展示结构化数据的标记语法，�
     </div>
 </details>
 
-<h2 id="c-8-0" style="text-align: center; color: black; background: linear-gradient(#fff 60%, #b2e311ff 40%); margin: 1.4em 0 1.1em; font-size: 1.4em; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; letter-spacing: .33px;">八、输入密码查看页面</h2>
+<h2 id="c-8-0" class="mh1">八、输入密码查看页面</h2>
 
 >
 > 把js代码放到首位，pass1 为设置的登录密码.
@@ -912,5 +912,25 @@ Markdown 表格是一种用于组织和展示结构化数据的标记语法，�
             <li style="list-style-type: none;"><a href="#c-8-0">八、输入密码查看页面</a></li>
         </ul>
 </div>
+
+<style>
+    /* 一级段落 */
+    .mh1 {
+      text-align: center;
+      color: black;
+      background: linear-gradient(#fff 60%, #b2e311ff 40%);
+      margin: 1.4em 0 1.1em;
+      font-size: 1.4em;
+      font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif;
+      line-height: 1.7;
+      letter-spacing: .33px;
+    }
+    /* 二级段落 */
+
+    .mh2 {
+      -webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;
+    }
+
+</style>
 
 本技术手册将持续更新，欢迎提交Issue和Pull Request
