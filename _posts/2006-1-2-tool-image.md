@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "常见镜像及启动盘制作"
+title: "常见操作系统镜像与启动盘制作指南"
 date:   2025-1-10
 tags: 
   - 工具类
@@ -8,7 +8,7 @@ comments: true
 author: feng6917
 ---
 
-`win、linux、kylin ...`
+`详细介绍Windows、Linux及Kylin等多种操作系统的镜像获取与启动盘制作方法。`
 
 <!-- more -->
 <h2 id="c-1-0" class="mh1">一、镜像烧录工具</h2>
