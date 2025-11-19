@@ -3,7 +3,7 @@ layout: post
 title: "常见镜像及启动盘制作"
 date:   2025-1-10
 tags: 
-  - 杂七杂八
+  - 工具类
 comments: true
 author: feng6917
 ---
