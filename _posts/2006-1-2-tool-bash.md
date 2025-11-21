@@ -234,65 +234,64 @@ author: feng6917
 
 1. xshell 脚本内容
 
-  ``` vbscript
-      Sub Main
-        ' 第一步：连接到服务器并运行docker
-        xsh.Session.Open("./内网 goserver build.xsh")
-        
-        ' 等待命令执行
-        xsh.Screen.WaitForString("#")
+``` vbscript
+    Sub Main
+      ' 第一步：连接到服务器并运行docker
+      xsh.Session.Open("./内网 goserver build.xsh")
+      
+      ' 等待命令执行
+      xsh.Screen.WaitForString("#")
 
-        ' 在新窗口中执行操作
-        xsh.Screen.Send("cd ~/myz" & vbCr)
-        xsh.Screen.WaitForString("#")
+      ' 在新窗口中执行操作
+      xsh.Screen.Send("cd ~/myz" & vbCr)
+      xsh.Screen.WaitForString("#")
 
-        ' 获取容器ID并替换文件第二行
-        xsh.Screen.Send "container_id=$(docker run -it -d registry.zhst.com/video-analysis/go-server:zhstserver-dongfeng-102959)" & vbCr
-        xsh.Screen.WaitForString "#"
+      ' 获取容器ID并替换文件第二行
+      xsh.Screen.Send "container_id=$(docker run -it -d registry.zhst.com/video-analysis/go-server:zhstserver-dongfeng-102959)" & vbCr
+      xsh.Screen.WaitForString "#"
 
-        ' 显示完整ID和截取后的ID
-        xsh.Screen.Send "echo ""完整容器ID: $container_id""" & vbCr
-        xsh.Screen.WaitForString "#"
+      ' 显示完整ID和截取后的ID
+      xsh.Screen.Send "echo ""完整容器ID: $container_id""" & vbCr
+      xsh.Screen.WaitForString "#"
 
-        ' 先截取前12位，再替换文件
-        xsh.Screen.Send "short_id=""containerID=$(echo $container_id | cut -c1-12)""" & vbCr
-        xsh.Screen.Send "echo ""截取后容器ID: $short_id""" & vbCr
-        xsh.Screen.WaitForString "#"
+      ' 先截取前12位，再替换文件
+      xsh.Screen.Send "short_id=""containerID=$(echo $container_id | cut -c1-12)""" & vbCr
+      xsh.Screen.Send "echo ""截取后容器ID: $short_id""" & vbCr
+      xsh.Screen.WaitForString "#"
 
-        ' 替换文件第二行 - 使用单引号
-        xsh.Screen.Send("sed -i ""2c $short_id"" ~/myz/ci_goserver.sh" & vbCr)
-        xsh.Screen.WaitForString "#"
-        
-        ' ' 显示第二行内容
-        xsh.Screen.Send "awk 'NR==2' ~/myz/ci_goserver.sh" & vbCr
-        xsh.Screen.WaitForString "#"    
-        
-      End Sub
-  
-  ```
+      ' 替换文件第二行 - 使用单引号
+      xsh.Screen.Send("sed -i ""2c $short_id"" ~/myz/ci_goserver.sh" & vbCr)
+      xsh.Screen.WaitForString "#"
+      
+      ' ' 显示第二行内容
+      xsh.Screen.Send "awk 'NR==2' ~/myz/ci_goserver.sh" & vbCr
+      xsh.Screen.WaitForString "#"    
+      
+    End Sub
+```
 
 2. ci_goserver.sh 脚本内容
 
-  ```
-  containerID=54578a5fad66
+``` bash
+containerID=54578a5fad66
 
-  # 生成 ctag：当前日期（月日-时分）
-  ctag="112107"
+# 生成 ctag：当前日期（月日-时分）
+ctag="112107"
 
-  echo "containerID: $containerID commit: $ccomit tag: $ctag"
+echo "containerID: $containerID commit: $ccomit tag: $ctag"
 
-  docker cp zhstserver $containerID:/myapp
+docker cp zhstserver $containerID:/myapp
 
-  docker commit -m "fix: $ccommit" $containerID registry.zhst.com/video-analysis/go-server:zhstserver-dongfeng-102959-$ctag
+docker commit -m "fix: $ccommit" $containerID registry.zhst.com/video-analysis/go-server:zhstserver-dongfeng-102959-$ctag
 
-  echo "镜像: registry.zhst.com/video-analysis/go-server:zhstserver-dongfeng-102959-$ctag"
+echo "镜像: registry.zhst.com/video-analysis/go-server:zhstserver-dongfeng-102959-$ctag"
 
-  rm -rf goserver-*
+rm -rf goserver-*
 
-  docker save -o goserver-$ctag.tar registry.zhst.com/video-analysis/go-server:zhstserver-dongfeng-102959-$ctag
+docker save -o goserver-$ctag.tar registry.zhst.com/video-analysis/go-server:zhstserver-dongfeng-102959-$ctag
 
-  echo "goserver-$ctag.tar 打包成功."
-  ```
+echo "goserver-$ctag.tar 打包成功."
+```
 
 <h2 id="c-6-0" class="mh1">六、参考资源</h2>
 
@@ -344,7 +343,7 @@ author: feng6917
 
     /* 目录 高度、宽度 可自行调整*/
     .mi1 {
-      position: fixed; bottom: 240px; right: 10px; width: 240px; height: 220px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;
+      position: fixed; bottom: 240px; right: 10px; width: 240px; height: 320px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;
     }
 
 </style>

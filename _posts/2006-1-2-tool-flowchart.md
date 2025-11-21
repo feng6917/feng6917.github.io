@@ -3,21 +3,15 @@ layout: post
 title: "常见的程序图绘制"
 date:   2024-10-10
 tags: 
-  - 杂七杂八
+  - 工具类
 comments: true
 author: feng6917
 ---
 
 <!-- more -->
 
-### 目录
+<h2 id="c-1-0" class="mh1">一、UML 用例图</h2>
 
-- [一、UML 用例图](#一uml-用例图)
-- [二、流程图](#二流程图)
-- [三、时序图](#三时序图)
-- [四、绘图软件参考](#四-绘图软件参考)
-
-#### 一、UML 用例图
 >
 > 用例图（Use Case Diagram）是一种描述系统功能的图，它展示了系统与外部实体之间的交互关系。用例图通常由参与者（Actors）和用例（Use Cases）组成，参与者是系统外部的实体，用例是系统内部的功能模块。用例图可以帮助开发人员理解系统的功能需求，并指导后续的设计和开发工作。
 
@@ -55,13 +49,7 @@ author: feng6917
 2. 用户银行转账参考
     ![img](../images/2024-10-10/8.jpg)
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
-<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
-
-#### 二、流程图
+<h2 id="c-2-0" class="mh1">二、流程图</h2>
   >
   > 流程图（Flowchart）是一种描述系统流程的图，它展示了系统中的各个步骤和流程。流程图通常由节点（Nodes）和箭头（Arrows）组成，节点表示系统的各个步骤，箭头表示流程的流向。流程图可以帮助开发人员理解系统的流程，并指导后续的设计和开发工作。
 
@@ -137,13 +125,7 @@ author: feng6917
 4. 用户网页登录参考
     ![img](../images/2024-10-10/22.jpg)
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
-<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
-
-#### 三、时序图
+<h2 id="c-3-0" class="mh1">三、时序图</h2>
   >
   > 时序图（Sequence Diagram）是一种描述对象之间交互的图，它展示了对象之间的消息传递顺序。时序图通常由对象（Objects）、消息（Messages）和生命线（Lifelines）组成，对象表示系统中的各个参与者，消息表示对象之间的交互，生命线表示对象在时间上的存在。
 
@@ -167,13 +149,7 @@ author: feng6917
 2. 客户银行取钱参考
     ![img](../images/2024-10-10/23.jpg)
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
-<hr style="background-color: blue;border: none;height: 15px;width: 100%" />
-
-#### 四、 绘图软件参考
+<h2 id="c-4-0" class="mh1">四、绘图软件参考</h2>
 
 | 名称                                        | 个人评分 | 说明                                             |
 | ----------------------------------------------- | ------------ | ------------------------------------------------ |
@@ -182,16 +158,65 @@ author: feng6917
 | [processon](https://www.processon.com/)         | ★★★★☆        | 需要登录、使用流畅、不断迭代                               |
 | [亿图图示、boardmix](https://www.edrawsoft.cn/) | ★★★★☆        | 需要登录、使用流畅、示例齐全                               |
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
 [plantuml 绘制各种图形](https://plantuml.com/zh/sequence-diagram)
 
-###### 参考链接如下
+<h2 id="c-6-0" class="mh1">六、参考资源</h2>
 
-- [6 分钟学会 UML 用例图](https://www.bilibili.com/video/BV1qN41177fw)
+<h3 id="c-6-1" class="mh2">6.1 相关技术链接</h3>
+
+- 学习资源
+  - [6 分钟学会 UML 用例图](https://www.bilibili.com/video/BV1qN41177fw)
 - [终极流程图教程](https://www.feaseo.com/zh-CN/flowchart-guide-flowchart-tutorial.html)
 - [常用流程图符号包括哪些？教你实用的流程图绘制技巧](https://www.liuchengtu.com/tutorial/liuchengtufuhao.html)
 - [如何绘制规范的流程图？](https://www.bilibili.com/video/BV1Qb4y1o75D)
 - [5 分钟学会 UML 时序图（顺序图、序列图）](https://www.bilibili.com/video/av536324503)
+
+<hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
+
+<!-- 目录容器 -->
+<div class="mi1">
+    <strong>目录</strong>
+        <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
+            <li style="list-style-type: none;"><a href="#c-1-0">一、UML 用例图</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-2-0">二、流程图</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-3-0">三、时序图</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-4-0">四、绘图软件参考</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <!-- <li style="list-style-type: none;"><a href="#c-5-0">五、XShell 脚本(构建镜像)</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul> -->
+            <li style="list-style-type: none;"><a href="#c-6-0">六、参考资源</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-6-1">6.1 相关技术链接</a></li>
+                </ul>
+        </ul>
+</div>
+
+<style>
+    /* 一级段落 */
+    .mh1 {
+      text-align: center;
+      color: black;
+      background: linear-gradient(#fff 60%, #b2e311ff 40%);
+      margin: 1.4em 0 1.1em;
+      font-size: 1.4em;
+      font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif;
+      line-height: 1.7;
+      letter-spacing: .33px;
+    }
+    /* 二级段落 */
+
+    .mh2 {
+      -webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;
+    }
+
+    /* 目录 高度、宽度 可自行调整*/
+    .mi1 {
+      position: fixed; bottom: 240px; right: 10px; width: 240px; height: 220px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;
+    }
+
+</style>
+
+本技术手册将持续更新，欢迎提交Issue和Pull Request
