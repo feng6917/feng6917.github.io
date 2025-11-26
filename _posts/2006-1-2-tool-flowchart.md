@@ -166,10 +166,10 @@ author: feng6917
 
 - 学习资源
   - [6 分钟学会 UML 用例图](https://www.bilibili.com/video/BV1qN41177fw)
-- [终极流程图教程](https://www.feaseo.com/zh-CN/flowchart-guide-flowchart-tutorial.html)
-- [常用流程图符号包括哪些？教你实用的流程图绘制技巧](https://www.liuchengtu.com/tutorial/liuchengtufuhao.html)
-- [如何绘制规范的流程图？](https://www.bilibili.com/video/BV1Qb4y1o75D)
-- [5 分钟学会 UML 时序图（顺序图、序列图）](https://www.bilibili.com/video/av536324503)
+  - [终极流程图教程](https://www.feaseo.com/zh-CN/flowchart-guide-flowchart-tutorial.html)
+  - [常用流程图符号包括哪些？教你实用的流程图绘制技巧](https://www.liuchengtu.com/tutorial/liuchengtufuhao.html)
+  - [如何绘制规范的流程图？](https://www.bilibili.com/video/BV1Qb4y1o75D)
+  - [5 分钟学会 UML 时序图（顺序图、序列图）](https://www.bilibili.com/video/av536324503)
 
 <hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
 

@@ -819,49 +819,7 @@ Markdown 表格是一种用于组织和展示结构化数据的标记语法，�
 >
 > 把js代码放到首位，pass1 为设置的登录密码.
 
-```javascript
-    <SCRIPT language=JavaScript>
-
-    function password() {
-
-        var testV=0;
-
-        var pass1=prompt('赶紧输密码:', '');
-
-        while (testV < 3) {
-
-            if ( !pass1) history.go(-1);
-
-            if (pass1=="myz") {
-
-                alert('密码正确!');
-
-                break;
-
-            }
-
-            testV+=1;
-
-            if (testV==1) {
-                pass1=prompt('密码错了，搞什么啊！还剩两次机会。');
-            }
-
-            else if (testV==2) {
-                pass1=prompt('密码错了，搞什么啊！还剩一次机会。');
-            }
-
-        }
-
-        if (pass1 !="password" & testV==3) history.go(-1);
-
-        return " ";
-
-    }
-
-    document.write(password());
-
-    </SCRIPT>
-```
+[跳转查看演示](../template/password-check.html)
 
 <hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
 
