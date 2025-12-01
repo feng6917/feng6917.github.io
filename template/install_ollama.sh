@@ -1,40 +1,4 @@
----
-layout: post
-title: "Centos 离线搭建 DeepSeek"
-date:   2025-2-13
-tags: 
-  - 应用软件
-comments: true
-author: feng6917
----
-
-<!-- more -->
-
-### 目录
-
-- [安装步骤](#安装步骤)
-
-#### 安装步骤
-
-1. 下载离线软件
-    - [ollama-linux-amd64.tgz](https://github.com/ollama/ollama/releases/download/v0.5.7/ollama-linux-amd64.tgz)
-    - [ollama-linux-amd64-rocm.tgz](https://github.com/ollama/ollama/releases/download/v0.5.7/ollama-linux-amd64-rocm.tgz)
-      ![alt text](../images/2025-2-13/image.png)
-    - [DeepSeek-R1-Distill-Llama-8B-Q4_K_M.gguf](https://hf-mirror.com/bartowski/DeepSeek-R1-Distill-Llama-8B-GGUF/resolve/main/DeepSeek-R1-Distill-Llama-8B-Q4_K_M.gguf)
-      ![alt text](../images/2025-2-13/image-1.png)
-
-    ollama 版本：0.5.7，可根据github更新时间选择最新版本, 通过<https://get-github.hexj.org/>可以加速下载。
-    deepseek 版本：R1-Distill-Llama-8B-Q4_K_M，可根据<https://hf-mirror.com/bartowski>选择合适版本, 通过迅雷可以加速下载。
-
-2. install.sh 调整
-
-   原脚本位置：<https://ollama.com/install.sh>
-   修改内容：
-   - ollama-linux-amd64.tgz&ollama-linux-amd64-rocm.tgz下载改为使用本地文件
-   - /etc/systemd/system/ollama.service增加`Environment="OLLAMA_HOST=0.0.0.0"`
-
-   ```bash
-        #!/bin/sh
+#!/bin/sh
         # This script installs Ollama on Linux.
         # It detects the current operating system architecture and installs the appropriate version of Ollama.
         
@@ -434,43 +398,3 @@ author: feng6917
         
         status "NVIDIA GPU ready."
         install_success
-
-   ```
-
-3. 安装allama
-
-   将下载的离线软件拷贝到服务器，新建install.sh文件，写入调整内容，给install.sh添加执行权限，执行./install.sh
-
-   ![alt text](../images/2025-2-13/image-2.png)
-
-4. 导入deepseek模型
-
-   - 新建文件夹，`mkdir -p /data/ollama/model`, 拷贝 DeepSeek-R1-Distill-Llama-8B-Q4_K_M.gguf 到当前文件夹下
-   - 新建文件 `Modelfile`，写入内容 `from ./DeepSeek-R1-Distill-Llama-8B-Q4_K_M.gguf`, gguf 替换为自己下载的模型
-   - 导入模型 ollama create <name> -f <path to modelfile>, eg: `ollama create deepseek-r1:8b -f /data/ollama/model/Modelfile`
-   - 查看模型 `ollama ls`
-
-     ![alt text](../images/2025-2-13/image-3.png)
-
-5. 配置open webui
-
-   - docker 环境(没有请百度)拉取镜像，`docker pull ghcr.nju.edu.cn/open-webui/open-webui`, 使用的是国内镜像
-
-   - run docker, `docker run -d -e HF_ENDPOINT=https://hf-mirror.com -p 3000:8080 -e OLLAMA_BASE_URL=http://10.0.1.14:11434 --add-host=host.docker.internal:host-gateway -v /path/to/open-webui:/app/backend/data --name open-webui ghcr.nju.edu.cn/open-webui/open-webui:main` 10.0.1.14:11434 替换为服务器的ipv4地址
-
-   - 访问 <http://10.0.1.14:3000>，首次需要注册账号，再次登录后选择模型即可使用。
-
-     ![alt text](../images/2025-2-13/image-5.png)
-
-6. [deepseek介绍](https://deepseek.csdn.net/67abf7d759bcf8384ab65a77.html),了解更多参考deepseek社区。
-
-###### 参考连接
-
-- [deepseek离线部署](https://blog.csdn.net/linuxxx110/article/details/145440984)
-- [linux离线部署Ollama+Deepseek r1+open webui](https://deepseek.csdn.net/67ab1c2579aaf67875cb9624.html)
-- [deepseek离线部署](https://blog.csdn.net/linuxxx110/article/details/145440984)
-- [curl http:宿主机IP:11434提示访问拒绝](https://www.cnblogs.com/boris2012/p/18233286)
-
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
