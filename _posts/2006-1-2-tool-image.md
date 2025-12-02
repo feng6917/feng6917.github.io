@@ -8,7 +8,7 @@ comments: true
 author: feng6917
 ---
 
-`详细介绍Windows、Linux及Kylin等多种操作系统的镜像获取与启动盘制作方法。`
+详细介绍Windows、Linux及Kylin等多种操作系统的镜像获取与启动盘制作方法。
 
 <!-- more -->
 <h2 id="c-1-0" class="mh1">一、镜像烧录工具</h2>

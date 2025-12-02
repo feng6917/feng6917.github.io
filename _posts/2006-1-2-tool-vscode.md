@@ -3,37 +3,21 @@ layout: post
 title: "Visual Studio Code 安装配置"
 date:   2023-9-23
 tags: 
-  - 应用软件
+  - 工具类
 comments: true
 author: feng6917
 ---
 
-`VS Code 的全称是 Visual Studio Code，是一款开源的、免费的、跨平台的、高性能的、轻量级的代码编辑器。它在性能、语言支持、开源社区方面，都做得很不错。`
+VS Code 的全称是 Visual Studio Code，是一款开源的、免费的、跨平台的、高性能的、轻量级的代码编辑器。它在性能、语言支持、开源社区方面，都做得很不错。
 
 <!-- more -->
 
-### 目录
-
-- [一、软件安装](#一软件安装)
-
-- [二、代理配置](#二代理配置)
-
-- [三、插件配置](#三插件配置)
-
-- [四、容器化开发](#四容器化开发)
-
-- [五、Golang安装](#五golang-安装)
-
-- [六、代码格式化](#六代码格式化)
-
-- [七、断点调试](#七断点调试)
-
-#### 一、软件安装
+<h2 id="c-1-0" class="mh1">一、软件安装</h2>
 
 > 软件下载请点击 [Visual Studio Code](https://code.visualstudio.com/Download) , 软件安装较为基础且简单，基本就是下一步，唯一要注意的地方，*安装路径尽量自定义，建议不要把应用放在系统盘*。
     ![下载图](../images/2018-3-3/1.png)
 
-#### 二、代理配置
+<h2 id="c-2-0" class="mh1">二、代理配置</h2>
 
 > 代理设置分为两种，一种是通过 `settings.json` 文件配置，一种是通过终端配置。
 
@@ -75,11 +59,7 @@ author: feng6917
         git config --global --unset https.proxy
         ```
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
-#### 三、插件配置
+<h2 id="c-3-0" class="mh1">三、插件配置</h2>
 
 1. 安装简体中文插件示例
     ![img](../images/2018-3-3/vs-install-chinese-plugin.gif)
@@ -106,11 +86,7 @@ author: feng6917
    - 导入
      ![img](../images/2018-3-3/vs-import-profile.gif)
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
-#### 四、容器化开发
+<h2 id="c-4-0" class="mh1">四、容器化开发</h2>
 
 1. wsl 安装
     >
@@ -156,15 +132,11 @@ author: feng6917
 
 5. 在Docker 客户端 打开容器，在Visual Studio Code 中 Dev Containers -> Open Folder in Container -> 选择容器启动的路径，即可在VsCode 中进行开发，开发环境与容器一致。
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
-#### 五、Golang 安装
+<h2 id="c-5-0" class="mh1">五、Golang 安装</h2>
 
 [安装参考文档](https://feng6917.github.io/lg-go-dev-env)
 
-#### 六、代码格式化
+<h2 id="c-6-0" class="mh1">六、代码格式化</h2>
 
 1. 安装Clang-Format 插件 `apt install clang-format`
 
@@ -193,11 +165,7 @@ author: feng6917
     AlignConsecutiveAssignments: true
     ```
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
-#### 七、断点调试
+<h2 id="c-7-0" class="mh1">七、断点调试</h2>
 
 0. launch.json 微调整
 
@@ -227,20 +195,73 @@ author: feng6917
   - 2. 运行配置文件编辑
   ![img](../images/2018-3-3/3.png)  
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
+<h2 id="c-8-0" class="mh1">八、参考资源</h2>
+
+<h3 id="c-8-1" class="mh2">8.1 相关技术链接</h3>
+
+- 学习资源
+  - [如何使用 WSL 在 Windows 上安装 Linux](https://learn.microsoft.com/zh-cn/windows/wsl/install)
+
+  - [Docker Install](https://www.runoob.com/docker/windows-docker-install.html)
+
+  - [dingms 镜像](https://hub.docker.com/r/dingms/ucas-bdms-hw-u64-2019)
+
+  - [WSL 2.0 Install](https://blog.csdn.net/hjb2722404/article/details/120738062)
+
+  - [VsCode Install](https://www.runoob.com/w3cnote/vscode-tutorial.html)
+
+  - [Docker 使用容器来创建镜像](https://www.runoob.com/w3cnote/docker-use-container-create-image.html)
+
+<hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
+
+<!-- 目录容器 -->
+<div class="mi1">
+    <strong>目录</strong>
+        <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
+            <li style="list-style-type: none;"><a href="#c-1-0">一、软件安装</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-2-0">二、代理配置</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-3-0">三、插件配置</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-4-0">四、容器化开发</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-5-0">五、Golang安装</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-6-0">六、代码格式化</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-7-0">七、断点调试</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-8-0">八、参考资源</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-8-1">8.1 相关技术链接</a></li>
+                </ul>
+        </ul>
 </div>
 
-###### 参考链接如下
+<style>
+    /* 一级段落 */
+    .mh1 {
+      text-align: center;
+      color: black;
+      background: linear-gradient(#fff 60%, #b2e311ff 40%);
+      margin: 1.4em 0 1.1em;
+      font-size: 1.4em;
+      font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif;
+      line-height: 1.7;
+      letter-spacing: .33px;
+    }
+    /* 二级段落 */
 
-- [如何使用 WSL 在 Windows 上安装 Linux](https://learn.microsoft.com/zh-cn/windows/wsl/install)
+    .mh2 {
+      -webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;
+    }
 
-- [Docker Install](https://www.runoob.com/docker/windows-docker-install.html)
+    /* 目录 高度、宽度 可自行调整*/
+    .mi1 {
+      position: fixed; bottom: 240px; right: 10px; width: 240px; height: 220px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;
+    }
 
-- [dingms 镜像](https://hub.docker.com/r/dingms/ucas-bdms-hw-u64-2019)
+</style>
 
-- [WSL 2.0 Install](https://blog.csdn.net/hjb2722404/article/details/120738062)
-
-- [VsCode Install](https://www.runoob.com/w3cnote/vscode-tutorial.html)
-
-- [Docker 使用容器来创建镜像](https://www.runoob.com/w3cnote/docker-use-container-create-image.html)
+本技术手册将持续更新，欢迎提交Issue和Pull Request

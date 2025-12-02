@@ -8,7 +8,7 @@ comments: true
 author: feng6917
 ---
 
-`实战记录Confluence企业Wiki平台部署：从MySQL数据库搭建、Confluence应用部署到软件破解和配置调优的完整技术方案。`
+实战记录Confluence企业Wiki平台部署：从MySQL数据库搭建、Confluence应用部署到软件破解和配置调优的完整技术方案。
 
 <!-- more -->
 
