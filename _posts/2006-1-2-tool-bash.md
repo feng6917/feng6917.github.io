@@ -14,6 +14,8 @@ author: feng6917
 
 <h2 id="c-1-0" class="mh1">一、文件、文件夹删除-Win</h2>
 
+`说明： 该脚本用于大文件或文件夹的强制删除，不需要执行命令，只需要把数据拖拽到脚本工具即可`
+
 - 1. 文件删除脚本创建
 
       ```
@@ -28,6 +30,8 @@ author: feng6917
   ![img](../images/2018-6-28/1.gif)
 
 <h2 id="c-2-0" class="mh1">二、日志初始化-Win</h2>
+
+`说明：针对每天的工作计划，初始出一个Markdown文档模块，执行初始化脚本后，自动根据日期创建当天的模块`
 
 - 1. 新建初始化日志模板
 
@@ -150,15 +154,15 @@ author: feng6917
 <h2 id="c-4-1" class="mh2">4.1 命令备份</h2>
 - 1. 备份
 
-    ```bash
-    mysqldump -u root -p123456 --all-databases > /data/mysql/all-databases.sql
-    ```
+  ```bash
+  mysqldump -u root -p123456 --all-databases > /data/mysql/all-databases.sql
+  ```
 
 - 2. 恢复
 
-    ```bash
-    mysql -u root -p123456 < /data/mysql/all-databases.sql
-    ```
+  ```bash
+  mysql -u root -p123456 < /data/mysql/all-databases.sql
+  ```
 
 <h2 id="c-4-2" class="mh2">4.2 Cron备份</h2>
 
@@ -230,7 +234,7 @@ author: feng6917
 
 <h2 id="c-5-0" class="mh1">五、XShell 脚本（构建镜像）</h2>
 
-说明：xshell 脚本主要是用来开启新的客户端，开启容器，替换容器id到相应编译文件脚本中，编译文件脚本与xshell脚本区分开是为了方便二次及多次编译。
+`说明：该脚本主要用于可执行文件拷贝到容器中，构建新的镜像。第一个shell 脚本，用于运行容器，替换容器ID。第二个脚本 用于打包，生成新镜像。区分开是为了方便二次及多次编译。`
 
 1. xshell 脚本内容
 
