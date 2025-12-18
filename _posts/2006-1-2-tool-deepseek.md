@@ -265,17 +265,14 @@ sudo groupdel ollama
 
 <h2 id="c-8-0" class="mh1">八、参考资源</h2>
 
-<h3 id="c-8-1" class="mh2">8.1 相关技术链接</h3>
-
-- 学习资源
-  - [deepseek离线部署](https://blog.csdn.net/linuxxx110/article/details/145440984)
-  - [linux离线部署Ollama+Deepseek r1+open webui](https://deepseek.csdn.net/67ab1c2579aaf67875cb9624.html)
-  - [deepseek离线部署](https://blog.csdn.net/linuxxx110/article/details/145440984)
-  - [curl http:宿主机IP:11434提示访问拒绝](https://www.cnblogs.com/boris2012/p/18233286)
-  - [linux下ollama更换模型路径](https://blog.csdn.net/hooksten/article/details/145418987)
-  - [如何卸载ollama](https://blog.csdn.net/LJX_ahut/article/details/139424004)
-  - [DeepSeek 实用集成](https://github.com/deepseek-ai/awesome-deepseek-integration/blob/main/README_cn.md)
-  - [ollama协议文档](https://github.com/ollama/ollama/blob/main/docs/api.md#generate-embeddings)
+- [deepseek离线部署](https://blog.csdn.net/linuxxx110/article/details/145440984)
+- [linux离线部署Ollama+Deepseek r1+open webui](https://deepseek.csdn.net/67ab1c2579aaf67875cb9624.html)
+- [deepseek离线部署](https://blog.csdn.net/linuxxx110/article/details/145440984)
+- [curl http:宿主机IP:11434提示访问拒绝](https://www.cnblogs.com/boris2012/p/18233286)
+- [linux下ollama更换模型路径](https://blog.csdn.net/hooksten/article/details/145418987)
+- [如何卸载ollama](https://blog.csdn.net/LJX_ahut/article/details/139424004)
+- [DeepSeek 实用集成](https://github.com/deepseek-ai/awesome-deepseek-integration/blob/main/README_cn.md)
+- [ollama协议文档](https://github.com/ollama/ollama/blob/main/docs/api.md#generate-embeddings)
 
 <hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
 
@@ -298,9 +295,7 @@ sudo groupdel ollama
             <li style="list-style-type: none;"><a href="#c-7-0">七、卸载流程</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-8-0">八、参考资源</a></li>
-                <ul style="padding-left: 15px; list-style-type: none;">
-                    <li style="list-style-type: none;"><a href="#c-8-1">8.1 相关技术链接</a></li>
-                </ul>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
         </ul>
 </div>
 

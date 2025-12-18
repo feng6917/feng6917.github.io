@@ -8,7 +8,7 @@ comments: true
 author: feng6917
 ---
 
-`实战记录Confluence企业Wiki平台部署：从MySQL数据库搭建、Confluence应用部署到软件破解和配置调优的完整技术方案。`
+实战记录Confluence企业Wiki平台部署：从MySQL数据库搭建、Confluence应用部署到软件破解和配置调优的完整技术方案。
 
 <!-- more -->
 
@@ -171,8 +171,6 @@ author: feng6917
 
 <h2 id="c-5-0" class="mh1">五、参考资源</h2>
 
-<h3 id="c-5-1" class="mh2">5.1 相关技术链接</h3>
-
 - [Linux搭建confluence企业级WIKI](https://www.dczzs.com/articles/2021/09/14/1631581152758.html)
 - [wiki的confluence 8.5.4安装部署](https://blog.csdn.net/weixin_44024436/article/details/135389431)
 - [Confluence7.4安装并汉化](https://blog.whsir.com/post-5854.html)
@@ -186,21 +184,15 @@ author: feng6917
     <strong>目录</strong>
         <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
             <li style="list-style-type: none;"><a href="#c-1-0">一、数据库部署和库创建</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-            </ul>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-2-0">二、软件部署</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-            </ul>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-3-0">三、软件破解</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-            </ul>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-4-0">四、软件配置</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-            </ul>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-5-0">五、参考资源</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-                <li style="list-style-type: none;"><a href="#c-5-1">5.1 相关技术链接</a></li>
-            </ul>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
         </ul>
 </div>
 

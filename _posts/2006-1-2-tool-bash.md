@@ -299,8 +299,6 @@ echo "goserver-$ctag.tar 打包成功."
 
 <h2 id="c-6-0" class="mh1">六、参考资源</h2>
 
-<h3 id="c-6-1" class="mh2">6.1 相关技术链接</h3>
-
 - 学习资源
   - [MySQL 数据库定时备份脚本实例](https://blog.csdn.net/SudongJang/article/details/125444498)
 
@@ -321,9 +319,7 @@ echo "goserver-$ctag.tar 打包成功."
             <li style="list-style-type: none;"><a href="#c-5-0">五、XShell 脚本(构建镜像)</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-6-0">六、参考资源</a></li>
-                <ul style="padding-left: 15px; list-style-type: none;">
-                    <li style="list-style-type: none;"><a href="#c-6-1">6.1 相关技术链接</a></li>
-                </ul>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
         </ul>
 </div>
 

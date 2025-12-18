@@ -141,17 +141,9 @@ tags:
 
 <h2 id="c-5-0" class="mh1">五、参考资源</h2>
 
-<h3 id="c-5-1" class="mh2">5.1 相关技术链接</h3>
-
-- 学习资源
-  - [翩帆的个人技术博客](https://pianfan.github.io/)
-  - [博客搭建详细教程](https://github.com/qiubaiying/qiubaiying.github.io/wiki/博客搭建详细教程)
-  - [为博客添加Gitalk评论插件](https://qiubaiying.github.io/2017/12/19/为博客添加-Gitalk-评论插件/)
-- 技术栈说明：
-  - Jekyll静态站点生成器
-  - GitHub Pages托管服务
-  - Markdown内容格式
-  - Liquid模板语言
+- [翩帆的个人技术博客](https://pianfan.github.io/)
+- [博客搭建详细教程](https://github.com/qiubaiying/qiubaiying.github.io/wiki/博客搭建详细教程)
+- [为博客添加Gitalk评论插件](https://qiubaiying.github.io/2017/12/19/为博客添加-Gitalk-评论插件/)
 
 <hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
 
@@ -179,9 +171,7 @@ tags:
                 <li style="list-style-type: none;"><a href="#c-4-1">4.1 文章创作规范</a></li>
             </ul>
             <li style="list-style-type: none;"><a href="#c-5-0">五、参考资源</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-                <li style="list-style-type: none;"><a href="#c-5-1">5.1 相关技术链接</a></li>
-            </ul>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
         </ul>
 </div>
 
