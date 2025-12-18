@@ -10,7 +10,7 @@ author: feng6917
 
 工欲善其事必先利其器，好的软件让我们工作起来事半功倍。
 
-<!-more -->
+<!-- more -->
 
 <h2 id="c-1-1" class="mh2">Edraw Max v9.0</h2>
 
