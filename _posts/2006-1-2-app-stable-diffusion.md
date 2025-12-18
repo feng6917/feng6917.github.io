@@ -3,37 +3,18 @@ layout: post
 title: "Stable Diffusion 文生图实践记录"
 date:   2024-9-12
 tags: 
-  - 应用软件
+  - 软件类
 comments: true
 author: feng6917
 ---
 
-`之前了解过，但是没有自己尝试去生图，今天尝试了一下，蛮有趣的。`
+Stable Diffusion 文生图实践记录
 
 <!-- more -->
 
-### 目录
+<h2 id="c-1-0" class="mh1">一、带着问题去探索</h2>
 
-[带着问题去探索](#带着问题去探索)
-
-- [AI 绘画是什么？](#ai-绘画是什么)
-- [Stable Diffusion 电脑配置要求 ?](#stable-diffusion-电脑配置要求-)
-
-[安装Stable Diffusion](#安装stable-diffusion)
-
-- [原始流程安装](#原始流程安装不推荐易出问题)
-- [整合包安装](#整合包安装-解压即用)
-
-[生成一张美女图片](#生成一张美女图片)
-
-- [基本参数了解](#基本参数了解)
-- [美女图生成](#美女图生成)
-
----
-
-### 带着问题去探索
-
-##### AI 绘画是什么？
+<h2 id="c-1-1" class="mh2">1.1 AI 绘画是什么？</h2>
 
   > AI 绘画，顾名思义就是利用人工智能进行绘画，是人工智能生成内容（[AIGC](https://www.uisdc.com/tag/aigc)）的一个应用场景。其主要原理简单来说就是收集大量已有作品数据，通过算法对它们进行解析，最后再生成新作品，而算法也便是 AI 绘画的核心，是它得以爆火的基础。
 
@@ -65,11 +46,7 @@ author: feng6917
     > SD 是免费的，可以部署到自己的电脑上，能够离线使用，在生图方面更灵活，更自由一些。
     >
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
-##### Stable Diffusion 电脑配置要求 ?
+<h2 id="c-1-2" class="mh2">1.2 Stable Diffusion 电脑配置要求 ?</h2>
 >
 > 出图主要依赖GPU, 磁盘主要用来存储模型，模型文件一般都是大几G
 
@@ -79,9 +56,11 @@ author: feng6917
 - GPU：不低于6 GB显存N卡, 或者具有至少8GB GDDR6内存的GeForce RTX GPU
 - 操作系统：Windows10或Windows11
 
-### 安装Stable Diffusion
+---
 
-##### 原始流程安装（不推荐，易出问题）
+<h2 id="c-2-0" class="mh1">二、安装Stable Diffusion</h2>
+
+<h2 id="c-2-1" class="mh2">2.1 原始流程安装（不推荐，易出问题）</h2>
 
 1. Install [Python 3.10.6](https://www.python.org/downloads/release/python-3106/) (Newer version of Python does not support torch), checking "Add Python to PATH".
 
@@ -91,11 +70,11 @@ author: feng6917
 
 4. Run `webui-user.bat` from Windows Explorer as normal, non-administrator, user.
 
-##### 整合包安装 解压即用
+<h2 id="c-2-2" class="mh2">2.2 整合包安装(解压即用)</h2>
 
 > 1. 小破站 搜索 秋葉aaaki 2. 搜索框 搜索 整合包
 
-​ ![img](../images/2024-9-12/1.jpg)
+​   ![img](../images/2024-9-12/1.jpg)
 
 > 使用步骤
 
@@ -105,15 +84,10 @@ author: feng6917
 
 ​   ![img](../images/2024-9-12/2.jpg)  
 
-#####
+---
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
-### 生成一张美女图片
-
-##### 基本参数了解
+<h2 id="c-3-0" class="mh1">三、生成一张美女图片</h2>
+<h2 id="c-3-1" class="mh2">3.1 基本参数了解</h2>
 
 - Stable Diffusion 模型
   > 大模型切换
@@ -140,7 +114,7 @@ author: feng6917
 
   > 随机数的起点。保持这个值不变，可以多次生成相同（或几乎相同，如果启用了 xformers）的图像。没有什么种子天生就比其他的好，但如果你只是稍微改变你的输入参数，以前产生好结果的种子很可能仍然会产生好结果。
 
-##### 美女图生成
+<h2 id="c-3-2" class="mh2">3.2 美女图生成</h2>
 
 1. 首先下载 [美女模型](https://www.mediafire.com/file/a0a20ueou6yrmdf/%E5%86%99%E5%AE%9E%E5%88%9D%E6%81%8B%E7%BE%8E%E5%A5%B3xl_v1.safetensors/file)
 
@@ -152,21 +126,67 @@ author: feng6917
     >
     > seaside,ambience,fair skin. Girly feeling,lighting,good light,big breasted beauty,smooth hair,4k image quality,gorgeous light and shadow,Tyndall effect,halo,messy hair,stunning beauty,brown eyes,sharp eyelashes,pink smudged blush,cute,delicate clothes,pink lips,light eyes,high quality,masterpiece,Master work,smile,
 4. 效果图如下
-​ ![img](../images/2024-9-12/3.jpg)  
+​
+    ![img](../images/2024-9-12/3.jpg)  
 
-  > 模型下载地址:  <https://civitai.com/>
-  
-#####
+    > 模型下载地址:  <https://civitai.com/>
+ >
+---
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
+<h2 id="c-4-0" class="mh1">四、参考资源</h2>
+
+- [超详细！外婆都能看懂的Stable Diffusion入门教程](https://www.uisdc.com/stable-diffusion-3)
+- [【AI绘画·24年8月最新】Stable Diffusion整合包v4.9发布！解压即用 防爆显存 三分钟入门AI绘画 ☆更新 ☆训练 ☆汉化 秋叶整合包](https://www.bilibili.com/video/BV1iM4y1y7oA/?spm_id_from=333.999.0.0&vd_source=7d32ad5a1a541e44326e50415ffd9907)
+- [写实美女SD主模型下载！含生成提示词](https://www.freedidi.com/13482.html)
+
+<hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
+
+<!-- 目录容器 -->
+<div class="mi1">
+    <strong>目录</strong>
+        <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
+            <li style="list-style-type: none;"><a href="#c-1-0">一、带着问题去探索</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-1-1">1.1 AI 绘画是什么？</a></li>
+                    <li style="list-style-type: none;"><a href="#c-1-2">1.2 Stable Diffusion 电脑配置要求 ?</a></li>
+                </ul>
+            <li style="list-style-type: none;"><a href="#c-2-0">二、安装Stable Diffusion</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-2-1">2.1 原始流程安装</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-2">2.2 整合包安装</a></li>
+                </ul>
+            <li style="list-style-type: none;"><a href="#c-3-0">三、生成一张美女图片</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-3-1">3.1 基本参数了解</a></li>
+                    <li style="list-style-type: none;"><a href="#c-3-2">3.2 美女图生成</a></li>
+                </ul>
+            <li style="list-style-type: none;"><a href="#c-4-0">四、参考资源</a></li>
+        </ul>
 </div>
 
----
-参考链接：
->
-> - [超详细！外婆都能看懂的Stable Diffusion入门教程](https://www.uisdc.com/stable-diffusion-3)
->
-> - [【AI绘画·24年8月最新】Stable Diffusion整合包v4.9发布！解压即用 防爆显存 三分钟入门AI绘画 ☆更新 ☆训练 ☆汉化 秋叶整合包](https://www.bilibili.com/video/BV1iM4y1y7oA/?spm_id_from=333.999.0.0&vd_source=7d32ad5a1a541e44326e50415ffd9907)
->
-> - [写实美女SD主模型下载！含生成提示词](https://www.freedidi.com/13482.html)
+<style>
+    /* 一级段落 */
+    .mh1 {
+      text-align: center;
+      color: black;
+      background: linear-gradient(#fff 60%, #b2e311ff 40%);
+      margin: 1.4em 0 1.1em;
+      font-size: 1.4em;
+      font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif;
+      line-height: 1.7;
+      letter-spacing: .33px;
+    }
+    /* 二级段落 */
+
+    .mh2 {
+      -webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;
+    }
+
+    /* 目录 高度、宽度 可自行调整*/
+    .mi1 {
+      position: fixed; bottom: 240px; right: 10px; width: 240px; height: 220px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;
+    }
+
+</style>
+
+本技术手册将持续更新，欢迎提交Issue和Pull Request

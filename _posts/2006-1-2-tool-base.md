@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "公开分享技术成长：我的学习实践与经验总结"
+title: "随便说说 ..."
 date:   2018-3-3
 tags: 
   - 工具类
@@ -8,31 +8,44 @@ comments: true
 author: feng6917
 ---
 
-记录我在技术领域的公开学习历程，包含成功经验与失败教训，分享实用的技术工具和效率提升方法。
+别急
 
 <!-- more -->
 
-<h2 id="c-1-0" class="mh1">一、本博客将涵盖的内容</h2>
+<h2 id="c-1-0" class="mh1">一、工作</h2>
 
-- **技术深度分享**: Kubernetes容器编排、云平台架构、自动化运维脚本
+- 软件世界没有银弹。
 
-- **工作效率方法**: 个人工作流优化与知识管理体系
+- 其实你写的代码可能在历史上已经是第一百零一次出现，重复 n 次，你要做的不是写，而是用。
 
-- **开源项目实践**: 基于"学习过程公开化"理念的项目记录
+- 当注释量超过了代码量，那么我想，离学会写代码又近了一步。
 
-- **实用工具推荐**: 经过实际验证的高效工具分享
+- 如果所写所做不能得到使用，那么便无了意义
 
-<h2 id="c-2-0" class="mh1">二、创作初衷</h2>
+- 爱迪生的实验次数是不记得了，但是自己代码优化次数是数的过来的。
 
-我相信透明化学习。在这里，你既能看到成功的技术方案，也会看到踩坑的经历。如果某个自动化方案帮我每周节省5小时，我会完整分享实现细节；如果我花费数天解决一个配置问题，你也会看到完整的排查过程。
+- 一切规范化，不要怕麻烦，怕麻烦才是真正的麻烦。
+
+- 尊重爬，走，跑，跳的自然规律，好架构一定使演化来的。
+
+<h2 id="c-2-0" class="mh1">二、生活</h2>
+
+- 人生最怕一句没有用，什么都没有用，什么才有用？
+
+- 无知者无畏, 多读少写方能避免无知。
+
+- 最简单的往往是最复杂的。
+  
+- 错了要认，挨打要立正，不管走了多远，错了就要重新返回。
+
+- 生活最怕的是一成不变。
+
+- 再简单的事情往细里做都会变得不那么容易。
 
 <h2 id="c-3-0" class="mh1">三、参考资源</h2>
 
-<h3 id="c-3-1" class="mh2">3.1 相关技术链接</h3>
-
-- 学习资源
-  - [DeepSeek](https://chat.deepseek.com/)
-  - [李文周博客](https://www.liwenzhou.com/posts/Go/golang-menu/)
+- [DeepSeek](https://chat.deepseek.com/)
+- [李文周博客](https://www.liwenzhou.com/posts/Go/golang-menu/)
 
 <hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
 
@@ -40,13 +53,13 @@ author: feng6917
 <div class="mi1">
     <strong>目录</strong>
         <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
-            <li style="list-style-type: none;"><a href="#c-1-0">一、本博客将涵盖的内容</a></li>
+            <li style="list-style-type: none;"><a href="#c-1-0">一、工作</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
-            <li style="list-style-type: none;"><a href="#c-2-0">二、为什么这么做</a></li>
+            <li style="list-style-type: none;"><a href="#c-2-0">二、生活</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-3-0">三、参考资源</a></li>
                 <ul style="padding-left: 15px; list-style-type: none;">
-                    <li style="list-style-type: none;"><a href="#c-3-1">3.1 相关技术链接</a></li>
+                    <li style="list-style-type: none;"><a href="https://asoftmurmur.com/">3.1 放松一下(声音在线)</a></li>
                 </ul>
         </ul>
 </div>

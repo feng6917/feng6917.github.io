@@ -1498,19 +1498,19 @@ kubectl scale deployment <deploy-name> --replicas=<original-number>
 <div class="mi1">
     <strong>目录</strong>
         <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
-            <li style="list-style-type: none;"><a href="../template/cmd_win.md">Win 快捷键</a></li>
+            <li style="list-style-type: none;"><a href="#c-1-0">Win 快捷键</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
-            <li style="list-style-type: none;"><a href="../template/cmd_linux.md">Linux 常用命令速查手册</a></li>
+            <li style="list-style-type: none;"><a href="#c-2-0">Linux 常用命令速查手册</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
-            <li style="list-style-type: none;"><a href="../template/cmd_k8s.md">Kubernetes常用命令和操作笔记</a></li>
+            <li style="list-style-type: none;"><a href="#c-3-0">Kubernetes常用命令和操作笔记</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-4-0">Helm</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-5-0">Visual Studio Code</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
-            <li style="list-style-type: none;"><a href="../template/cmd_git.md">Git 常用命令总结</a></li>
+            <li style="list-style-type: none;"><a href="#c-6-0">Git 常用命令总结</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
-            <li style="list-style-type: none;"><a href="../template/cmd_docker.md">Docker 常用命令总结</a></li>
+            <li style="list-style-type: none;"><a href="#c-7-0">Docker 常用命令总结</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-8-0">CURL</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>

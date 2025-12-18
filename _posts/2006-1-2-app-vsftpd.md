@@ -3,30 +3,25 @@ layout: post
 title: "ftp服务器软件 vsftpd 搭建"
 date:   2024-4-1
 tags: 
-  - 应用软件
+  - 软件类
 comments: true
 author: feng6917
 ---
 
-`vsftpd 是“very secure FTP daemon”的缩写，是一个完全免费的、开放源代码的ftp服务器软件。特点是：非常高的安全性需求、带宽限制、良好的可伸缩性等。`
+vsftpd 是“very secure FTP daemon”的缩写，是一个完全免费的、开放源代码的ftp服务器软件。特点是：非常高的安全性需求、带宽限制、良好的可伸缩性等。
 
 <!-- more -->
 
-### 目录
+<h2 id="c-1-0" class="mh1">一、安装部署</h2>
 
-- [软件安装](#软件安装)
-- [软件配置](#软件配置)
+```shell
+[root@k8s-master-7 ~]# rpm -qa | grep vsftpd
+```
 
-#### 软件安装
-
-    ```shell
-    [root@k8s-master-7 ~]# rpm -qa | grep vsftpd
-    ```
-
-    ```
-    [root@k8s-master-7 ~]# systemctl status vsftpd
-    Unit vsftpd.service could not be found.
-    ```
+```
+[root@k8s-master-7 ~]# systemctl status vsftpd
+Unit vsftpd.service could not be found.
+```
 
 1. 在本地拷贝 vsftpd 到服务器 [vsftpd 下载链接](<http://rpmfind.net/linux/rpm2html/search.php?query=vsftpd(x86-64)>) (已提供离线安装包)
 
@@ -74,11 +69,7 @@ author: feng6917
     tcp6       0      0 :::21                   :::*                    LISTEN      210255/vsftpd
     ```
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
-#### 软件配置
+<h2 id="c-2-0" class="mh1">二、软件配置</h2>
 
 1. 添加用户(用户可自定义，符合命名规则即可)
 
@@ -165,6 +156,42 @@ author: feng6917
     [root@k8s-master-7 ~]# systemctl restart vsftpd.service
     ```
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
+---
+
+<!-- 目录容器 -->
+<div class="mi1">
+    <strong>目录</strong>
+        <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
+            <li style="list-style-type: none;"><a href="#c-1-0">一、安装部署</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-2-0">二、软件配置</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+        </ul>
 </div>
+
+<style>
+    /* 一级段落 */
+    .mh1 {
+      text-align: center;
+      color: black;
+      background: linear-gradient(#fff 60%, #b2e311ff 40%);
+      margin: 1.4em 0 1.1em;
+      font-size: 1.4em;
+      font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif;
+      line-height: 1.7;
+      letter-spacing: .33px;
+    }
+    /* 二级段落 */
+
+    .mh2 {
+      -webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;
+    }
+
+    /* 目录 高度、宽度 可自行调整*/
+    .mi1 {
+      position: fixed; bottom: 240px; right: 10px; width: 240px; height: 100px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;
+    }
+
+</style>
+
+本技术手册将持续更新，欢迎提交Issue和Pull Request
