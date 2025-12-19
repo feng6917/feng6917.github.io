@@ -476,6 +476,67 @@ author: feng6917
 
     ![img](../images/2018-6-9/5.jpg)
 
+<h2 id="c-3-0" class="mh2">RTSP 流媒体服务器搭建</h2>
+
+1. rtsp-server 安装
+
+   ```
+   # 下载安装包
+   wget https://github.com/bluenviron/mediamtx/releases/download/v1.11.1/mediamtx_v1.11.1_linux_amd64.tar.gz
+   # 解压缩&安装
+   mkdir media
+   tar -zxvf -C media
+   # 启动服务
+   ./media
+   # 配置端口 修改mediamtx.yml 文件
+   ```
+
+2. ffmpg 文件安装
+
+   ```
+   Centos
+   # 下载安装包
+   wget https://johnvansickle.com/ffmpeg/release-source/ffmpeg-4.1.tar.xz
+   tar -Jxvf ffmpeg-4.1.tar.xz
+   cd ffmpeg-4.1/
+   sudo ./configure --prefix=/usr/local/ffmpeg
+   # 根据情况判断是否执行命令
+   1. yum install yasm
+   2. sudo ./configure --prefix=/usr/local/ffmpeg --disable-x86asm）
+   # 编译安装
+   sudo make & make install
+   ---------------------------
+   耐心等待安装完成
+   ---------------------------
+   # 查看版本号
+   ./ffmpeg -version
+   # 设置环境变量
+   vi /etc/profile 
+   export PATH=$PATH:/usr/local/ffmpeg/bin # 地址设为实际地址
+   source /etc/profile # 应用配置
+   ffmpeg -version
+   ```
+
+3. ffmpeg 推流
+
+   ```
+   # 滚动推流
+   ffmpeg -re -stream_loop -1 -i ./myz/video.mp4 -c copy -f rtsp rtsp://127.0.0.1:8664/stream
+   # 后台
+   nohup ffmpeg -re -stream_loop -1 -i ./myz/video.mp4 -c copy -f rtsp rtsp://127.0.0.1:8664/stream &
+   ```
+
+4. 出现无法访问时，关闭防火墙重试
+
+   ```
+   # 启动防火墙
+   systemctl start firewalld
+   # 关闭防火墙
+   systemctl stop firewalld
+   ```
+
+---
+
 <div class="mi1">
     <strong>目录</strong>
       <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
@@ -516,7 +577,7 @@ author: feng6917
                 <li style="list-style-type: none;"><a title="v2rayN是Windows系统下的代理软件客户端，功能强大且支持多种代理协议，如VMess、VLESS、Trojan、Socks、Shadowsocks、Hysteria2、Tuic等代理协议。" href="https://github.com/2dust/v2rayN">V2rayN(代理)</a>
                 </ul>
             </ul>
-         <li style="list-style-type: none;"><a href="#c-3-0">Mac</a></li>
+         <li style="list-style-type: none;"><a href="#c-2-0">Mac</a></li>
             <ul style="padding-left: 15px; list-style-type: none;">
               <li style="list-style-type: none;"><a href="#c-2-1">CleanMyMac X 4.10.6</a></li>
               <ul style="padding-left: 15px; list-style-type: none;"></ul>
@@ -533,6 +594,11 @@ author: feng6917
               <li style="list-style-type: none;"><a href="#c-2-7">Typora 1.8.10</a></li>
               <ul style="padding-left: 15px; list-style-type: none;"> </ul>
             </ul>
+        <li style="list-style-type: none;"><a href="#c-3-0">Mac</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;">
+              <li style="list-style-type: none;"><a href="#c-3-0">RTSP 流媒体服务器搭建</a></li>
+              <ul style="padding-left: 15px; list-style-type: none;"></ul>
+        </ul>
       </ul>
 </div>
 

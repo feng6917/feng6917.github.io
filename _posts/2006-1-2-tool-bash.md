@@ -297,10 +297,43 @@ docker save -o goserver-$ctag.tar registry.zhst.com/video-analysis/go-server:zhs
 echo "goserver-$ctag.tar 打包成功."
 ```
 
-<h2 id="c-6-0" class="mh1">六、参考资源</h2>
+<h2 id="c-6-0" class="mh1">六、批量删除S3数据-Linux</h2>
 
-- 学习资源
-  - [MySQL 数据库定时备份脚本实例](https://blog.csdn.net/SudongJang/article/details/125444498)
+`seaweedfs 删除某前缀开头后面指定时间命名的存储数据`
+
+``` bash
+#!/bin/bash
+
+# 设置起始和结束日期
+start_date="2025-06-14"
+end_date="2025-06-20"
+
+# 删除s3文件夹前缀
+prefix="process"
+# 删除文件IP地址 通过fileserver pod fileter-0 IP
+addr="10.244.0.24"
+
+# 循环遍历每一天的日期
+current_date="$start_date"
+while [[ "$current_date" < "$end_date" || "$current_date" == "$end_date" ]]; do
+  # 格式化日期为所需的 YYYYMMDD 格式
+  formatted_date=$(date -d "$current_date" +%Y%m%d)
+
+  # 执行 curl 命令
+  curl -XDELETE "http://${addr}:8888/buckets/${prefix}-${formatted_date}?recursive=true"
+
+  # 输出执行日志
+  echo "Deleted bucket for date: $formatted_date"
+
+  # 增加一天
+  current_date=$(date -I -d "$current_date + 1 day")
+done
+
+```
+
+<h2 id="c-7-0" class="mh1">七、参考资源</h2>
+
+- [MySQL 数据库定时备份脚本实例](https://blog.csdn.net/SudongJang/article/details/125444498)
 
 <hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
 
@@ -318,7 +351,9 @@ echo "goserver-$ctag.tar 打包成功."
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-5-0">五、XShell 脚本(构建镜像)</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
-            <li style="list-style-type: none;"><a href="#c-6-0">六、参考资源</a></li>
+            <li style="list-style-type: none;"><a href="#c-6-0">六、批量删除S3数据-Linux</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-7-0">七、参考资源</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
         </ul>
 </div>

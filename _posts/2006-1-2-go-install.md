@@ -99,7 +99,7 @@ author: feng6917
 
 <h2 id="c-3-0" class="mh1">三、 参数配置</h2>
 
-<h2 id="c-3-1" class="mh1">3.1 GO111MODULE</h2>
+<h2 id="c-3-1" class="mh2">3.1 GO111MODULE</h2>
 
 >
 > - `GO111MODULE=off`，无模块支持，go 命令行将不会支持 module 功能，寻找依赖包的方式将会沿用旧版本那种通过 vendor 目录或者 GOPATH 模式来查找。
