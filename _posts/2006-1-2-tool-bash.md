@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "一些脚本"
+title: "脚本记录，重复工作流程化处理"
 date:   2024-4-1
 tags: 
   - 工具类
