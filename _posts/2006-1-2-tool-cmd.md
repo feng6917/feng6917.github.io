@@ -925,7 +925,7 @@ kubectl scale deployment <deploy-name> --replicas=<original-number>
 
   `ctrl + (shift) + h`
 
-<h2 id="c-5-0" class="mh2">Git 常用命令总结</h2>
+<h2 id="c-6-0" class="mh2">Git 常用命令总结</h2>
 
 - 把要提交的文件的信息添加到暂存区中
 
