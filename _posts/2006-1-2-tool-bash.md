@@ -406,6 +406,145 @@ EOF
 
 3. 执行命令 `chmod +x del_vearch.sh && ./del_vearch.sh`
 
+<h2 id="c-8-0" class="mh1">八、监控磁盘容量写入数据库磁盘表-Linux</h2>
+
+`该工具主要用于查询指定路径磁盘信息，检索容器ID，连接数据库，写入磁盘表，实现容器内对外部磁盘容量的监控`
+
+```bash
+cat > disk_monitor.sh << 'EOF'
+#!/bin/bash
+# 配置
+LOG_FILE="./disk_monitor.log"
+MYSQL_CONTAINER_NAME="mysql"
+MYSQL_DATABASE="apiserver"
+MYSQL_TABLE="disk_usage_numeric"
+
+# 记录日志
+log_message() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" >> "$LOG_FILE"
+}
+
+# 查找MySQL容器
+find_mysql_container() {
+    local container_id=$(docker ps --filter "name=$MYSQL_CONTAINER_NAME" --format "{{.ID}}" 2>/dev/null)
+    if [ -z "$container_id" ]; then
+        container_id=$(docker ps | grep mysql | awk '{print $1}' 2>/dev/null)
+    fi
+    echo "$container_id"
+}
+
+# 获取MySQL密码
+get_mysql_password() {
+    local container_id="$1"
+    local password=$(docker inspect "$container_id" --format='{{range .Config.Env}}{{println .}}{{end}}' \
+        2>/dev/null | grep MYSQL_ROOT_PASSWORD | cut -d= -f2)
+    echo "$password"
+}
+
+# 获取挂载点路径
+get_mount_point() {
+    if [ -f .env ]; then
+        HISTORY_DIR=$(grep '^HISTORY_VIDEO_DIR=' .env | cut -d'=' -f2- | xargs)
+        HISTORY_DIR=$(echo "$HISTORY_DIR" | sed "s/^['\"]//;s/['\"]$//")
+        if [[ "$HISTORY_DIR" == /* ]]; then
+            MOUNT_POINT="/$(echo "$HISTORY_DIR" | cut -d'/' -f2)"
+        else
+            MOUNT_POINT=$(echo "$HISTORY_DIR" | cut -d'/' -f1)
+        fi
+        echo "$MOUNT_POINT"
+    else
+        echo "/data_hdd"
+    fi
+}
+
+# 主程序
+log_message "=== 启动磁盘监控程序（每5秒执行一次） ==="
+
+# 主循环
+while true; do
+    log_message "=== 开始获取磁盘信息 ==="
+    
+    # 获取挂载点路径（每次循环都重新获取）
+    MOUNT_POINT=$(get_mount_point)
+    
+    # 检查挂载点
+    if ! mountpoint -q "$MOUNT_POINT"; then
+        log_message "错误: $MOUNT_POINT 未挂载"
+        sleep 5
+        continue
+    fi
+    
+    # 获取磁盘信息（字节单位）
+    df_output=$(df -B1 "$MOUNT_POINT" | tail -1)
+    if [ -z "$df_output" ]; then
+        log_message "错误: 无法获取磁盘信息"
+        sleep 5
+        continue
+    fi
+    
+    # 解析字段
+    filesystem=$(echo "$df_output" | awk '{print $1}')
+    total_bytes=$(echo "$df_output" | awk '{print $2}')
+    used_bytes=$(echo "$df_output" | awk '{print $3}')
+    free_bytes=$(echo "$df_output" | awk '{print $4}')
+    usage_percent=$(echo "$df_output" | awk '{print $5}' | sed 's/%//')
+    
+    # 转换为GB（保留2位小数）
+    total_gb=$(echo "scale=2; $total_bytes / 1024 / 1024 / 1024" | bc)
+    used_gb=$(echo "scale=2; $used_bytes / 1024 / 1024 / 1024" | bc)
+    free_gb=$(echo "$total_gb - $used_gb" | bc)  # 使用计算确保一致
+    
+    log_message "磁盘信息: $filesystem | 总容量: ${total_gb}GB | 已用: ${used_gb}GB | 剩余: ${free_gb}GB | 使用率: ${usage_percent}%"
+    
+    # 查找MySQL容器
+    container_id=$(find_mysql_container)
+    if [ -z "$container_id" ]; then
+        log_message "警告: 未找到MySQL容器，跳过数据库插入"
+        sleep 5
+        continue
+    fi
+    
+    log_message "找到MySQL容器: $container_id"
+    
+    # 获取MySQL密码
+    password=$(get_mysql_password "$container_id")
+    
+    # 方法1：使用 DELETE + INSERT（最简单直接）
+    update_sql="
+    USE $MYSQL_DATABASE;
+    -- 先删除该挂载点的旧记录
+    DELETE FROM $MYSQL_TABLE WHERE mount_point = '$MOUNT_POINT';
+    -- 插入新记录
+    INSERT INTO $MYSQL_TABLE 
+    (filesystem, total_gb, used_gb, free_gb, usage_percent, mount_point) 
+    VALUES 
+    ('$filesystem', $total_gb, $used_gb, $free_gb, $usage_percent, '$MOUNT_POINT');
+    "
+    
+    # 执行SQL
+    if [ -n "$password" ]; then
+        echo "$update_sql" | docker exec -i "$container_id" mysql -u root -p"$password" --init-command="SET time_zone='+08:00'" 2>/dev/null
+        result=$?
+    else
+        echo "$update_sql" | docker exec -i "$container_id" mysql -u root --init-command="SET time_zone='+08:00'" 2>/dev/null
+        result=$?
+    fi
+    
+    # 检查结果
+    if [ $result -eq 0 ]; then
+        log_message "成功插入数据到MySQL"
+    else
+        log_message "错误: 插入数据失败"
+    fi
+    
+    log_message "=== 本次任务完成，等待5秒后继续 ==="
+    
+    # 等待5秒
+    sleep 5
+done
+EOF
+```
+
 <h2 id="c-10-0" class="mh1">十、参考资源</h2>
 
 - [MySQL 数据库定时备份脚本实例](https://blog.csdn.net/SudongJang/article/details/125444498)
@@ -429,6 +568,8 @@ EOF
             <li style="list-style-type: none;"><a href="#c-6-0">六、批量删除S3数据-Linux</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-7-0">七、批量删除Vearch数据-Linux</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-8-0">八、监控磁盘容量写入数据库磁盘表-Linux</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-10-0">十、参考资源</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
