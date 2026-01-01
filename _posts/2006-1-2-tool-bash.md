@@ -8,7 +8,7 @@ comments: true
 author: feng6917
 ---
 
-`工作过程中的一些脚本记录，重复工作流程化处理`
+工作过程中的一些脚本记录，重复工作流程化处理
 
 <!-- more -->
 
@@ -16,227 +16,224 @@ author: feng6917
 
 `说明： 该脚本用于大文件或文件夹的强制删除，不需要执行命令，只需要把数据拖拽到脚本工具即可`
 
-- 1. 文件删除脚本创建
+### 1. 文件删除脚本创建
 
-      ```
-        强制删除.bat
-        ----------------------
-        DEL /F /A /Q \\?\%1 RD /S /Q \\?\%1
-      ```
+``` bat
+  强制删除.bat
+  ----------------------
+  DEL /F /A /Q \\?\%1 RD /S /Q \\?\%1
+```
 
-- 2. 执行文件删除脚本
-  - 1. 创建 强制删除.bat 文件，写入 `DEL /F /A /Q \\?\%1 RD /S /Q \\?\%1` 内容
-  - 2. 拉取要删除的文件/文件夹 到 强制删除.bat
-  ![img](../images/2018-6-28/1.gif)
+### 2. 执行文件删除脚本
+
+- 1. 创建 强制删除.bat 文件，写入 `DEL /F /A /Q \\?\%1 RD /S /Q \\?\%1` 内容
+- 1. 拉取要删除的文件/文件夹 到 强制删除.bat
+![img](../images/2018-6-28/1.gif)
 
 <h2 id="c-2-0" class="mh1">二、日志初始化-Win</h2>
 
 `说明：针对每天的工作计划，初始出一个Markdown文档模块，执行初始化脚本后，自动根据日期创建当天的模块`
 
-- 1. 新建初始化日志模板
+### 1. 新建初始化日志模板
 
-      ```
-          template.md
-          1. 需要调整格式 取消缩进
-          ----------
+```
+    template.md
+    1. 需要调整格式 取消缩进
+    ----------
 
-          > 与人为善,于己为善,与人有路,于己有退
+    > 与人为善,于己为善,与人有路,于己有退
 
-          - [ ] 每日一语？
-            
-            ```
-            
-            ```
-
-
-
-          - [ ] 我今天怎样比昨天做的更好？
-            
-            ```
-            
-            ```
-
-          -----
-
-          <div id="jump">工作任务</div>
-
-          - [ ] 
-          - [ ] 
-          - [ ] 
-          - [ ] 
-          - [ ] 
-          - [ ] 
-
-          ---
-
-          [工作完成进度确认](#jump)
-
-          ```
-
-          ```
-
-          ---
-
-          ***今日总结***  
-
-          ```
-
-          ```
-      ```
-
-- 2. 新建初始化日志脚本
-
-      ```
-        initLogs.bat
-        1. 需要调整格式 取消缩进
-        2. 参数说明
-          dest 为存储路径
-          %dest%/logs 为存放日志的文件夹
-          %dest%/template.md 为模板文件路径
-          %dt% 为日期格式
-        ----------
-        
-        @echo off
+    - [ ] 每日一语？
       
-        SET dest=C:\Users\Admin\Desktop
-
-        echo jump log path
-        cd /d %dest%\logs
-
-        echo set today date
-        set dt=%date:~0,4%.%date:~5,2%.%date:~8,2%-%date:~11,13%
-
-        echo copy template markdown file 
-        xcopy %dest%\template.md .
-        cd ./%dt%
-
-        echo rename template.md today markdown file
-        ren template.md %dt%.md
-        del template.md
-
-        echo create success
+      ```
+      
       ```
 
-- 3. 执行初始化脚本
 
-    ![img](../images/2018-6-28/2.png)
-    ![img](../images/2018-6-28/3.png)
+
+    - [ ] 我今天怎样比昨天做的更好？
+      
+      ```
+      
+      ```
+
+    -----
+
+    <div id="jump">工作任务</div>
+
+    - [ ] 
+
+    ---
+
+    [工作完成进度确认](#jump)
+
+    ```
+
+    ```
+
+    ---
+
+    ***今日总结***  
+
+    ```
+
+    ```
+```
+
+### 2. 新建初始化日志脚本
+
+``` bat
+  initLogs.bat
+  1. 需要调整格式 取消缩进
+  2. 参数说明
+    dest 为存储路径
+    %dest%/logs 为存放日志的文件夹
+    %dest%/template.md 为模板文件路径
+    %dt% 为日期格式
+  ----------
+  
+  @echo off
+
+  SET dest=C:\Users\Admin\Desktop
+
+  echo jump log path
+  cd /d %dest%\logs
+
+  echo set today date
+  set dt=%date:~0,4%.%date:~5,2%.%date:~8,2%-%date:~11,13%
+
+  echo copy template markdown file 
+  xcopy %dest%\template.md .
+  cd ./%dt%
+
+  echo rename template.md today markdown file
+  ren template.md %dt%.md
+  del template.md
+
+  echo create success
+```
+
+### 3. 执行初始化脚本
+
+![img](../images/2018-6-28/2.png)
+![img](../images/2018-6-28/3.png)
 
 <h2 id="c-3-0" class="mh1">三、一键启动多任务-Win</h2>
 
-- 1. 新建一键启动多任务脚本
+### 1. 新建一键启动多任务脚本
 
-      ```
-        start.bat
-        1. 需要调整格式 取消缩进
-        2. start 可执行多次多个任务
-        ----------
+``` bat
+  start.bat
+  1. 需要调整格式 取消缩进
+  2. start 可执行多次多个任务
+  ----------
 
-        @echo off
- 
+  @echo off
 
-        if "%1" == "h" goto begin
-        
 
-        mshta vbscript:createobject("wscript.shell").run("""%~nx0"" h",0)(window.close)&&exit
-        
+  if "%1" == "h" goto begin
+  
 
-        :begin
-        
-        echo 打开打卡定时图片任务...
-        start /B C:/workspace/golang/src/feng6917/local/bash/gohome_bat.exe
-      ```  
+  mshta vbscript:createobject("wscript.shell").run("""%~nx0"" h",0)(window.close)&&exit
+  
 
-- 2. 执行 start.bat
+  :begin
+  
+  echo 打开打卡定时图片任务...
+  start /B C:/workspace/golang/src/feng6917/local/bash/gohome_bat.exe
+```  
+
+### 2. 执行 start.bat
 
 <h2 id="c-4-0" class="mh1">四、MySQL数据备份-Linux</h2>
 
 <h2 id="c-4-1" class="mh2">4.1 命令备份</h2>
-- 1. 备份
 
-  ```bash
-  mysqldump -u root -p123456 --all-databases > /data/mysql/all-databases.sql
-  ```
+### 1. 备份
 
-- 2. 恢复
+``` bash
+mysqldump -u root -p123456 --all-databases > /data/mysql/all-databases.sql
+```
 
-  ```bash
-  mysql -u root -p123456 < /data/mysql/all-databases.sql
-  ```
+### 2. 恢复
+
+``` bash
+mysql -u root -p123456 < /data/mysql/all-databases.sql
+```
 
 <h2 id="c-4-2" class="mh2">4.2 Cron备份</h2>
 
-- 1. 备份脚本编写
+### 1. 备份脚本编写
 
-      ```
-      #保存备份个数，备份7天数据
-      number=7
-      #备份保存路径  路径名可自定义
-      backup_dir=/root/mmysql/mysqlbackup
-      #日期
-      dd=`date +%Y-%m-%d-%H-%M-%S`
-      #备份工具
-      tool=mysqldump
-      #用户名
-      username=root
-      #密码  自己的数据库密码
-      password=root
-      #将要备份的数据库
-      database_name=db_myz
-      #host
-      host=192.168.23.68
-      #port
-      port=31506
+``` bash
+#保存备份个数，备份7天数据
+number=7
+#备份保存路径  路径名可自定义
+backup_dir=/root/mmysql/mysqlbackup
+#日期
+dd=`date +%Y-%m-%d-%H-%M-%S`
+#备份工具
+tool=mysqldump
+#用户名
+username=root
+#密码  自己的数据库密码
+password=root
+#将要备份的数据库
+database_name=db_myz
+#host
+host=192.168.23.68
+#port
+port=31506
 
-      #如果文件夹不存在则创建
-      if [ ! -d $backup_dir ];
-      then
-          mkdir -p $backup_dir;
-      fi
+#如果文件夹不存在则创建
+if [ ! -d $backup_dir ];
+then
+    mkdir -p $backup_dir;
+fi
 
-      #简单写法 mysqldump -u root -p123456 users > /root/mysqlbackup/users-$filename.sql
-      #变量写法  本实例采用变量写法，这样增强脚本可移植性、可读性，后期维护时只需修改变量名即可
-      $tool -h$host -P$port -u $username -p$password $database_name > $backup_dir/$database_name-$dd.sql
+#简单写法 mysqldump -u root -p123456 users > /root/mysqlbackup/users-$filename.sql
+#变量写法  本实例采用变量写法，这样增强脚本可移植性、可读性，后期维护时只需修改变量名即可
+$tool -h$host -P$port -u $username -p$password $database_name > $backup_dir/$database_name-$dd.sql
 
-      #写创建备份日志
-      echo "创建数据部备份文件 $backup_dir/$database_name-$dd.sql" >> $backup_dir/log.txt
+#写创建备份日志
+echo "创建数据部备份文件 $backup_dir/$database_name-$dd.sql" >> $backup_dir/log.txt
 
-      #找出需要删除的备份
-      delfile=`ls -l -crt $backup_dir/*.sql | awk '{print $9 }' | head -1`
+#找出需要删除的备份
+delfile=`ls -l -crt $backup_dir/*.sql | awk '{print $9 }' | head -1`
 
-      #判断现在的备份数量是否大于$number
-      count=`ls -l -crt $backup_dir/*.sql | awk '{print $9 }' | wc -l`
+#判断现在的备份数量是否大于$number
+count=`ls -l -crt $backup_dir/*.sql | awk '{print $9 }' | wc -l`
 
-      if [ $count -gt $number ]
-      then
-        #删除最早生成的备份，只保留number数量的备份
-        rm $delfile
-        #写删除文件日志
-        echo "删除过期本份文件 $delfile" >> $backup_dir/log.txt
-      fi
-      ```
+if [ $count -gt $number ]
+then
+  #删除最早生成的备份，只保留number数量的备份
+  rm $delfile
+  #写删除文件日志
+  echo "删除过期本份文件 $delfile" >> $backup_dir/log.txt
+fi
+```
 
-- 2. 使用 cron 定时执行脚本
+### 2. 使用 cron 定时执行脚本
 
-      ```
-        #service crond start //启动服务
-        #service crond stop //关闭服务
-        #service crond restart //重启服务
-        #service crond reload //重新载入配置
-        #service crond status //查看服务状态
-        #cron 文件内容
-        #0 2 * * * /root/mysql_backup_script.sh
-        #cron 执行
-        #crontab mysqlRollback.cron
-        #cron 状态
-        #crontab -l
-      ```
+``` bash
+  #service crond start //启动服务
+  #service crond stop //关闭服务
+  #service crond restart //重启服务
+  #service crond reload //重新载入配置
+  #service crond status //查看服务状态
+  #cron 文件内容
+  #0 2 * * * /root/mysql_backup_script.sh
+  #cron 执行
+  #crontab mysqlRollback.cron
+  #cron 状态
+  #crontab -l
+```
 
 <h2 id="c-5-0" class="mh1">五、XShell 脚本（构建镜像）</h2>
 
 `说明：该脚本主要用于可执行文件拷贝到容器中，构建新的镜像。第一个shell 脚本，用于运行容器，替换容器ID。第二个脚本 用于打包，生成新镜像。区分开是为了方便二次及多次编译。`
 
-1. xshell 脚本内容
+### 1. xshell 脚本内容
 
 ``` vbscript
     Sub Main
@@ -274,7 +271,7 @@ author: feng6917
     End Sub
 ```
 
-2. ci_goserver.sh 脚本内容
+### 2. ci_goserver.sh 脚本内容
 
 ``` bash
 containerID=54578a5fad66
@@ -299,9 +296,10 @@ echo "goserver-$ctag.tar 打包成功."
 
 <h2 id="c-6-0" class="mh1">六、批量删除S3数据-Linux</h2>
 
-`seaweedfs 删除某前缀开头后面指定时间命名的存储数据`
+`移除的s3数据为某指定类型数据，非全部数据，按照时间排列 process_20250101,process_20250102 ...``
 
 ``` bash
+cat > del_s3.sh << 'EOF'
 #!/bin/bash
 
 # 设置起始和结束日期
@@ -328,10 +326,85 @@ while [[ "$current_date" < "$end_date" || "$current_date" == "$end_date" ]]; do
   # 增加一天
   current_date=$(date -I -d "$current_date + 1 day")
 done
+EOF
+```
+
+#### 命令行执行上诉命令得到`del_s3.sh`,针对该文件需要做出以下调整
+
+1. 起始时间，需要根据需要进行设置，当月或当日小于10需要前面补零，例 `2025-01-01`
+
+   **ps**: 建议，删除日期时间段先设置为1天，没有问题再调大删除，需要反复确认时间段，避免误删
+
+2. 删除文件地址 执行命令 `kubectl -n fileserver get po -o wide | grep fi` 使用该IP替换文件地址
+
+3. 执行命令 `chmod +x del_s3.sh && ./del_s3.sh`
+
+<h2 id="c-7-0" class="mh1">七、批量删除Vearch数据-Linux</h2>
+
+`移除的vearch特征数据为某类型特征特征数据，分别移除reid_head_attr、non_motor_vehicle、face 下相应时间数据，仍存有其他特征表（gait ...），相应表下存有其他space数据（gather、history、offlice ...）, 如需删除指定表执行相应拼接地址即可，删除后需要重启vearch`
+
+``` bash
+cat > del_vearch.sh << 'EOF'
+#!/bin/bash
+
+# 设置起始和结束日期
+start_date="2025-06-14"
+end_date="2025-06-20"
+
+# 删除s3文件夹前缀
+prefix="p_"
+# 删除特征IP地址 1. kubectl -n vearch get svc;vearch-master CLUSTER-IP 地址 2. docker compose 一般为localhost
+addr="localhost"
+
+# 循环遍历每一天的日期
+current_date="$start_date"
+while [[ "$current_date" < "$end_date" || "$current_date" == "$end_date" ]]; do
+  # 格式化日期为所需的 YYYYMMDD 格式
+  formatted_date=$(date -d "$current_date" +%Y%m%d)
+
+  echo "开始清理 ${prefix}${formatted_date} 的索引空间..."
+  echo
+
+  # 删除 reid_head_attr（行人头部属性识别）索引空间
+  # 该空间存储行人头部属性相关的特征数据
+  echo "1. 正在删除 reid_head_attr 索引空间..."
+  curl -XDELETE "http://${addr}:8817/space/reid_head_attr/${prefix}${formatted_date}"
+  echo "   删除完成"
+  echo
+
+  # 删除 non_motor_vehicle（非机动车）索引空间
+  # 该空间存储非机动车相关的特征数据
+  echo "2. 正在删除 non_motor_vehicle 索引空间..."
+  curl -XDELETE "http://${addr}:8817/space/non_motor_vehicle/${prefix}${formatted_date}"
+  echo "   删除完成"
+  echo
+
+  # 删除 face（人脸）索引空间
+  # 该空间存储人脸相关的特征数据
+  echo "3. 正在删除 face 索引空间..."
+  curl -XDELETE "http://${addr}:8817/space/face/${prefix}${formatted_date}"
+  echo "   删除完成"
+  echo
+
+  # 输出执行日志
+  echo "Deleted space for date: $formatted_date"
+
+  # 增加一天
+  current_date=$(date -I -d "$current_date + 1 day")
+done
+EOF
 
 ```
 
-<h2 id="c-7-0" class="mh1">七、参考资源</h2>
+#### 执行上诉命令后得到`del_vearch.sh`文件，针对该文件需要做出以下调整
+
+1. 时间日期 策略同上
+
+2. 地址获取 执行 `kubectl -n vearch get svc|grep master`,替换文件中地址
+
+3. 执行命令 `chmod +x del_vearch.sh && ./del_vearch.sh`
+
+<h2 id="c-10-0" class="mh1">十、参考资源</h2>
 
 - [MySQL 数据库定时备份脚本实例](https://blog.csdn.net/SudongJang/article/details/125444498)
 
@@ -353,7 +426,9 @@ done
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-6-0">六、批量删除S3数据-Linux</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
-            <li style="list-style-type: none;"><a href="#c-7-0">七、参考资源</a></li>
+            <li style="list-style-type: none;"><a href="#c-7-0">七、批量删除Vearch数据-Linux</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-10-0">十、参考资源</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
         </ul>
 </div>
