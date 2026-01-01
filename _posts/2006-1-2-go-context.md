@@ -25,7 +25,7 @@ Context 翻译成中文是“上下文”，它可以控制一组呈树状结构
 
 Context实际上只定义了接口，凡是实现该接口的类型都可称为一种Context, 官方包中实现了几个常用的Context,分别可用于不同的场景。
 
-<h2 id="c-2-1" class="mh2">基础结构</h2>
+<h2 id="c-2-1" class="mh2">2.1 基础结构</h2>
 
 ```go
 type Context interface {
@@ -56,7 +56,7 @@ type Context interface {
 
 有一种context，它不是用于控制呈树状分布的goroutine,而是用于在树状分布的goroutine间传递消息。Value()方法就是用于此种类型的context，该方法根据key值查询map中的value.
 
-<h2 id="c-2-2" class="mh2">EmptyCtx</h2>
+<h2 id="c-2-2" class="mh2">2.2 EmptyCtx</h2>
 
 context 包中定义了一个空的context，名为emptyCtx,用于context的根节点，空的context只能简单的实现了Context接口，本身不包含任何值，仅用于Context的父节点。
 
@@ -92,7 +92,7 @@ var (
 - context.Background() 返回一个空的Context, 它不能被取消、不包含值、也没有截止时间，一般作为主函数、初始化中和测试代码的Context。
 - context.TODO() 返回一个空的Context, 它不能被取消、不包含值、也没有截止时间，一般用于不确定应该使用哪种Context时。
 
-<h2 id="c-2-3" class="mh2">ValueCtx</h2>
+<h2 id="c-2-3" class="mh2">2.3 ValueCtx</h2>
 
 ```go
 type valueCtx struct {
@@ -131,7 +131,7 @@ func WithValue(parent Context, key, val interface{}) Context {
 }
 ```
 
-<h2 id="c-2-4" class="mh2">方法实现</h2>
+<h2 id="c-2-4" class="mh2">2.4 方法实现</h2>
 
 包提供了4个方法创建不同类型的context，使用这些方法时如果没有父context,则使用background作为父context。
 
@@ -183,7 +183,7 @@ WithDeadline()方法实现步骤如下：
 
 WithTimeout()实际调用了WithDeadline,二者实现原理一致。
 
-<h2 id="c-2-5" class="mh2">WithCancel</h2>
+<h2 id="c-2-5" class="mh2">2.5 WithCancel</h2>
 
 ### 取消是通知机制，发出取消请求
 
@@ -291,11 +291,11 @@ func example3() {
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-2-0">二、Context 实现原理</a></li>
                 <ul style="padding-left: 15px; list-style-type: none;">
-                    <li style="list-style-type: none;"><a href="#c-2-1">基础结构</a></li>
-                    <li style="list-style-type: none;"><a href="#c-2-2">EmptyCtx</a></li>
-                    <li style="list-style-type: none;"><a href="#c-2-3">ValueCtx</a></li>
-                    <li style="list-style-type: none;"><a href="#c-2-4">方法实现</a></li>
-                    <li style="list-style-type: none;"><a href="#c-2-5">WithCancel</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-1">2.1 基础结构</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-2">2.2 EmptyCtx</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-3">2.3 ValueCtx</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-4">2.4 方法实现</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-5">2.5 WithCancel</a></li>
                 </ul>
             <li style="list-style-type: none;"><a href="#c-3-0">三、参考资源</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
@@ -322,7 +322,7 @@ func example3() {
 
     /* 目录 高度、宽度 可自行调整*/
     .mi1 {
-      position: fixed; bottom: 240px; right: 10px; width: 240px; height: 100px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;
+      position: fixed; bottom: 240px; right: 10px; width: 240px; height: 220px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;
     }
 
 </style>
