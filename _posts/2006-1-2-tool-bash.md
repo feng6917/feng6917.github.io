@@ -26,8 +26,10 @@ author: feng6917
 
 ### 2. 执行文件删除脚本
 
-- 1. 创建 强制删除.bat 文件，写入 `DEL /F /A /Q \\?\%1 RD /S /Q \\?\%1` 内容
-- 1. 拉取要删除的文件/文件夹 到 强制删除.bat
+#### 1. 创建 强制删除.bat 文件，写入 `DEL /F /A /Q \\?\%1 RD /S /Q \\?\%1` 内容
+
+#### 2. 拉取要删除的文件/文件夹 到 强制删除.bat
+
 ![img](../images/2018-6-28/1.gif)
 
 <h2 id="c-2-0" class="mh1">二、日志初始化-Win</h2>
@@ -231,44 +233,44 @@ fi
 
 <h2 id="c-5-0" class="mh1">五、XShell 脚本（构建镜像）</h2>
 
-`说明：该脚本主要用于可执行文件拷贝到容器中，构建新的镜像。第一个shell 脚本，用于运行容器，替换容器ID。第二个脚本 用于打包，生成新镜像。区分开是为了方便二次及多次编译。`
+说明：`该脚本主要用于可执行文件拷贝到容器中，构建新的镜像。第一个shell 脚本，用于运行容器，替换容器ID。第二个脚本 用于打包，生成新镜像。区分开是为了方便二次及多次编译。`
 
 ### 1. xshell 脚本内容
 
-``` vbscript
-    Sub Main
-      ' 第一步：连接到服务器并运行docker
-      xsh.Session.Open("./内网 goserver build.xsh")
-      
-      ' 等待命令执行
-      xsh.Screen.WaitForString("#")
+``` vb
+Sub Main
+  ' 第一步：连接到服务器并运行docker
+  xsh.Session.Open("./内网 goserver build.xsh")
+  
+  ' 等待命令执行
+  xsh.Screen.WaitForString("#")
 
-      ' 在新窗口中执行操作
-      xsh.Screen.Send("cd ~/myz" & vbCr)
-      xsh.Screen.WaitForString("#")
+  ' 在新窗口中执行操作
+  xsh.Screen.Send("cd ~/myz" & vbCr)
+  xsh.Screen.WaitForString("#")
 
-      ' 获取容器ID并替换文件第二行
-      xsh.Screen.Send "container_id=$(docker run -it -d registry.zhst.com/video-analysis/go-server:zhstserver-dongfeng-102959)" & vbCr
-      xsh.Screen.WaitForString "#"
+  ' 获取容器ID并替换文件第二行
+  xsh.Screen.Send "container_id=$(docker run -it -d registry.zhst.com/video-analysis/go-server:zhstserver-dongfeng-102959)" & vbCr
+  xsh.Screen.WaitForString "#"
 
-      ' 显示完整ID和截取后的ID
-      xsh.Screen.Send "echo ""完整容器ID: $container_id""" & vbCr
-      xsh.Screen.WaitForString "#"
+  ' 显示完整ID和截取后的ID
+  xsh.Screen.Send "echo ""完整容器ID: $container_id""" & vbCr
+  xsh.Screen.WaitForString "#"
 
-      ' 先截取前12位，再替换文件
-      xsh.Screen.Send "short_id=""containerID=$(echo $container_id | cut -c1-12)""" & vbCr
-      xsh.Screen.Send "echo ""截取后容器ID: $short_id""" & vbCr
-      xsh.Screen.WaitForString "#"
+  ' 先截取前12位，再替换文件
+  xsh.Screen.Send "short_id=""containerID=$(echo $container_id | cut -c1-12)""" & vbCr
+  xsh.Screen.Send "echo ""截取后容器ID: $short_id""" & vbCr
+  xsh.Screen.WaitForString "#"
 
-      ' 替换文件第二行 - 使用单引号
-      xsh.Screen.Send("sed -i ""2c $short_id"" ~/myz/ci_goserver.sh" & vbCr)
-      xsh.Screen.WaitForString "#"
-      
-      ' ' 显示第二行内容
-      xsh.Screen.Send "awk 'NR==2' ~/myz/ci_goserver.sh" & vbCr
-      xsh.Screen.WaitForString "#"    
-      
-    End Sub
+  ' 替换文件第二行 - 使用单引号
+  xsh.Screen.Send("sed -i ""2c $short_id"" ~/myz/ci_goserver.sh" & vbCr)
+  xsh.Screen.WaitForString "#"
+  
+  ' ' 显示第二行内容
+  xsh.Screen.Send "awk 'NR==2' ~/myz/ci_goserver.sh" & vbCr
+  xsh.Screen.WaitForString "#"    
+  
+End Sub
 ```
 
 ### 2. ci_goserver.sh 脚本内容
