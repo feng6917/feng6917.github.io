@@ -766,6 +766,58 @@ gluster volume info <volume-name>
 kubectl scale deployment <deploy-name> --replicas=<original-number>
 ```
 
+<h2 id="c-3-9" class="mh2">10. 集群相关</h2>
+
+```bash
+# 1. 集群服务重启
+[root@k8s-master-157 cluster_installer]# ansible all -i install_host -m reboot
+
+install_host eg:
+  [all]
+  #k8s-master-157 ansible_host=10.0.0.157
+  #k8s-storage-202 ansible_host=10.0.0.202
+  k8s-storage-251 ansible_host=10.0.0.251
+
+  [all:vars]
+  ansible_ssh_pass=zhst1234
+  ansible_ssh_port=22
+  ansible_ssh_user=root
+
+  # 对应更改all.yml 定义的master ip变量
+  [master]
+  k8s-master-157
+
+  [node]
+  # node01
+
+  [vearch]
+  k8s-master-157
+
+  [tidb]
+  k8s-master-157
+
+  [storage]
+  k8s-master-157
+  k8s-storage-202
+  k8s-storage-251
+
+  [gpu]
+  k8s-master-157
+
+  #24小时token过期后添加node节点
+  [newnode]
+  k8s-storage-202
+
+  [k8s:children]
+  master
+  node
+  newnode
+  vearch
+  tidb
+  storage
+  gpu
+```
+
 <h2 id="c-4-0" class="mh1">Helm</h2>
 
 - 查看帮助
