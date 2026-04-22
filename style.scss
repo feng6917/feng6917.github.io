@@ -622,7 +622,48 @@ nav {
 
 
 // Tags
+.tags {
+  // 整体排版更“卡片化”
+  margin-top: 10px;
+
+  // 锁定标签页二级标题高度，减少字体切换时的布局变化
+  h2 {
+    scroll-margin-top: 70px; // 顶部 sticky 标签条占位，避免锚点跳转“被遮住像没跳”
+    line-height: 1.35;
+    min-height: calc(1.35em * 1);
+    margin-top: 1.2em;
+    padding-bottom: .25em;
+    border-bottom: 1px dashed $divider-color;
+    position: relative;
+
+    &:before {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: 56px;
+      height: 3px;
+      background: linear-gradient(90deg, $link-color, transparent);
+      border-radius: 3px;
+    }
+  }
+}
+
 .tags > .label {
+  // 顶部标签条更显眼
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  padding: 10px 10px;
+  margin: 0 0 16px 0;
+  background: rgba(248, 249, 250, .92);
+  backdrop-filter: blur(6px);
+  border: 1px solid $divider-color;
+  border-radius: 10px;
+
+  // 允许换行时更美观
+  display: block;
+
   > li:before {
     content: "";
   }
@@ -635,26 +676,32 @@ nav {
 
     > a {
       display: inline-block;
-      margin: 1px;
+      margin: 4px 6px 4px 0;
       color: $base-color;
       background-color: $tag-index-label-background-color;
-      border-radius: 3px;
+      border-radius: 999px;
       line-height: 1.2;
       min-height: 22px; // 锁定标签块高度，减少字体加载导致的跳动（CLS）
+      border: 1px solid rgba(0,0,0,.06);
+      box-shadow: 0 1px 0 rgba(0,0,0,.03);
+      transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease, border-color .15s ease;
 
       &:hover {
         background-color: $link-bghv-color;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 16px rgba(0,0,0,.08);
+        border-color: rgba(0,0,0,.10);
       }
 
       span {
         float: left;
-        padding: .5px 5px;
+        padding: 0 10px;
         line-height: 22px; // 与容器高度一致，避免初始字号变化造成上下抖动
         height: 22px;
 
         &.count {
           background-color: $tag-index-count-background-color;
-          border-radius: 0 3px 3px 0;
+          border-radius: 0 999px 999px 0;
 
         }
       }
@@ -662,23 +709,40 @@ nav {
   }
 }
 
-.tags {
-  // 锁定标签页二级标题高度，减少字体切换时的布局变化
-  h2 {
-    line-height: 1.35;
-    min-height: calc(1.35em * 1);
-  }
-}
-
 .tags > .tag {
+  list-style: none;
+  padding-left: 0;
+  margin: 10px 0 26px 0;
+
+  > li:before {
+    content: "";
+  }
+
+  > li {
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(0,0,0,.04);
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
   a {
     color: $base-color;
+    text-decoration: none;
+
+    &:hover {
+      color: $link-color;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
   }
   time {
     color: $base-lighten-color;
     font-size: $small-font-size;
     font-weight: 300;
-    margin-left: 3px;
+    margin-left: 8px;
+    float: right;
   }
 }
 
