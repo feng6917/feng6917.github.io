@@ -639,6 +639,8 @@ nav {
       color: $base-color;
       background-color: $tag-index-label-background-color;
       border-radius: 3px;
+      line-height: 1.2;
+      min-height: 22px; // 锁定标签块高度，减少字体加载导致的跳动（CLS）
 
       &:hover {
         background-color: $link-bghv-color;
@@ -647,6 +649,8 @@ nav {
       span {
         float: left;
         padding: .5px 5px;
+        line-height: 22px; // 与容器高度一致，避免初始字号变化造成上下抖动
+        height: 22px;
 
         &.count {
           background-color: $tag-index-count-background-color;
@@ -655,6 +659,14 @@ nav {
         }
       }
     }
+  }
+}
+
+.tags {
+  // 锁定标签页二级标题高度，减少字体切换时的布局变化
+  h2 {
+    line-height: 1.35;
+    min-height: calc(1.35em * 1);
   }
 }
 
