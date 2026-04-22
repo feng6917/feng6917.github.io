@@ -10,9 +10,9 @@ author: feng6917
 
 本文记录一个本地音乐库服务 `music_local` 的使用与部署方式（本地运行 / Docker / Docker Compose），以及常见问题排查要点。
 
-- 项目源码：[feng6917/music_local](https://github.com/feng6917/music_local)
-
 <!-- more -->
+
+- 项目源码：[feng6917/music_local](https://github.com/feng6917/music_local)
 
 <h2 id="c-1-0" class="mh1">一、介绍</h2>
 
