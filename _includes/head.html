@@ -4,25 +4,23 @@
   {% include meta.html %}
   {% include fonts.html %}
 
+  <!-- 预连接：减少字体/样式首次加载抖动 -->
+  <link rel="preconnect" href="https://use.typekit.net" crossorigin>
+  <link rel="preconnect" href="https://p.typekit.net" crossorigin>
+
   <!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
 
+  <!-- 预加载主样式：降低首屏 FOUC（由小变大闪动） -->
+  <link rel="preload" href="{{ site.baseurl }}/style.css" as="style">
   <link rel="stylesheet" type="text/css" href="{{ site.baseurl }}/style.css" />
   <link rel="alternate" type="application/rss+xml" title="{{ site.name }} - {{ site.description }}" href="{{ site.baseurl }}/feed.xml" />
   <link rel="shortcut icon" href="{{ site.favicon }}">
  <!--  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css"> -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script> -->
-  <script>
-    (function(d) {
-      var config = {
-        kitId: 'vbt3gjx',
-        scriptTimeout: 3000,
-        async: true
-      },
-      h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
-    })(document);
-  </script>  
+  <!-- Typekit：改为 CSS 方式加载，避免 wf-loading 导致的布局抖动（CLS） -->
+  <link rel="stylesheet" href="https://use.typekit.net/vbt3gjx.css?display=swap">
 
 
   <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->

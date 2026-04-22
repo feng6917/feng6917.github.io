@@ -480,6 +480,29 @@ nav {
   border-bottom: none;
 }
 
+.posts > .post {
+  // 锁定首页卡片的排版高度，减少字体加载切换造成的跳动（CLS）
+  h1 {
+    line-height: 1.35;
+    min-height: calc(1.35em * 2); // 预留两行标题高度
+  }
+
+  .meta {
+    min-height: 22px; // 预留日期 + tag 行高度
+  }
+
+  .entry {
+    line-height: 1.7;
+    min-height: calc(1.7em * 3); // 预留 3 行摘要高度
+  }
+
+  .read-more {
+    display: inline-block;
+    line-height: 1.2;
+    min-height: 1.2em;
+  }
+}
+
 .date {
   font-weight: 300;
   font-size: $small-font-size;
