@@ -12,73 +12,6 @@ author: feng6917
 
 <!-- more -->
 
-<hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
-
-<!-- 目录容器 -->
-<div class="mi1">
-    <strong>目录</strong>
-        <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
-            <li style="list-style-type: none;"><a href="#c-1-0">一、目标与使用场景</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;"></ul>
-            <li style="list-style-type: none;"><a href="#c-2-0">二、部署方式（Docker / Docker Compose）</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-              <li style="list-style-type: none;"><a href="#c-2-1">2.1 目录规划（宿主机）</a></li>
-              <li style="list-style-type: none;"><a href="#c-2-2">2.2 Docker Run（等价方式）</a></li>
-              <li style="list-style-type: none;"><a href="#c-2-3">2.3 Docker Compose（推荐）</a></li>
-            </ul>
-            <li style="list-style-type: none;"><a href="#c-3-0">三、config.ini 初始化获取步骤（首次必做）</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;"></ul>
-            <li style="list-style-type: none;"><a href="#c-4-0">四、关键端口与访问入口（示例）</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;"></ul>
-            <li style="list-style-type: none;"><a href="#c-5-0">五、用 API 做“拉流代理”（RTSP 输入 → 多协议输出）</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-              <li style="list-style-type: none;"><a href="#c-5-1">5.1 secret 获取</a></li>
-              <li style="list-style-type: none;"><a href="#c-5-2">5.2 添加代理（addStreamProxy）</a></li>
-              <li style="list-style-type: none;"><a href="#c-5-3">5.3 移除代理（delStreamProxy）</a></li>
-              <li style="list-style-type: none;"><a href="#c-5-4">5.4 添加代理后怎么访问（输出 URL 规律）</a></li>
-            </ul>
-            <li style="list-style-type: none;"><a href="#c-6-0">六、config.ini 关键参数说明（高频项）</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-              <li style="list-style-type: none;"><a href="#c-6-1">6.1 API 安全（[api]）</a></li>
-              <li style="list-style-type: none;"><a href="#c-6-2">6.2 HTTP 与访问控制（[http]）</a></li>
-              <li style="list-style-type: none;"><a href="#c-6-3">6.3 RTSP/RTMP 端口（[rtsp]/[rtmp]）</a></li>
-              <li style="list-style-type: none;"><a href="#c-6-4">6.4 WebRTC（[rtc]）</a></li>
-              <li style="list-style-type: none;"><a href="#c-6-5">6.5 RTP 代理（[rtp_proxy]）</a></li>
-              <li style="list-style-type: none;"><a href="#c-6-6">6.6 HLS 切片保留（[hls] + [protocol]）</a></li>
-              <li style="list-style-type: none;"><a href="#c-6-7">6.7 服务器唯一标识（[general]）</a></li>
-            </ul>
-            <li style="list-style-type: none;"><a href="#c-7-0">七、部署优化与建议（实战常用）</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;"></ul>
-            <li style="list-style-type: none;"><a href="#c-8-0">八、常见问题排查（快速定位）</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-              <li style="list-style-type: none;"><a href="#c-8-1">8.1 容器启动了但端口不通</a></li>
-              <li style="list-style-type: none;"><a href="#c-8-2">8.2 addStreamProxy 成功但播放黑屏/卡顿</a></li>
-            </ul>
-        </ul>
-</div>
-
-<style>
-    /* 一级段落 */
-    .mh1 {
-      text-align: center;
-      color: black;
-      background: linear-gradient(#fff 60%, #b2e311ff 40%);
-      margin: 1.4em 0 1.1em;
-      font-size: 1.4em;
-      font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif;
-      line-height: 1.7;
-      letter-spacing: .33px;
-    }
-    /* 二级段落 */
-    .mh2 {
-      -webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;
-    }
-    /* 目录 高度、宽度 可自行调整*/
-    .mi1 {
-      position: fixed; bottom: 240px; right: 10px; width: 260px; height: 320px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;
-    }
-</style>
-
 <h2 id="c-1-0" class="mh1">一、目标与使用场景</h2>
 
 通常将摄像头/NVR 的 **RTSP** 作为上游输入，由 ZLMediaKit 统一对外输出：
@@ -372,3 +305,75 @@ ss -lntup | grep -E "(:180|:11935|:1554|:18000|:9000|:10000)" || true
 - UDP 端口段未放行（媒体通道建立失败）
 
 可以先用 RTSP/RTMP 方式验证链路是否通，再逐步切到 WebRTC。
+
+<hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
+
+<!-- 目录容器 -->
+<div class="mi1">
+    <strong>目录</strong>
+        <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
+            <li style="list-style-type: none;"><a href="#c-1-0">一、目标与使用场景</a></li>
+            <li style="list-style-type: none;"><a href="#c-2-0">二、部署方式（Docker / Docker Compose）</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-2-1">2.1 目录规划（宿主机）</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-2">2.2 Docker Run（等价方式）</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-3">2.3 Docker Compose（推荐）</a></li>
+                </ul>
+            <li style="list-style-type: none;"><a href="#c-3-0">三、config.ini 初始化获取步骤（首次必做）</a></li>
+            <li style="list-style-type: none;"><a href="#c-4-0">四、关键端口与访问入口（以本文配置为例）</a></li>
+            <li style="list-style-type: none;"><a href="#c-5-0">五、用 API 做“拉流代理”（RTSP 输入 → 多协议输出）</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-5-1">5.1 secret 获取</a></li>
+                    <li style="list-style-type: none;"><a href="#c-5-2">5.2 添加代理（addStreamProxy）</a></li>
+                    <li style="list-style-type: none;"><a href="#c-5-3">5.3 移除代理（delStreamProxy）</a></li>
+                    <li style="list-style-type: none;"><a href="#c-5-4">5.4 添加代理后怎么访问（输出 URL 规律）</a></li>
+                </ul>
+            <li style="list-style-type: none;"><a href="#c-6-0">六、config.ini 关键参数说明（高频项）</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-6-1">6.1 API 安全（[api]）</a></li>
+                    <li style="list-style-type: none;"><a href="#c-6-2">6.2 HTTP 与访问控制（[http]）</a></li>
+                    <li style="list-style-type: none;"><a href="#c-6-3">6.3 RTSP/RTMP 端口（[rtsp]/[rtmp]）</a></li>
+                    <li style="list-style-type: none;"><a href="#c-6-4">6.4 WebRTC（[rtc]）</a></li>
+                    <li style="list-style-type: none;"><a href="#c-6-5">6.5 RTP 代理（[rtp_proxy]）</a></li>
+                    <li style="list-style-type: none;"><a href="#c-6-6">6.6 HLS 切片保留（[hls] + [protocol]）</a></li>
+                    <li style="list-style-type: none;"><a href="#c-6-7">6.7 服务器唯一标识（[general]）</a></li>
+                </ul>
+            <li style="list-style-type: none;"><a href="#c-7-0">七、部署优化与建议（实战常用）</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-7-1">7.1 强烈建议：网络用 host</a></li>
+                    <li style="list-style-type: none;"><a href="#c-7-2">7.2 只给内网访问 API</a></li>
+                    <li style="list-style-type: none;"><a href="#c-7-3">7.3 日志与磁盘</a></li>
+                </ul>
+            <li style="list-style-type: none;"><a href="#c-8-0">八、常见问题排查（快速定位）</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-8-1">8.1 容器启动了但端口不通</a></li>
+                    <li style="list-style-type: none;"><a href="#c-8-2">8.2 播放黑屏/卡顿</a></li>
+                </ul>
+        </ul>
+</div>
+
+<style>
+    /* 一级段落 */
+    .mh1 {
+      text-align: center;
+      color: black;
+      background: linear-gradient(#fff 60%, #b2e311ff 40%);
+      margin: 1.4em 0 1.1em;
+      font-size: 1.4em;
+      font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif;
+      line-height: 1.7;
+      letter-spacing: .33px;
+    }
+    /* 二级段落 */
+    .mh2 {
+      -webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;
+    }
+
+    /* 目录 高度、宽度 可自行调整*/
+    .mi1 {
+      position: fixed; bottom: 240px; right: 10px; width: 240px; height: 220px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;
+    }
+
+</style>
+
+本技术手册将持续更新，欢迎提交 Issue 和 Pull Request
