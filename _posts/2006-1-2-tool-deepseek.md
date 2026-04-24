@@ -151,6 +151,7 @@ ls -la /data_hdd/ollama/models/
 
 ### 2. 下载并导入模型
 
+{% raw %}
 ```bash
 # 下载 32B 模型示例（根据实际情况选择）
 wget https://hf-mirror.com/bartowski/DeepSeek-R1-Distill-Qwen-32B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-32B-Q8_0.gguf
@@ -170,6 +171,7 @@ EOF
 # 导入模型
 ollama create deepseek-r1:32b -f Modelfile
 ```
+{% endraw %}
 
 ---
 

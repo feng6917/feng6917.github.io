@@ -491,7 +491,7 @@ chmod +x docker-migrate-01-export-old-host.sh docker-migrate-02-import-new-host.
 
 <h2 id="c-7-0-3" class="mh2">7.3 旧机脚本全文：`docker-migrate-01-export-old-host.sh`</h2>
 
-以下为**完整可执行脚本正文**（保存为 `docker-migrate-01-export-old-host.sh` 后 `chmod +x` 即可）。因含 Docker `--format` 中的 `{{` … `}}`，站点生成静态页时用 `raw` 包裹以免被模板引擎误解析。
+以下为**完整可执行脚本正文**（保存为 `docker-migrate-01-export-old-host.sh` 后 `chmod +x` 即可）。脚本内含 Docker `--format` 的 Go 模板占位符（双花括号加 `.Repository` 等字段名），故整体放在 Jekyll 的 **raw** 指令块中，避免被 Liquid 误解析。
 
 {% raw %}
 ```bash
@@ -1004,7 +1004,7 @@ fi
 
 <h2 id="c-7-0-4" class="mh2">7.4 新机脚本全文：`docker-migrate-02-import-new-host.sh`</h2>
 
-以下为**完整可执行脚本正文**（保存为 `docker-migrate-02-import-new-host.sh` 后 `chmod +x` 即可）。同样因含 `{{`，用 `raw` 包裹。
+以下为**完整可执行脚本正文**（保存为 `docker-migrate-02-import-new-host.sh` 后 `chmod +x` 即可）。同样因内含 Go 模板风格占位符，须放在 **raw** 指令块中。
 
 {% raw %}
 ```bash
