@@ -5,8 +5,20 @@
     {% include nav.html %}
 
     {% if page.toc==true %}
-      <aside class="toc">
-        {% include toc.html html=content %}
+      <aside class="toc" id="post-sidebar-toc" aria-label="文章目录">
+        <div class="toc__inner">
+          <header class="toc__head">
+            <span class="toc__title">目录</span>
+            <button type="button" class="toc__toggle" id="toc-collapse-btn" aria-expanded="true" aria-controls="toc-panel" title="折叠 / 展开目录">
+              <span class="toc__chev" aria-hidden="true"></span>
+            </button>
+          </header>
+          <div class="toc__panel" id="toc-panel">
+            <nav class="toc__nav">
+              {% include toc.html html=content sanitize=true %}
+            </nav>
+          </div>
+        </div>
       </aside>
     {% endif %}
 
@@ -16,19 +28,28 @@
       </div>
     </div>
 
+    <div class="wrapper-footer-mobile">
+      <footer class="footer">
+        {% include footer.html %}
+      </footer>
+    </div>
+
+    {% if page.toc==true %}
+    <script>
+      (function () {
+        var main = document.getElementById('main');
+        if (main) main.classList.add('withtoc');
+        var root = document.getElementById('post-sidebar-toc');
+        var btn = document.getElementById('toc-collapse-btn');
+        if (!root || !btn) return;
+        btn.addEventListener('click', function () {
+          var collapsed = root.classList.toggle('toc--collapsed');
+          btn.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+        });
+      })();
+    </script>
+    {% endif %}
+
     {% include analytics.html %}
   </body>
-
-  {% if page.toc==true %}
-  <script>
-    document.getElementById("main").classList.add("withtoc");
-  </script>
-  {% endif %}
-
-  <div class="wrapper-footer-mobile">
-    <footer class="footer">
-      {% include footer.html %}
-    </footer>
-
-
 </html>
