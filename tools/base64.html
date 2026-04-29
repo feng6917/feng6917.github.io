@@ -9,80 +9,124 @@ permalink: /tools/base64/
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Base64 编解码</title>
   <style>
+    :root {
+      --paper: #f6f2eb;
+      --card: #fdfcfa;
+      --ink: #3a342c;
+      --ink-soft: #6b6358;
+      --line: rgba(58, 52, 44, 0.12);
+      --accent: #5c5347;
+      --accent-hover: #4a4339;
+      --radius: 10px;
+      --font: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, serif;
+      --mono: "JetBrains Mono", Consolas, "Sarasa Mono SC", monospace;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: #fff;
-      color: #111;
-      line-height: 1.5;
-      padding: 24px 20px 40px;
-      max-width: 920px;
+      font-family: var(--font);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.65;
+      padding: 28px 18px 48px;
+      max-width: 820px;
       margin: 0 auto;
+      min-height: 100vh;
     }
-    .nav-back { margin-bottom: 20px; font-size: 14px; }
-    .nav-back a { color: #2563eb; text-decoration: none; }
-    .nav-back a:hover { text-decoration: underline; }
-    label.block { display: block; font-size: 15px; margin-bottom: 8px; color: #333; }
+    .nav-back { margin-bottom: 20px; font-size: 13px; letter-spacing: 0.02em; }
+    .nav-back a {
+      color: var(--ink-soft);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(107, 99, 88, 0.35);
+      padding-bottom: 1px;
+    }
+    .nav-back a:hover { color: var(--accent); border-color: var(--accent); }
+    h1 {
+      font-size: 1.65rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      margin-bottom: 22px;
+      color: var(--ink);
+    }
+    label.block {
+      display: block;
+      font-size: 0.88rem;
+      margin-bottom: 8px;
+      color: var(--ink-soft);
+      letter-spacing: 0.04em;
+    }
+    .sheet {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px 22px 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 24px rgba(58, 52, 44, 0.06);
+    }
     textarea {
       width: 100%;
       min-height: 200px;
-      padding: 12px 14px;
-      border: 1px solid #c0c0c0;
-      border-radius: 4px;
-      font-size: 14px;
-      font-family: Consolas, Monaco, "Courier New", monospace;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: var(--mono);
       resize: vertical;
+      line-height: 1.55;
+      background: #faf8f5;
+      color: var(--ink);
     }
     textarea:focus {
       outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+      border-color: rgba(92, 83, 71, 0.45);
+      background: var(--card);
     }
+    textarea[readonly] { background: #f0ebe3; }
     .toolbar {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 10px 14px;
-      margin: 18px 0 28px;
+      margin: 16px 0 20px;
     }
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       padding: 8px 18px;
-      font-size: 14px;
-      border-radius: 4px;
+      font-size: 13px;
+      border-radius: 6px;
       cursor: pointer;
-      border: 1px solid transparent;
-      font-family: inherit;
+      border: 1px solid var(--line);
+      font-family: var(--font);
+      letter-spacing: 0.04em;
     }
     .btn-primary {
-      background: #2563eb;
-      color: #fff;
-      border-color: #2563eb;
+      background: var(--accent);
+      color: #faf8f5;
+      border-color: var(--accent);
     }
-    .btn-primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
+    .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
     .btn-outline {
-      background: #fff;
-      color: #111;
-      border-color: #c0c0c0;
+      background: var(--card);
+      color: var(--ink);
     }
-    .btn-outline:hover { border-color: #888; background: #fafafa; }
+    .btn-outline:hover { background: #f3efe8; border-color: rgba(58, 52, 44, 0.22); }
     .hint {
-      font-size: 13px;
-      color: #555;
+      font-size: 12px;
+      color: var(--ink-soft);
       margin-left: auto;
+      letter-spacing: 0.02em;
     }
     kbd {
       display: inline-block;
-      padding: 2px 8px;
+      padding: 2px 7px;
       margin: 0 2px;
-      font-size: 12px;
-      font-family: Consolas, Monaco, monospace;
-      background: #374151;
-      color: #fff;
+      font-size: 11px;
+      font-family: var(--mono);
+      background: #e8e2d9;
+      color: var(--ink);
       border-radius: 4px;
-      box-shadow: 0 1px 0 #111827;
+      border: 1px solid var(--line);
     }
     .out-row {
       display: flex;
@@ -95,33 +139,38 @@ permalink: /tools/base64/
     .checkbox-row {
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 14px;
-      color: #333;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--ink-soft);
       user-select: none;
+      font-family: var(--font);
     }
-    h1 { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
+    .checkbox-row input { accent-color: var(--accent); }
   </style>
 </head>
 <body>
   <p class="nav-back"><a href="{{ site.baseurl }}/tools/">← 返回工具</a></p>
   <h1>Base64 编解码</h1>
 
-  <label class="block" for="input">请输入要进行 Base64 编码或解码的字符</label>
-  <textarea id="input" placeholder="在此输入原文或 Base64 字符串…"></textarea>
+  <div class="sheet">
+    <label class="block" for="input">请输入要进行 Base64 编码或解码的字符</label>
+    <textarea id="input" placeholder="在此输入原文或 Base64 字符串…"></textarea>
 
-  <div class="toolbar">
-    <button type="button" class="btn btn-primary" id="btnEncode">编码 (Encode)</button>
-    <button type="button" class="btn btn-outline" id="btnDecode">解码 (Decode)</button>
-    <button type="button" class="btn btn-outline" id="btnSwap" title="交换输入与输出">⇅ 交换</button>
-    <span class="hint">（编/解码快捷键：<kbd>ctrl</kbd> + <kbd>Enter</kbd>）</span>
+    <div class="toolbar">
+      <button type="button" class="btn btn-primary" id="btnEncode">编码 (Encode)</button>
+      <button type="button" class="btn btn-outline" id="btnDecode">解码 (Decode)</button>
+      <button type="button" class="btn btn-outline" id="btnSwap" title="交换输入与输出">交换</button>
+      <span class="hint">快捷键 <kbd>ctrl</kbd> + <kbd>Enter</kbd> 执行编码</span>
+    </div>
   </div>
 
-  <div class="out-row">
-    <label class="block" for="output" style="margin:0;">Base64 编码或解码的结果：</label>
-    <label class="checkbox-row"><input type="checkbox" id="autoSelect"> 编码后自动全选</label>
+  <div class="sheet">
+    <div class="out-row">
+      <label class="block" for="output" style="margin:0;">Base64 编码或解码的结果</label>
+      <label class="checkbox-row"><input type="checkbox" id="autoSelect"> 编码后自动全选</label>
+    </div>
+    <textarea id="output" readonly placeholder="结果将显示在此…"></textarea>
   </div>
-  <textarea id="output" readonly placeholder="结果将显示在此…"></textarea>
 
   <script>
     (function () {

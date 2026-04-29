@@ -10,108 +10,178 @@ permalink: /tools/timestamp/
   <title>时间戳转换</title>
   <script src="https://cdn.jsdelivr.net/npm/luxon@3.5.0/build/global/luxon.min.js"></script>
   <style>
+    :root {
+      --paper: #f6f2eb;
+      --card: #fdfcfa;
+      --ink: #3a342c;
+      --ink-soft: #6b6358;
+      --line: rgba(58, 52, 44, 0.12);
+      --accent: #5c5347;
+      --accent-hover: #4a4339;
+      --danger: #9c4c41;
+      --radius: 10px;
+      --font: "Noto Serif SC", "Source Han Serif SC", "Songti SC", Georgia, "Times New Roman", serif;
+      --font-mono: "JetBrains Mono", Consolas, "Sarasa Mono SC", monospace;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: #f3f4f6;
-      color: #111827;
-      line-height: 1.5;
-      padding: 24px 16px 48px;
-      max-width: 960px;
+      font-family: var(--font);
+      background: var(--paper);
+      color: var(--ink);
+      line-height: 1.65;
+      padding: 28px 18px 56px;
+      max-width: 880px;
       margin: 0 auto;
+      min-height: 100vh;
     }
-    .nav-back { margin-bottom: 16px; font-size: 14px; }
-    .nav-back a { color: #1f2937; text-decoration: underline; }
+    .nav-back { margin-bottom: 20px; font-size: 13px; letter-spacing: 0.02em; }
+    .nav-back a {
+      color: var(--ink-soft);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(107, 99, 88, 0.35);
+      padding-bottom: 1px;
+    }
+    .nav-back a:hover { color: var(--accent); border-color: var(--accent); }
+    h1.page-title {
+      font-size: 1.65rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      margin-bottom: 22px;
+      color: var(--ink);
+    }
     .card {
-      background: #fff;
-      border: 1px solid #e5e7eb;
-      border-radius: 12px;
-      padding: 20px 22px;
-      margin-bottom: 20px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 24px rgba(58, 52, 44, 0.06);
     }
-    h1.page-title { font-size: 22px; font-weight: 700; margin-bottom: 18px; }
-    .card h2 { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+    .card h2 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--ink-soft);
+      margin-bottom: 14px;
+      text-transform: none;
+    }
     .now-display {
-      font-size: 2rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      margin-bottom: 6px;
+      font-family: var(--font-mono);
+      font-size: 1.85rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--ink);
       font-variant-numeric: tabular-nums;
     }
-    .now-unit { font-size: 1rem; font-weight: 500; color: #6b7280; margin-left: 6px; }
-    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .now-unit { font-size: 0.95rem; font-weight: 400; color: var(--ink-soft); margin-left: 8px; font-family: var(--font); }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
     .btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      padding: 8px 14px;
-      font-size: 14px;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
-      background: #fff;
+      padding: 8px 16px;
+      font-size: 13px;
+      border-radius: 6px;
+      border: 1px solid var(--line);
+      background: var(--card);
       cursor: pointer;
-      font-family: inherit;
-      color: #111827;
+      font-family: var(--font);
+      color: var(--ink);
+      letter-spacing: 0.04em;
     }
-    .btn:hover { background: #f9fafb; border-color: #d1d5db; }
-    .btn-danger { border-color: #fecaca; background: #fff; color: #dc2626; }
-    .btn-danger:hover { background: #fef2f2; }
-    .btn-primary { background: #1f2937; color: #fff; border-color: #1f2937; }
-    .btn-primary:hover { background: #111827; }
+    .btn:hover { background: #f3efe8; border-color: rgba(58, 52, 44, 0.2); }
+    .btn-danger { border-color: rgba(156, 76, 65, 0.35); color: var(--danger); }
+    .btn-danger:hover { background: #faf5f4; }
+    .btn-primary {
+      background: var(--accent);
+      color: #faf8f5;
+      border-color: var(--accent);
+    }
+    .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
     .tabs {
       display: flex;
-      gap: 0;
-      margin: -6px -6px 18px;
-      border-bottom: 1px solid #e5e7eb;
-      padding: 0 6px;
+      gap: 4px;
+      margin: -4px -4px 20px;
+      border-bottom: 1px solid var(--line);
+      padding: 0 4px 0;
     }
     .tab {
-      padding: 10px 18px;
-      font-size: 14px;
+      padding: 10px 20px;
+      font-size: 13px;
       cursor: pointer;
       border: none;
-      background: #f3f4f6;
-      color: #6b7280;
-      border-radius: 8px 8px 0 0;
+      background: transparent;
+      color: var(--ink-soft);
+      border-radius: 6px 6px 0 0;
       margin-bottom: -1px;
-      font-family: inherit;
+      font-family: var(--font);
+      letter-spacing: 0.08em;
     }
-    .tab.active { background: #fff; color: #111827; font-weight: 600; border: 1px solid #e5e7eb; border-bottom-color: #fff; }
-    .section-block { margin-bottom: 22px; }
+    .tab.active {
+      background: var(--card);
+      color: var(--ink);
+      font-weight: 600;
+      border: 1px solid var(--line);
+      border-bottom-color: var(--card);
+    }
+    .section-block { margin-bottom: 26px; }
     .section-block:last-child { margin-bottom: 0; }
-    .section-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .section-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--ink);
+      letter-spacing: 0.04em;
+    }
     .row {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
       align-items: center;
     }
-    input[type="text"], select, textarea {
-      padding: 8px 10px;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: inherit;
+    .field-label {
+      font-size: 12px;
+      color: var(--ink-soft);
+      min-width: 100%;
+      margin-bottom: -4px;
     }
-    input[type="text"] { min-width: 140px; flex: 1; }
-    select { min-width: 130px; }
+    input[type="text"], select, textarea {
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: var(--font-mono);
+      background: #faf8f5;
+      color: var(--ink);
+    }
+    input[type="text"]:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: rgba(92, 83, 71, 0.45);
+      background: var(--card);
+    }
+    input[type="text"] { min-width: 160px; flex: 1; }
+    select { min-width: 140px; font-family: var(--font); }
     .result-field {
       flex: 1;
       min-width: 180px;
-      background: #f9fafb;
-      color: #374151;
+      background: #f0ebe3;
+      color: var(--ink);
     }
     .panel { display: none; }
     .panel.active { display: block; }
     textarea.batch-in, textarea.batch-out {
       width: 100%;
-      min-height: 120px;
-      font-family: Consolas, Monaco, monospace;
+      min-height: 130px;
       resize: vertical;
+      line-height: 1.5;
     }
-    .batch-out { margin-top: 10px; background: #f9fafb; }
-    .muted { font-size: 13px; color: #6b7280; margin-top: 8px; }
+    .batch-out { margin-top: 12px; background: #f0ebe3; }
+    .muted {
+      font-size: 12px;
+      color: var(--ink-soft);
+      margin-top: 10px;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
@@ -124,9 +194,9 @@ permalink: /tools/timestamp/
       <span class="now-display" id="nowVal">0</span><span class="now-unit" id="nowUnitLabel">秒</span>
     </div>
     <div class="btn-row">
-      <button type="button" class="btn" id="btnToggleUnit" title="在秒与毫秒间切换显示">↻ 切换单位</button>
-      <button type="button" class="btn" id="btnCopyNow">📋 复制</button>
-      <button type="button" class="btn btn-danger" id="btnStopStart">■ 停止</button>
+      <button type="button" class="btn" id="btnToggleUnit">切换单位</button>
+      <button type="button" class="btn" id="btnCopyNow">复制</button>
+      <button type="button" class="btn btn-danger" id="btnStopStart">停止</button>
     </div>
   </div>
 
@@ -138,23 +208,25 @@ permalink: /tools/timestamp/
 
     <div class="panel active" id="panel-single">
       <div class="section-block">
-        <div class="section-title">🕐 时间戳转日期时间</div>
+        <div class="section-title">时间戳 → 日期时间</div>
+        <span class="field-label">显示时区（可选，默认 Asia/Shanghai）</span>
         <div class="row">
-          <input type="text" id="tsIn" placeholder="Unix 时间戳">
-          <select id="tsUnit">
+          <input type="text" id="tsIn" placeholder="Unix 时间戳" autocomplete="off">
+          <select id="tsUnit" title="输入单位">
             <option value="s">秒(s)</option>
             <option value="ms">毫秒(ms)</option>
           </select>
           <button type="button" class="btn btn-primary" id="btnTs2dt">转换</button>
           <input type="text" class="result-field" id="ts2dtOut" readonly placeholder="转换结果">
-          <select id="ts2dtTz"></select>
+          <select id="ts2dtTz" title="显示用的时区"></select>
         </div>
       </div>
       <div class="section-block">
-        <div class="section-title">📅 日期时间转时间戳</div>
+        <div class="section-title">日期时间 → 时间戳</div>
+        <span class="field-label">解析时区（可选：不选则按 Asia/Shanghai；选「本机」则按系统本地）</span>
         <div class="row">
-          <input type="text" id="dtIn" placeholder="2026-04-29 10:20:24" style="min-width:200px;">
-          <select id="dt2tsTz"></select>
+          <input type="text" id="dtIn" placeholder="2026-04-29 10:20:24" style="min-width:200px;" autocomplete="off">
+          <select id="dt2tsTz" title="将输入当作该时区的墙上时间"></select>
           <button type="button" class="btn btn-primary" id="btnDt2ts">转换</button>
           <input type="text" class="result-field" id="dt2tsOut" readonly placeholder="转换结果">
           <select id="dt2tsUnit">
@@ -162,14 +234,14 @@ permalink: /tools/timestamp/
             <option value="ms">毫秒(ms)</option>
           </select>
         </div>
-        <p class="muted">日期时间格式：yyyy-MM-dd HH:mm:ss（Luxon 解析，按所选时区 wall time）</p>
+        <p class="muted">支持 <code>yyyy-MM-dd HH:mm:ss</code>、<code>yyyy-MM-ddTHH:mm:ss</code> 等形式；会去除首尾引号与多余空白。</p>
       </div>
     </div>
 
     <div class="panel" id="panel-batch">
-      <p class="muted" style="margin-bottom:10px;">每行一个时间戳，与「单个」中相同的单位与时区设置生效。</p>
+      <p class="muted" style="margin-bottom:12px;">每行一个时间戳。显示时区见下方（默认上海）。</p>
       <textarea class="batch-in" id="batchIn" placeholder="每行一个时间戳…"></textarea>
-      <div class="row" style="margin-top:10px;">
+      <div class="row" style="margin-top:12px;">
         <select id="batchTsUnit">
           <option value="s">秒(s)</option>
           <option value="ms">毫秒(ms)</option>
@@ -184,22 +256,88 @@ permalink: /tools/timestamp/
   <script>
     (function () {
       var DateTime = luxon.DateTime;
+      var DEFAULT_TZ = 'Asia/Shanghai';
+
       var zones = [
         'Asia/Shanghai', 'Asia/Tokyo', 'Asia/Singapore', 'Asia/Hong_Kong',
         'UTC', 'Europe/London', 'Europe/Berlin', 'America/New_York', 'America/Los_Angeles'
       ];
 
       function fillTz(sel) {
+        var def = document.createElement('option');
+        def.value = '';
+        def.textContent = '默认（Asia/Shanghai）';
+        sel.appendChild(def);
+        var local = document.createElement('option');
+        local.value = '__local__';
+        local.textContent = '本机时区';
+        sel.appendChild(local);
         zones.forEach(function (z) {
           var o = document.createElement('option');
           o.value = z;
           o.textContent = z;
           sel.appendChild(o);
         });
+        sel.selectedIndex = 0;
       }
+
       fillTz(document.getElementById('ts2dtTz'));
       fillTz(document.getElementById('dt2tsTz'));
       fillTz(document.getElementById('batchTz'));
+
+      function resolveTzForParse(sel) {
+        var v = sel.value;
+        if (v === '__local__') return null;
+        if (!v) return DEFAULT_TZ;
+        return v;
+      }
+
+      function resolveTzForDisplay(sel) {
+        var v = sel.value;
+        if (v === '__local__') return null;
+        if (!v) return DEFAULT_TZ;
+        return v;
+      }
+
+      function normalizeDateTimeInput(s) {
+        if (!s) return '';
+        s = String(s).trim().replace(/^\uFEFF/, '');
+        s = s.replace(/\u3000/g, ' ').replace(/\s+/g, ' ');
+        while (s.length >= 2) {
+          var a = s.charAt(0);
+          var b = s.charAt(s.length - 1);
+          var pair =
+            (a === '"' && b === '"') ||
+            (a === "'" && b === "'") ||
+            (a === '\u201C' && b === '\u201D') ||
+            (a === '\u2018' && b === '\u2019');
+          if (pair) {
+            s = s.slice(1, -1).trim();
+            continue;
+          }
+          break;
+        }
+        return s;
+      }
+
+      function parseWallDateTime(s, zoneForWall) {
+        s = normalizeDateTimeInput(s);
+        if (!s) return { dt: null, reason: '空输入' };
+        var opts = zoneForWall == null ? {} : { zone: zoneForWall };
+        var dt;
+        dt = DateTime.fromSQL(s, opts);
+        if (dt.isValid) return { dt: dt, reason: '' };
+        dt = DateTime.fromFormat(s, 'yyyy-MM-dd HH:mm:ss', opts);
+        if (dt.isValid) return { dt: dt, reason: '' };
+        dt = DateTime.fromFormat(s, 'yyyy-M-d H:m:s', opts);
+        if (dt.isValid) return { dt: dt, reason: '' };
+        var isoish = s.replace(' ', 'T');
+        dt = DateTime.fromISO(isoish, opts);
+        if (dt.isValid) return { dt: dt, reason: '' };
+        dt = DateTime.fromISO(s, opts);
+        if (dt.isValid) return { dt: dt, reason: '' };
+        return { dt: null, reason: (dt && dt.invalidReason) ? dt.invalidReason : '格式无法识别' };
+      }
 
       var nowMs = false;
       var timer = null;
@@ -214,7 +352,7 @@ permalink: /tools/timestamp/
 
       function startTimer() {
         if (timer) clearInterval(timer);
-        timer = setInterval(renderNow, nowMs ? 50 : 1000);
+        timer = setInterval(renderNow, nowMs ? 80 : 1000);
         renderNow();
       }
 
@@ -232,13 +370,13 @@ permalink: /tools/timestamp/
         running = !running;
         var b = document.getElementById('btnStopStart');
         if (running) {
-          b.textContent = '■ 停止';
+          b.textContent = '停止';
           b.classList.add('btn-danger');
           startTimer();
         } else {
           if (timer) clearInterval(timer);
           timer = null;
-          b.textContent = '▶ 开始';
+          b.textContent = '开始';
           b.classList.remove('btn-danger');
         }
       };
@@ -257,40 +395,46 @@ permalink: /tools/timestamp/
       document.getElementById('btnTs2dt').onclick = function () {
         var raw = document.getElementById('tsIn').value.trim();
         var unit = document.getElementById('tsUnit').value;
-        var tz = document.getElementById('ts2dtTz').value;
+        var tz = resolveTzForDisplay(document.getElementById('ts2dtTz'));
         var n = parseFloat(raw);
         if (isNaN(n)) {
           document.getElementById('ts2dtOut').value = '无效时间戳';
           return;
         }
         var ms = unit === 'ms' ? n : n * 1000;
-        var dt = DateTime.fromMillis(ms, { zone: tz });
+        var dt = tz
+          ? DateTime.fromMillis(ms, { zone: 'utc' }).setZone(tz)
+          : DateTime.fromMillis(ms);
         document.getElementById('ts2dtOut').value = dt.isValid ? dt.toFormat('yyyy-MM-dd HH:mm:ss') : '无效';
       };
 
       document.getElementById('btnDt2ts').onclick = function () {
-        var s = document.getElementById('dtIn').value.trim();
-        var tz = document.getElementById('dt2tsTz').value;
+        var raw = document.getElementById('dtIn').value;
+        var tzSel = document.getElementById('dt2tsTz');
+        var zone = resolveTzForParse(tzSel);
         var outUnit = document.getElementById('dt2tsUnit').value;
-        var dt = DateTime.fromFormat(s, 'yyyy-MM-dd HH:mm:ss', { zone: tz });
-        if (!dt.isValid) {
-          document.getElementById('dt2tsOut').value = '无法解析，请检查格式与时区';
+        var localMode = tzSel.value === '__local__';
+        var parsed = parseWallDateTime(raw, localMode ? null : zone);
+        if (!parsed.dt || !parsed.dt.isValid) {
+          document.getElementById('dt2tsOut').value = '无法解析：' + (parsed.reason || '请检查格式');
           return;
         }
-        var ms = dt.toMillis();
+        var ms = parsed.dt.toMillis();
         document.getElementById('dt2tsOut').value = outUnit === 'ms' ? String(ms) : String(Math.floor(ms / 1000));
       };
 
       document.getElementById('btnBatch').onclick = function () {
         var lines = document.getElementById('batchIn').value.split(/\r?\n/);
         var unit = document.getElementById('batchTsUnit').value;
-        var tz = document.getElementById('batchTz').value;
+        var tz = resolveTzForDisplay(document.getElementById('batchTz'));
         var out = lines.map(function (line) {
           var n = parseFloat(line.trim());
           if (line.trim() === '') return '';
           if (isNaN(n)) return '无效';
           var ms = unit === 'ms' ? n : n * 1000;
-          var dt = DateTime.fromMillis(ms, { zone: tz });
+          var dt = tz
+            ? DateTime.fromMillis(ms, { zone: 'utc' }).setZone(tz)
+            : DateTime.fromMillis(ms);
           return dt.isValid ? dt.toFormat('yyyy-MM-dd HH:mm:ss') : '无效';
         });
         document.getElementById('batchOut').value = out.join('\n');
