@@ -7,7 +7,7 @@ layout: default
 
   <h1>{{ page.title }}</h1>
 
-  <div clsss="meta">
+  <div class="meta">
     <span class="date">
       {{ page.date | date: "%Y-%m-%d" }}
     </span>
@@ -28,6 +28,80 @@ layout: default
   <div class="entry">
     {{ content }}
   </div>
+
+  <script>
+  (function () {
+    function isLikelyInlineToc(el) {
+      if (!el || el.tagName !== "DIV") return false;
+      if (el.classList.contains("mi1")) return true;
+      var st = el.getAttribute("style");
+      if (!st) return false;
+      if (st.indexOf("bottom: 240px") === -1 || st.indexOf("right: 10px") === -1) return false;
+      var s = el.querySelector(":scope > strong");
+      return s && /^\s*目录\s*$/.test((s.textContent || "").trim());
+    }
+
+    function enhance(root) {
+      if (root.getAttribute("data-inline-toc") === "1") return;
+      root.setAttribute("data-inline-toc", "1");
+      root.removeAttribute("style");
+      root.classList.add("mi1", "mi1--toc-x");
+
+      var nodes = Array.prototype.slice.call(root.childNodes);
+      var head = document.createElement("div");
+      head.className = "mi1__head";
+      var panel = document.createElement("div");
+      panel.className = "mi1__panel";
+      panel.id = "post-inline-toc-" + Math.random().toString(36).slice(2, 11);
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "mi1__toggle";
+      btn.setAttribute("aria-expanded", "true");
+      btn.setAttribute("aria-controls", panel.id);
+      btn.setAttribute("title", "折叠 / 展开目录");
+      btn.innerHTML = '<span class="mi1__chev" aria-hidden="true"></span>';
+      head.appendChild(btn);
+
+      nodes.forEach(function (n) {
+        if (n.nodeType === 1 && n.tagName === "STRONG") {
+          n.classList.add("mi1__title");
+          head.insertBefore(n, btn);
+        } else {
+          panel.appendChild(n);
+        }
+      });
+
+      if (!head.querySelector(".mi1__title")) {
+        var t = document.createElement("strong");
+        t.className = "mi1__title";
+        t.textContent = "目录";
+        head.insertBefore(t, btn);
+      }
+
+      root.appendChild(head);
+      root.appendChild(panel);
+
+      btn.addEventListener("click", function () {
+        var collapsed = root.classList.toggle("mi1--collapsed");
+        btn.setAttribute("aria-expanded", collapsed ? "false" : "true");
+      });
+    }
+
+    function run() {
+      var entry = document.querySelector("article.posts .entry");
+      if (!entry) return;
+      entry.querySelectorAll("div").forEach(function (d) {
+        if (isLikelyInlineToc(d)) enhance(d);
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", run);
+    } else {
+      run();
+    }
+  })();
+  </script>
 
 </article>
 

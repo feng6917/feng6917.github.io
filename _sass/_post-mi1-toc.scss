@@ -1,0 +1,151 @@
+// 文章内手写「目录」块（.mi1 或固定定位 + 目录）— 由 post 页脚本增强为 .mi1--toc-x
+
+article.posts .entry .mi1.mi1--toc-x {
+  position: fixed;
+  right: 12px;
+  bottom: 100px;
+  z-index: 5;
+  width: min(288px, calc(100vw - 24px));
+  max-height: calc(100vh - 120px);
+  height: auto;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background: rgba($white, 0.96);
+  border: 1px solid $divider-color;
+  border-radius: 10px;
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.1);
+  font-family: $base-font;
+  font-size: $small-font-size;
+  line-height: 1.45;
+  color: $base-color;
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+
+  @include mobile {
+    display: none;
+  }
+}
+
+article.posts .entry .mi1.mi1--toc-x .mi1__head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px 8px 12px;
+  border-bottom: 1px solid $divider-color;
+  background: rgba($background-color, 0.98);
+}
+
+article.posts .entry .mi1.mi1--toc-x .mi1__title {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: $base-color;
+  margin: 0;
+}
+
+article.posts .entry .mi1.mi1--toc-x .mi1__toggle {
+  flex: 0 0 auto;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  padding: 4px 8px;
+  margin: 0;
+  border-radius: 6px;
+  color: $base-lighten-color;
+  line-height: 1;
+
+  &:hover {
+    background: $link-bghv-color;
+    color: $link-color;
+    border-color: rgba($link-color, 0.2);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $link-color;
+    outline-offset: 2px;
+  }
+}
+
+article.posts .entry .mi1.mi1--toc-x .mi1__chev {
+  display: inline-block;
+  font-size: 0.7rem;
+  transition: transform 0.2s ease;
+
+  &::before {
+    content: "▼";
+  }
+}
+
+article.posts .entry .mi1.mi1--toc-x.mi1--collapsed .mi1__chev {
+  transform: rotate(-90deg);
+}
+
+article.posts .entry .mi1.mi1--toc-x .mi1__panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: min(58vh, calc(100vh - 220px));
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 10px 12px 12px;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($base-lighten-color, 0.45);
+    border-radius: 999px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ul,
+  ol {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  li {
+    margin: 0.28em 0;
+    padding-left: 0;
+
+    &::before {
+      content: none !important;
+    }
+  }
+
+  ul ul {
+    margin-top: 0.15em;
+    padding-left: 0.85em;
+    border-left: 1px solid rgba($divider-color, 0.95);
+  }
+
+  a {
+    color: $link-color;
+    text-decoration: none;
+    display: inline-block;
+    padding: 2px 4px;
+    margin: 0 -2px;
+    border-radius: 4px;
+    word-break: break-word;
+
+    &:hover {
+      background: $link-bghv-color;
+      color: $link-lighten-color;
+    }
+  }
+}
+
+article.posts .entry .mi1.mi1--toc-x.mi1--collapsed .mi1__panel {
+  display: none;
+}
