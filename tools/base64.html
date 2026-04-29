@@ -1,0 +1,175 @@
+---
+layout: null
+permalink: /tools/base64/
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Base64 编解码</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #fff;
+      color: #111;
+      line-height: 1.5;
+      padding: 24px 20px 40px;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+    .nav-back { margin-bottom: 20px; font-size: 14px; }
+    .nav-back a { color: #2563eb; text-decoration: none; }
+    .nav-back a:hover { text-decoration: underline; }
+    label.block { display: block; font-size: 15px; margin-bottom: 8px; color: #333; }
+    textarea {
+      width: 100%;
+      min-height: 200px;
+      padding: 12px 14px;
+      border: 1px solid #c0c0c0;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      resize: vertical;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px 14px;
+      margin: 18px 0 28px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 18px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: #2563eb;
+      color: #fff;
+      border-color: #2563eb;
+    }
+    .btn-primary:hover { background: #1d4ed8; border-color: #1d4ed8; }
+    .btn-outline {
+      background: #fff;
+      color: #111;
+      border-color: #c0c0c0;
+    }
+    .btn-outline:hover { border-color: #888; background: #fafafa; }
+    .hint {
+      font-size: 13px;
+      color: #555;
+      margin-left: auto;
+    }
+    kbd {
+      display: inline-block;
+      padding: 2px 8px;
+      margin: 0 2px;
+      font-size: 12px;
+      font-family: Consolas, Monaco, monospace;
+      background: #374151;
+      color: #fff;
+      border-radius: 4px;
+      box-shadow: 0 1px 0 #111827;
+    }
+    .out-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: #333;
+      user-select: none;
+    }
+    h1 { font-size: 22px; font-weight: 600; margin-bottom: 24px; }
+  </style>
+</head>
+<body>
+  <p class="nav-back"><a href="{{ site.baseurl }}/tools/">← 返回工具</a></p>
+  <h1>Base64 编解码</h1>
+
+  <label class="block" for="input">请输入要进行 Base64 编码或解码的字符</label>
+  <textarea id="input" placeholder="在此输入原文或 Base64 字符串…"></textarea>
+
+  <div class="toolbar">
+    <button type="button" class="btn btn-primary" id="btnEncode">编码 (Encode)</button>
+    <button type="button" class="btn btn-outline" id="btnDecode">解码 (Decode)</button>
+    <button type="button" class="btn btn-outline" id="btnSwap" title="交换输入与输出">⇅ 交换</button>
+    <span class="hint">（编/解码快捷键：<kbd>ctrl</kbd> + <kbd>Enter</kbd>）</span>
+  </div>
+
+  <div class="out-row">
+    <label class="block" for="output" style="margin:0;">Base64 编码或解码的结果：</label>
+    <label class="checkbox-row"><input type="checkbox" id="autoSelect"> 编码后自动全选</label>
+  </div>
+  <textarea id="output" readonly placeholder="结果将显示在此…"></textarea>
+
+  <script>
+    (function () {
+      var input = document.getElementById('input');
+      var output = document.getElementById('output');
+      var autoSelect = document.getElementById('autoSelect');
+
+      function utf8ToBase64(str) {
+        return btoa(unescape(encodeURIComponent(str)));
+      }
+      function base64ToUtf8(str) {
+        var s = str.replace(/\s/g, '');
+        return decodeURIComponent(escape(atob(s)));
+      }
+
+      document.getElementById('btnEncode').onclick = function () {
+        try {
+          output.value = utf8ToBase64(input.value);
+          if (autoSelect.checked) {
+            output.focus();
+            output.select();
+          }
+        } catch (e) {
+          output.value = '编码失败：' + (e && e.message ? e.message : String(e));
+        }
+      };
+
+      document.getElementById('btnDecode').onclick = function () {
+        try {
+          output.value = base64ToUtf8(input.value);
+        } catch (e) {
+          output.value = '解码失败：请检查是否为有效的 Base64 字符串。';
+        }
+      };
+
+      document.getElementById('btnSwap').onclick = function () {
+        var t = input.value;
+        input.value = output.value;
+        output.value = t;
+      };
+
+      document.addEventListener('keydown', function (e) {
+        if (e.ctrlKey && e.key === 'Enter') {
+          e.preventDefault();
+          document.getElementById('btnEncode').click();
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

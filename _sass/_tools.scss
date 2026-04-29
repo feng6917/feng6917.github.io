@@ -1,0 +1,135 @@
+// 首页「工具」栏目与 /tools/ 聚合页
+
+.tools-home {
+  margin: 28px 0 8px;
+  padding: 20px 22px;
+  border: 1px solid $divider-color;
+  border-radius: 12px;
+  background: $background-lighten-color;
+}
+
+.tools-home__title {
+  margin: 0 0 6px;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.tools-home__lead {
+  margin: 0 0 16px;
+  font-size: $small-font-size;
+  color: $base-lighten-color;
+}
+
+.tools-home__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.tools-home__card {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid $divider-color;
+  background: $white;
+  color: $base-color;
+  text-decoration: none;
+  font-size: $small-font-size;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
+
+  &:hover {
+    color: $link-color;
+    border-color: rgba($link-color, 0.35);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.tools-home__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: $link-bghv-color;
+  color: $link-color;
+  font-weight: 700;
+  font-size: 13px;
+  font-family: $code-font;
+}
+
+.tools-home__more {
+  margin: 16px 0 0;
+  font-size: $small-font-size;
+
+  a {
+    font-weight: 600;
+  }
+}
+
+// /tools/ 聚合页：浮动图标网格
+.tools-hub {
+  margin-top: 8px;
+}
+
+.tools-hub__intro {
+  color: $base-lighten-color;
+  margin-bottom: 24px;
+  font-size: $small-font-size;
+}
+
+.tools-hub__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 20px;
+  max-width: 720px;
+}
+
+.tools-hub__tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px 16px;
+  min-height: 140px;
+  border-radius: 16px;
+  border: 1px solid $divider-color;
+  background: $white;
+  color: $base-color;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.2s;
+
+  &:hover {
+    color: $link-color;
+    border-color: rgba($link-color, 0.4);
+    transform: translateY(-6px);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.tools-hub__tile-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 700;
+  font-family: $code-font;
+  background: linear-gradient(145deg, $link-bghv-color, $white);
+  color: $link-color;
+}
+
+.tools-hub__tile-label {
+  font-size: $small-font-size;
+  font-weight: 600;
+  line-height: 1.4;
+}

@@ -25,6 +25,8 @@ footer-text: Copyright (c) 2024 Feng6917 # 版权信息
 navigation:
   - name: 首页
     url: /
+  - name: 工具
+    url: /tools/
   - name: 关于
     url: /about
   - name: 分类

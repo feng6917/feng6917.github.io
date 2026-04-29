@@ -34,7 +34,18 @@ layout: default
 	exclude: ['Welcome']
   })
 </script>
- 
+
+<section class="tools-home" aria-labelledby="tools-home-title">
+  <h2 id="tools-home-title" class="tools-home__title">工具</h2>
+  <p class="tools-home__lead">常用在线小工具，在独立页面中打开使用。</p>
+  <div class="tools-home__grid">
+    <a class="tools-home__card" href="{{ site.baseurl }}/tools/base64/"><span class="tools-home__icon" aria-hidden="true">64</span><span>Base64 编解码</span></a>
+    <a class="tools-home__card" href="{{ site.baseurl }}/tools/timestamp/"><span class="tools-home__icon" aria-hidden="true">⏱</span><span>时间戳转换</span></a>
+    <a class="tools-home__card" href="{{ site.baseurl }}/tools/json-format/"><span class="tools-home__icon" aria-hidden="true">{ }</span><span>JSON 格式化</span></a>
+  </div>
+  <p class="tools-home__more"><a href="{{ site.baseurl }}/tools/">全部工具</a></p>
+</section>
+
 {% if site.posts.size == 0 %}
   <h2>No post found</h2>
 {% endif %}

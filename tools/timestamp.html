@@ -1,0 +1,301 @@
+---
+layout: null
+permalink: /tools/timestamp/
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>时间戳转换</title>
+  <script src="https://cdn.jsdelivr.net/npm/luxon@3.5.0/build/global/luxon.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+      line-height: 1.5;
+      padding: 24px 16px 48px;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .nav-back { margin-bottom: 16px; font-size: 14px; }
+    .nav-back a { color: #1f2937; text-decoration: underline; }
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+    h1.page-title { font-size: 22px; font-weight: 700; margin-bottom: 18px; }
+    .card h2 { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+    .now-display {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 6px;
+      font-variant-numeric: tabular-nums;
+    }
+    .now-unit { font-size: 1rem; font-weight: 500; color: #6b7280; margin-left: 6px; }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      cursor: pointer;
+      font-family: inherit;
+      color: #111827;
+    }
+    .btn:hover { background: #f9fafb; border-color: #d1d5db; }
+    .btn-danger { border-color: #fecaca; background: #fff; color: #dc2626; }
+    .btn-danger:hover { background: #fef2f2; }
+    .btn-primary { background: #1f2937; color: #fff; border-color: #1f2937; }
+    .btn-primary:hover { background: #111827; }
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin: -6px -6px 18px;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0 6px;
+    }
+    .tab {
+      padding: 10px 18px;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      background: #f3f4f6;
+      color: #6b7280;
+      border-radius: 8px 8px 0 0;
+      margin-bottom: -1px;
+      font-family: inherit;
+    }
+    .tab.active { background: #fff; color: #111827; font-weight: 600; border: 1px solid #e5e7eb; border-bottom-color: #fff; }
+    .section-block { margin-bottom: 22px; }
+    .section-block:last-child { margin-bottom: 0; }
+    .section-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+    input[type="text"], select, textarea {
+      padding: 8px 10px;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    input[type="text"] { min-width: 140px; flex: 1; }
+    select { min-width: 130px; }
+    .result-field {
+      flex: 1;
+      min-width: 180px;
+      background: #f9fafb;
+      color: #374151;
+    }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    textarea.batch-in, textarea.batch-out {
+      width: 100%;
+      min-height: 120px;
+      font-family: Consolas, Monaco, monospace;
+      resize: vertical;
+    }
+    .batch-out { margin-top: 10px; background: #f9fafb; }
+    .muted { font-size: 13px; color: #6b7280; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <p class="nav-back"><a href="{{ site.baseurl }}/tools/">← 返回工具</a></p>
+  <h1 class="page-title">时间戳转换</h1>
+
+  <div class="card">
+    <h2>当前时间戳</h2>
+    <div>
+      <span class="now-display" id="nowVal">0</span><span class="now-unit" id="nowUnitLabel">秒</span>
+    </div>
+    <div class="btn-row">
+      <button type="button" class="btn" id="btnToggleUnit" title="在秒与毫秒间切换显示">↻ 切换单位</button>
+      <button type="button" class="btn" id="btnCopyNow">📋 复制</button>
+      <button type="button" class="btn btn-danger" id="btnStopStart">■ 停止</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="tabs">
+      <button type="button" class="tab active" data-tab="single">单个转换</button>
+      <button type="button" class="tab" data-tab="batch">批量转换</button>
+    </div>
+
+    <div class="panel active" id="panel-single">
+      <div class="section-block">
+        <div class="section-title">🕐 时间戳转日期时间</div>
+        <div class="row">
+          <input type="text" id="tsIn" placeholder="Unix 时间戳">
+          <select id="tsUnit">
+            <option value="s">秒(s)</option>
+            <option value="ms">毫秒(ms)</option>
+          </select>
+          <button type="button" class="btn btn-primary" id="btnTs2dt">转换</button>
+          <input type="text" class="result-field" id="ts2dtOut" readonly placeholder="转换结果">
+          <select id="ts2dtTz"></select>
+        </div>
+      </div>
+      <div class="section-block">
+        <div class="section-title">📅 日期时间转时间戳</div>
+        <div class="row">
+          <input type="text" id="dtIn" placeholder="2026-04-29 10:20:24" style="min-width:200px;">
+          <select id="dt2tsTz"></select>
+          <button type="button" class="btn btn-primary" id="btnDt2ts">转换</button>
+          <input type="text" class="result-field" id="dt2tsOut" readonly placeholder="转换结果">
+          <select id="dt2tsUnit">
+            <option value="s">秒(s)</option>
+            <option value="ms">毫秒(ms)</option>
+          </select>
+        </div>
+        <p class="muted">日期时间格式：yyyy-MM-dd HH:mm:ss（Luxon 解析，按所选时区 wall time）</p>
+      </div>
+    </div>
+
+    <div class="panel" id="panel-batch">
+      <p class="muted" style="margin-bottom:10px;">每行一个时间戳，与「单个」中相同的单位与时区设置生效。</p>
+      <textarea class="batch-in" id="batchIn" placeholder="每行一个时间戳…"></textarea>
+      <div class="row" style="margin-top:10px;">
+        <select id="batchTsUnit">
+          <option value="s">秒(s)</option>
+          <option value="ms">毫秒(ms)</option>
+        </select>
+        <select id="batchTz"></select>
+        <button type="button" class="btn btn-primary" id="btnBatch">批量转日期时间</button>
+      </div>
+      <textarea class="batch-out" id="batchOut" readonly placeholder="转换结果（每行对应输入）…"></textarea>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var DateTime = luxon.DateTime;
+      var zones = [
+        'Asia/Shanghai', 'Asia/Tokyo', 'Asia/Singapore', 'Asia/Hong_Kong',
+        'UTC', 'Europe/London', 'Europe/Berlin', 'America/New_York', 'America/Los_Angeles'
+      ];
+
+      function fillTz(sel) {
+        zones.forEach(function (z) {
+          var o = document.createElement('option');
+          o.value = z;
+          o.textContent = z;
+          sel.appendChild(o);
+        });
+      }
+      fillTz(document.getElementById('ts2dtTz'));
+      fillTz(document.getElementById('dt2tsTz'));
+      fillTz(document.getElementById('batchTz'));
+
+      var nowMs = false;
+      var timer = null;
+      var running = true;
+
+      function renderNow() {
+        var t = Date.now();
+        var v = nowMs ? t : Math.floor(t / 1000);
+        document.getElementById('nowVal').textContent = String(v);
+        document.getElementById('nowUnitLabel').textContent = nowMs ? '毫秒' : '秒';
+      }
+
+      function startTimer() {
+        if (timer) clearInterval(timer);
+        timer = setInterval(renderNow, nowMs ? 50 : 1000);
+        renderNow();
+      }
+
+      document.getElementById('btnToggleUnit').onclick = function () {
+        nowMs = !nowMs;
+        startTimer();
+      };
+
+      document.getElementById('btnCopyNow').onclick = function () {
+        var v = document.getElementById('nowVal').textContent;
+        navigator.clipboard.writeText(v).catch(function () {});
+      };
+
+      document.getElementById('btnStopStart').onclick = function () {
+        running = !running;
+        var b = document.getElementById('btnStopStart');
+        if (running) {
+          b.textContent = '■ 停止';
+          b.classList.add('btn-danger');
+          startTimer();
+        } else {
+          if (timer) clearInterval(timer);
+          timer = null;
+          b.textContent = '▶ 开始';
+          b.classList.remove('btn-danger');
+        }
+      };
+
+      startTimer();
+
+      document.querySelectorAll('.tab').forEach(function (t) {
+        t.addEventListener('click', function () {
+          document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
+          t.classList.add('active');
+          document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
+          document.getElementById('panel-' + t.getAttribute('data-tab')).classList.add('active');
+        });
+      });
+
+      document.getElementById('btnTs2dt').onclick = function () {
+        var raw = document.getElementById('tsIn').value.trim();
+        var unit = document.getElementById('tsUnit').value;
+        var tz = document.getElementById('ts2dtTz').value;
+        var n = parseFloat(raw);
+        if (isNaN(n)) {
+          document.getElementById('ts2dtOut').value = '无效时间戳';
+          return;
+        }
+        var ms = unit === 'ms' ? n : n * 1000;
+        var dt = DateTime.fromMillis(ms, { zone: tz });
+        document.getElementById('ts2dtOut').value = dt.isValid ? dt.toFormat('yyyy-MM-dd HH:mm:ss') : '无效';
+      };
+
+      document.getElementById('btnDt2ts').onclick = function () {
+        var s = document.getElementById('dtIn').value.trim();
+        var tz = document.getElementById('dt2tsTz').value;
+        var outUnit = document.getElementById('dt2tsUnit').value;
+        var dt = DateTime.fromFormat(s, 'yyyy-MM-dd HH:mm:ss', { zone: tz });
+        if (!dt.isValid) {
+          document.getElementById('dt2tsOut').value = '无法解析，请检查格式与时区';
+          return;
+        }
+        var ms = dt.toMillis();
+        document.getElementById('dt2tsOut').value = outUnit === 'ms' ? String(ms) : String(Math.floor(ms / 1000));
+      };
+
+      document.getElementById('btnBatch').onclick = function () {
+        var lines = document.getElementById('batchIn').value.split(/\r?\n/);
+        var unit = document.getElementById('batchTsUnit').value;
+        var tz = document.getElementById('batchTz').value;
+        var out = lines.map(function (line) {
+          var n = parseFloat(line.trim());
+          if (line.trim() === '') return '';
+          if (isNaN(n)) return '无效';
+          var ms = unit === 'ms' ? n : n * 1000;
+          var dt = DateTime.fromMillis(ms, { zone: tz });
+          return dt.isValid ? dt.toFormat('yyyy-MM-dd HH:mm:ss') : '无效';
+        });
+        document.getElementById('batchOut').value = out.join('\n');
+      };
+    })();
+  </script>
+</body>
+</html>
