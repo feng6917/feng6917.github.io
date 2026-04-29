@@ -1,0 +1,41 @@
+// 文章内 HTML 标题样式（原各篇文末 <style> 中的 .mh1 / .mh2 / .mh3，已统一到此）
+
+$mh-post-font-stack: "roboto", "Iowan Old Style", "Ovo", "Hoefler Text", Georgia,
+  "Times New Roman", "TIBch", "Source Han Sans", "PingFangSC-Regular",
+  "Hiragino Sans GB", "STHeiti", "Microsoft Yahei", "Droid Sans Fallback",
+  "WenQuanYi Micro Hei", sans-serif;
+
+article.posts .entry .mh1 {
+  text-align: center;
+  color: $black;
+  background: linear-gradient(#fff 60%, #b2e311ff 40%);
+  margin: 1.4em 0 1.1em;
+  font-size: 1.4em;
+  font-family: $mh-post-font-stack;
+  line-height: 1.7;
+  letter-spacing: 0.33px;
+}
+
+article.posts .entry .mh2 {
+  -webkit-text-size-adjust: 100%;
+  letter-spacing: 0.33px;
+  font-family: $mh-post-font-stack;
+  line-height: 1.7;
+  color: #1cc03cff;
+  border-left: 4px solid #1bb75cff;
+  padding-left: 6px;
+  margin: 1.4em 0 1.1em;
+}
+
+// 仅少数文章使用（如软件合集内小节）
+article.posts .entry .mh3 {
+  -webkit-text-size-adjust: 100%;
+  letter-spacing: 0.11px;
+  font-family: $mh-post-font-stack;
+  line-height: 0.7;
+  color: #1cc03cff;
+  border-left: 2px solid #27b663ff;
+  padding-left: 3px;
+  margin: 0.7em 0 0.5em;
+  font-size: smaller;
+}

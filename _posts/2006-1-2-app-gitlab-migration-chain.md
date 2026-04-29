@@ -1398,25 +1398,6 @@ GitLab 部署完成只是起点：**自建 CA 与站点证书**决定全链路 T
         </ul>
 </div>
 
-<style>
-    .mh1 {
-      text-align: center;
-      color: black;
-      background: linear-gradient(#fff 60%, #b2e311ff 40%);
-      margin: 1.4em 0 1.1em;
-      font-size: 1.4em;
-      font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif;
-      line-height: 1.7;
-      letter-spacing: .33px;
-    }
-    .mh2 {
-      -webkit-text-size-adjust: 100%; letter-spacing: .33px; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; line-height: 1.7; color: #1cc03cff; border-left: 4px solid #1bb75cff; padding-left: 6px; margin: 1.4em 0 1.1em;
-    }
-    .mi1 {
-      position: fixed; bottom: 240px; right: 10px; width: 240px; height: 240px; background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 8px; padding: 15px; overflow-y: auto; font-family: 'roboto', 'Iowan Old Style', 'Ovo', 'Hoefler Text', Georgia, 'Times New Roman', 'TIBch', 'Source Han Sans', 'PingFangSC-Regular', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Yahei', 'Droid Sans Fallback', 'WenQuanYi Micro Hei', sans-serif; font-size: 14px; line-height: 1.15; color: #444; letter-spacing: 0.33px; transition: all 0.3s ease;
-    }
-</style>
-
 *本文整理自内网运维记录与运维脚本实践；实施命令请以你们当前 GitLab / Harbor 版本官方文档为准。**镜像离线迁移的权威正文即第七节中两个脚本全文**；若你本地另存副本后自行修改，以你环境中实际文件为准。*
 
 本文将随环境与 GitLab / Harbor 版本变化持续修订。
