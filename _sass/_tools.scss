@@ -3,15 +3,18 @@
 .tools-home {
   margin: 28px 0 8px;
   padding: 20px 22px;
-  border: 1px solid $divider-color;
-  border-radius: 12px;
-  background: $background-lighten-color;
+  border: 2px dashed $anime-border-strong;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fff5fa 0%, #f5f0ff 100%);
+  box-shadow: 0 8px 24px rgba(255, 133, 192, 0.15);
 }
 
 .tools-home__title {
   margin: 0 0 6px;
   font-size: 1.25rem;
   line-height: 1.4;
+  font-family: $anime-font;
+  font-weight: 400;
 }
 
 .tools-home__lead {
@@ -32,19 +35,19 @@
   gap: 10px;
   padding: 10px 16px;
   border-radius: 999px;
-  border: 1px solid $divider-color;
+  border: 2px solid $anime-border;
   background: $white;
   color: $base-color;
   text-decoration: none;
   font-size: $small-font-size;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 14px rgba(255, 133, 192, 0.12);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
 
   &:hover {
-    color: $link-color;
-    border-color: rgba($link-color, 0.35);
+    color: $link-lighten-color;
+    border-color: $anime-accent;
     transform: translateY(-3px);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 24px rgba(255, 133, 192, 0.25);
   }
 }
 
@@ -55,8 +58,8 @@
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: $link-bghv-color;
-  color: $link-color;
+  background: linear-gradient(135deg, #ffd6e8, #efdbff);
+  color: $anime-accent2;
   font-weight: 700;
   font-size: 13px;
   font-family: $code-font;

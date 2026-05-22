@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>日历 · 二次元小日常</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="page">
+    <p class="page-deco" aria-hidden="true">✦ ♡ ✦ ♡ ✦</p>
+    <main class="cal-widget" aria-label="万年历月历">
+      <header class="cal-header">
+        <div class="date-box">
+          <span class="date-box-deco" aria-hidden="true">♡</span>
+          <span class="date-box-week" id="headerWeekday">——</span>
+          <span class="date-box-day" id="headerDay">——</span>
+        </div>
+        <div class="header-info">
+          <div class="header-ym" id="headerYm">——</div>
+          <div class="header-meta" id="headerMeta">——</div>
+          <span class="today-tag" id="todayTag" hidden>今天</span>
+        </div>
+        <div class="header-right">
+          <div class="header-festival" id="headerFestival"></div>
+          <p class="header-spark" id="headerSpark" aria-live="polite"></p>
+        </div>
+      </header>
+
+      <div class="cal-controls">
+        <select class="ctrl-select ctrl-year" id="yearSelect" aria-label="年份"></select>
+
+        <div class="month-nav" aria-label="月份切换">
+          <button type="button" class="arrow-btn" id="prevMonth" aria-label="上个月">‹</button>
+          <select class="ctrl-select ctrl-month" id="monthSelect" aria-label="月份"></select>
+          <button type="button" class="arrow-btn" id="nextMonth" aria-label="下个月">›</button>
+        </div>
+
+        <label class="ctrl-labeled">
+          <span class="ctrl-labeled-text">放假安排</span>
+          <select class="ctrl-select ctrl-inner" id="holidayFilter" aria-label="放假安排"></select>
+        </label>
+
+        <label class="ctrl-labeled">
+          <span class="ctrl-labeled-text">起始日</span>
+          <select class="ctrl-select ctrl-inner" id="weekStart" aria-label="起始日">
+            <option value="1">周一</option>
+            <option value="0">周日</option>
+          </select>
+        </label>
+
+        <button type="button" class="back-today-btn" id="goToday">返回今天</button>
+      </div>
+
+      <p class="holiday-hint" id="holidayHint" hidden></p>
+
+      <div class="weekday-row" id="weekdayRow" aria-hidden="true"></div>
+      <div class="days-grid" id="daysGrid" role="grid"></div>
+
+      <footer class="almanac-footer">
+        <div class="almanac-left">
+          <p class="lunar-line" id="lunarLine">农历 ——</p>
+          <p class="ganzhi-line" id="ganzhiLine">——</p>
+        </div>
+        <div class="almanac-right">
+          <div class="yiji-row">
+            <span class="badge badge-yi">宜</span>
+            <p class="yiji-text" id="yiText">——</p>
+          </div>
+          <div class="yiji-row">
+            <span class="badge badge-ji">忌</span>
+            <p class="yiji-text" id="jiText">——</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+  <div id="confettiLayer" class="confetti-layer" aria-hidden="true"></div>
+  <script src="js/lunar.js"></script>
+  <script src="js/special-days.js"></script>
+  <script src="js/kawaii.js"></script>
+  <script src="js/calendar.js"></script>
+</body>
+</html>
