@@ -25,7 +25,7 @@
   font-size: 14px;
   line-height: 1.5;
   color: var(--ink);
-  padding: 0 10px 20px;
+  padding: 0 0 20px;
   margin-top: 8px;
   -webkit-overflow-scrolling: touch;
 
@@ -735,73 +735,48 @@
   }
 }
 
-// 侧栏窄列适配
+// 侧栏内日历：占满列宽，使用默认尺寸（680px 侧栏无需再压缩）
 .wrapper-sidebar .blog-calendar {
-  overflow-x: auto;
-  overflow-y: visible;
+  padding-left: 0;
+  padding-right: 0;
+  margin-top: 12px;
+  overflow: visible;
   max-width: 100%;
 
   & .cal-widget {
-    min-width: 0;
     width: 100%;
   }
 
   & .cal-header {
-    flex-wrap: wrap;
-    gap: 10px;
-    padding: 12px 14px;
-  }
-
-  & .date-box {
-    width: 68px;
-  }
-
-  & .date-box-day {
-    font-size: 32px;
-  }
-
-  & .header-ym {
-    font-size: 17px;
+    flex-wrap: nowrap;
   }
 
   & .header-right {
-    max-width: 100%;
-    width: 100%;
-    text-align: left;
-  }
-
-  & .cal-controls {
-    padding: 10px 12px;
-    gap: 8px;
+    max-width: 220px;
+    width: auto;
+    text-align: right;
   }
 
   & .back-today-btn {
-    margin-left: 0;
-    width: 100%;
+    margin-left: auto;
+    width: auto;
   }
 
   & .day-cell {
-    min-height: 58px;
-    padding: 6px 2px 4px;
+    min-height: 76px;
   }
 
   & .solar {
-    font-size: 16px;
-    margin-top: 4px;
+    font-size: 20px;
   }
 
   & .sub {
-    font-size: 10px;
+    font-size: 11px;
   }
 
   & .almanac-footer {
-    flex-direction: column;
-    gap: 12px;
-    padding: 12px 14px;
-  }
-
-  & .lunar-line {
-    font-size: 15px;
+    flex-direction: row;
+    gap: 20px;
   }
 }
 

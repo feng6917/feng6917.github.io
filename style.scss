@@ -43,9 +43,10 @@ body::before {
 
 .container {
   margin: 0 auto;
-  max-width: 1250px; // 原 1000px，放宽四分之一
+  max-width: 1250px;
   padding: 0 20px;
   width: 100%;
+  box-sizing: border-box;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -339,18 +340,19 @@ $sidebar-width: 680px;
 
 .wrapper-sidebar {
   width: $sidebar-width;
+  box-sizing: border-box;
 	-webkit-background-size: cover;
 	background-size: cover;
 	background: linear-gradient(180deg, #fff5fa 0%, $background-color 40%, #f5f0ff 100%);
 	height: 100%;
 	top: 0;
-	left:0;
+	left: 0;
 	position: fixed;
 	z-index: 4;
   border-right: 2px dashed $anime-border-strong;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-bottom: 100px;
+  padding: 0 20px 100px;
 
   @include mobile {
     width: 100%;
@@ -453,14 +455,28 @@ nav {
 // content
 
 .wrapper-content {
-  float: right;
+  margin-left: $sidebar-width;
   width: calc(100% - #{$sidebar-width});
+  min-height: 100vh;
   position: relative;
   z-index: 1;
+  box-sizing: border-box;
+
+  // 主内容贴紧侧栏，占满剩余宽度（避免 max-width + 居中造成左右大空白）
+  > .container {
+    max-width: none;
+    margin: 0;
+    width: 100%;
+    padding: 28px 40px 56px;
+  }
 
   @include mobile {
-    float: none;
+    margin-left: 0;
     width: 100%;
+
+    > .container {
+      padding: 20px;
+    }
   }
 }
 
