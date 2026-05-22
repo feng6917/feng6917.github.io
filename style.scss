@@ -352,7 +352,10 @@ $sidebar-width: 680px;
   border-right: 2px dashed $anime-border-strong;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0 20px 100px;
+  padding: 16px 20px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 
   @include mobile {
     width: 100%;
@@ -364,8 +367,20 @@ $sidebar-width: 680px;
   }
 }
 
+// 侧栏顶部：与日历同风格的卡片
+.sidebar-brand {
+  flex-shrink: 0;
+  margin-bottom: 16px;
+  padding: 20px 18px 16px;
+  border: 3px solid $anime-border-strong;
+  border-radius: 20px;
+  background: linear-gradient(160deg, #fff5fa 0%, #f5f0ff 100%);
+  box-shadow: 0 8px 24px rgba(255, 133, 192, 0.18);
+  text-align: center;
+}
+
 .sidebar {
-  padding: 20px 0;
+  padding: 0;
 
   @include mobile {
     text-align: center;
@@ -373,20 +388,20 @@ $sidebar-width: 680px;
 }
 
 .site-info {
-  text-align:center;
-  margin: 48px auto 0;
+  text-align: center;
+  margin: 0 auto;
 
   @include mobile {
     float: none;
     display: block;
-    margin: 24px auto 0;
+    margin: 0 auto;
   }
 
   .site-avatar {
-    margin:0 auto;
+    margin: 0 auto 12px;
     display: block;
-    max-width: 200px;
-    max-height: 200px;
+    max-width: 140px;
+    max-height: 140px;
 
     @include mobile {
       max-width: 120px;
@@ -403,51 +418,61 @@ $sidebar-width: 680px;
 }
 
 .site-name {
-  margin: 0 auto;
+  margin: 0 auto 8px;
   color: $base-color;
   cursor: pointer;
   font-family: $anime-font;
   font-weight: 400;
-  font-size: 28px;
-  letter-spacing: 1px;
+  font-size: 36px;
+  line-height: 1.25;
+  letter-spacing: 0.5px;
   text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.85);
 }
 
 .site-description {
-  margin: 15px auto;
+  margin: 0 auto 4px;
   color: $base-lighten-color;
-  font-size: 16px;
+  font-family: $anime-font;
+  font-size: 18px;
+  line-height: 1.5;
 
   @include mobile {
-    margin: 10px auto;
+    margin: 0 auto;
   }
 }
 
-.navlist{
-  text-align:center;
+.navlist {
+  text-align: center;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 2px dashed $anime-border;
 }
 
 nav {
   display: block;
-  margin-top: 23px; // @TODO: Vertically middle align
+  margin-top: 0;
   font-family: $anime-font;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 22px;
+  line-height: 1.6;
 
   @include mobile {
-    margin-top: 9px;
-    font-size: 16px;
+    font-size: 18px;
   }
 
   a {
-    margin: 0 10px;
-    text-align: right;
-    font-weight: 300;
-    letter-spacing: 1px;
+    margin: 0 12px;
+    color: $link-color;
+    letter-spacing: 0.5px;
+    transition: color 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+      color: $link-lighten-color;
+      transform: translateY(-1px);
+    }
 
     @include mobile {
       margin: 0 10px;
-      color: $link-color;
     }
   }
 }
@@ -462,12 +487,13 @@ nav {
   z-index: 1;
   box-sizing: border-box;
 
-  // 主内容贴紧侧栏，占满剩余宽度（避免 max-width + 居中造成左右大空白）
+  // 主内容占满剩余宽度，右侧与顶部留出适度空白
   > .container {
     max-width: none;
     margin: 0;
     width: 100%;
-    padding: 28px 40px 56px;
+    padding: 32px 56px 56px 36px;
+    box-sizing: border-box;
   }
 
   @include mobile {
@@ -475,7 +501,7 @@ nav {
     width: 100%;
 
     > .container {
-      padding: 20px;
+      padding: 20px 16px 32px;
     }
   }
 }
@@ -935,20 +961,20 @@ $toc-column-width: 272px;
 
 
 
-// Footer
-.wrapper-footer-desktop {
-  margin-top: 50px;
-  border-top: 1px solid $footer-border-color;
-  background-color: $footer-background-color;
-  position: absolute;
-  clear:both;
-  width:100%;
-  bottom:0;
-  
+// Footer（侧栏内：跟在日历后，不再 absolute 避免与日历叠加）
+.wrapper-sidebar .wrapper-footer-desktop {
+  flex-shrink: 0;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 2px dashed $anime-border;
+  background: transparent;
+  position: static;
+  width: 100%;
+  clear: both;
+
   @include mobile {
     display: none;
   }
-
 }
 
 .wrapper-footer-mobile {
@@ -963,12 +989,14 @@ $toc-column-width: 272px;
 }
 
 footer {
-  padding: 20px 0;
+  padding: 12px 0 4px;
   text-align: center;
 
   p {
-    font-size: $small-font-size;
+    font-family: $anime-font;
+    font-size: 15px;
     color: $base-lighten-color;
+    margin: 8px 0 0;
   }
 
   .svg-icon {

@@ -737,9 +737,11 @@
 
 // 侧栏内日历：占满列宽，使用默认尺寸（680px 侧栏无需再压缩）
 .wrapper-sidebar .blog-calendar {
+  flex-shrink: 0;
   padding-left: 0;
   padding-right: 0;
-  margin-top: 12px;
+  margin-top: 0;
+  margin-bottom: 0;
   overflow: visible;
   max-width: 100%;
 
