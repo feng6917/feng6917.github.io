@@ -1,9 +1,3 @@
 # jekyll local file
 .jekyll*
 _site
-
-# 本地 sass 临时文件（勿用 npx sass 直接编译根目录 style.scss）
-style.css.map
-_jekyll-style.scss
-_style-build.scss
-style-test.css
