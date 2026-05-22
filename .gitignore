@@ -2,8 +2,7 @@
 .jekyll*
 _site
 
-# 由 style.scss 编译生成，勿用 npx sass 直接编译根目录 style.scss（含 Jekyll front matter 会失败）
-style.css
+# 本地 sass 临时文件（勿用 npx sass 直接编译根目录 style.scss）
 style.css.map
 _jekyll-style.scss
 _style-build.scss

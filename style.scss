@@ -334,9 +334,11 @@ img {
 // .sidebar
 //
 
-// 侧栏宽度：原 30%，缩小三分之一后为 20%（与 .wrapper-content、.toc 联动）
+// 侧栏固定宽度，容纳万年历（与 .wrapper-content、.toc 联动）
+$sidebar-width: 340px;
+
 .wrapper-sidebar {
-  width: 20%;
+  width: $sidebar-width;
 	-webkit-background-size: cover;
 	background-size: cover;
 	background: linear-gradient(180deg, #fff5fa 0%, $background-color 40%, #f5f0ff 100%);
@@ -452,7 +454,7 @@ nav {
 
 .wrapper-content {
   float: right;
-  width: 80%;
+  width: calc(100% - #{$sidebar-width});
   position: relative;
   z-index: 1;
 
@@ -580,7 +582,7 @@ $toc-column-width: 272px;
 
 .toc {
   width: $toc-column-width;
-  left: 20%;
+  left: $sidebar-width;
   position: fixed;
   z-index: 4;
   top: 18px;

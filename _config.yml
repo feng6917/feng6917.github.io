@@ -5,6 +5,7 @@ avatar: https://feng6917.github.io/images/avator.png # 个人头像
 favicon: https://feng6917.github.io/images/favicon.ico # github 图标 可忽略
 
 url: https://feng6917.github.io # 博客地址
+baseurl: "" # 用户页站点必须为根路径，否则 /js、/style.css 会 404
 
 # Gitalk
 gitalk:
