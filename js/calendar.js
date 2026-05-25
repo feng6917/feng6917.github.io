@@ -386,6 +386,8 @@ class CalendarApp {
       cell.type = "button";
       cell.className = "day-cell";
       cell.setAttribute("role", "gridcell");
+      cell.style.gridColumn = String((i % 7) + 1);
+      cell.style.gridRow = String(Math.floor(i / 7) + 1);
 
       if (otherMonth) cell.classList.add("other-month");
       const dow = date.getDay();
