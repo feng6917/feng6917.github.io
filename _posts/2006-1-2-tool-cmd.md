@@ -477,6 +477,51 @@ telnet <host> <port>                         # TCP端口测试
 nc -zv <host> <port>                         # 快速端口测试
 ```
 
+### 配置代理（CentOS 7 / k8s-master-26）
+
+将 `代理IP`、`端口` 替换为环境中真实的值。
+
+#### 1. 临时生效（当前终端，先试通）
+
+```bash
+export http_proxy=http://代理IP:端口
+export https_proxy=http://代理IP:端口
+export HTTP_PROXY=$http_proxy
+export HTTPS_PROXY=$https_proxy
+export no_proxy=localhost,127.0.0.1,10.0.0.0/8,192.168.0.0/16,.svc,.cluster.local
+export NO_PROXY=$no_proxy
+```
+
+需要账号密码时：
+
+```bash
+export http_proxy=http://用户名:密码@代理IP:端口
+export https_proxy=http://用户名:密码@代理IP:端口
+```
+
+测试：
+
+```bash
+curl -I --connect-timeout 10 https://github.com
+curl -I --connect-timeout 10 https://ollama.com
+# 能返回 HTTP/2 200 或 301/302 就说明代理可用
+```
+
+#### 2. 永久生效（root 用户）
+
+```bash
+cat >> /root/.bashrc <<'EOF'
+# proxy
+export http_proxy=http://代理IP:端口
+export https_proxy=http://代理IP:端口
+export HTTP_PROXY=$http_proxy
+export HTTPS_PROXY=$https_proxy
+export no_proxy=localhost,127.0.0.1,10.0.0.0/8,192.168.0.0/16,.svc,.cluster.local
+export NO_PROXY=$no_proxy
+EOF
+source /root/.bashrc
+```
+
 ---
 
 <h2 id="c-2-6" class="mh2">6. 进程管理与日志</h2>
