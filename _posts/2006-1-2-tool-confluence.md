@@ -137,13 +137,37 @@ author: feng6917
         scp mysqlconnectorjava5.1.44bin.jar root@ip:/opt/atlassian/confluence/confluence/WEB-INF/lib/
     ```  
 
-- 3.4 开启服务
+- 3.4 迁移 CONFLUENCE_HOME & 指定 新的 CONFLUENCE_HOME（可忽略）
+
+    迁移
+    
+    ```
+       # 创建新目录
+       sudo mkdir -p /data_hdd/confluence
+       sudo mkdir -p /data_hdd/confluence-attachments
+
+       sudo chmod -R 777 /data_hdd/confluence
+       sudo chmod -R 777 /data_hdd/confluence-attachments 2>/dev/null
+       # 拷贝原数据（保留权限）
+       sudo rsync -a /var/atlassian/application-data/confluence/ /data_hdd/confluence/
+    ```
+
+    指定
+
+    ```
+       sudo vi /opt/atlassian/confluence/bin/setenv.sh
+
+       # 在尾部追加
+       export CONFLUENCE_HOME=/data_hdd/confluence
+    ```
+
+- 3.5 开启服务
 
     ```
         sh /opt/atlassian/confluence/bin/start-confluence.sh
     ```      
 
-- 3.5 Confluence 授权码获取
+- 3.6 Confluence 授权码获取
 
     ```
         cd /opt/atlassian/confluence/bin
@@ -155,7 +179,7 @@ author: feng6917
     ```
 
 
-- 3.6 confluence关闭启用命令
+- 3.7 confluence关闭启用命令
 
     ```
         停止：sh /opt/atlassian/confluence/bin/stop-confluence.sh
