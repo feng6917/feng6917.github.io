@@ -102,46 +102,67 @@ author: feng6917
 
 <h2 id="c-3-0" class="mh1">三、软件破解</h2>
 
-- 3.1 拷贝服务器atlassian-extras-decoder-v2-3.4.1.jar 到本地
+- 3.1 关闭服务
 
     ```
-        mv /opt/atlassian/confluence/confluence/WEB-INF/lib/atlassian-extras-decoder-v2-3.4.1.jar /root/atlassian-extras-2.4.jar
-
-        scp root@IP:/root/atlassian-extras-2.4.jar ./
+        sh /opt/atlassian/confluence/bin/stop-confluence.sh
     ```
 
-- 3.2 windows 中执行 confluence_keygen.jar 打开破解工具（需安装 jdk）
+- 3.2 拷贝文件atlassian-agent-v1.2.3.tar.gz 到服务器
 
-    ```
-        java -jar confluence_keygen.jar
-        name 英文随便填 serverID 粘贴复制得服务器ID
-    ```
-
-- 3.3 点击.patch 选择atlassian-extras-2.4.jar
-
-- 3.4 点击.gen
-    ![img](../images/2024-8-22/6.png)
-
-- 3.5 拷贝生成的atlassian-extras-2.4.jar 到服务器
-
-    ```
-        scp atlassian-extras-2.4.jar root@ip:/opt/atlassian/confluence/confluence/WEB-INF/lib/atlassian-extras-decoder-v2-3.4.1.jar
+    下载地址： https://github.com/qinyuxin99/atlassian-agent/releases
+    
+    ``` 
+        # 拷贝到服务器
+        scp atlassian-agent-v1.2.3.tar.gz root@ip:/opt/atlassian/
+        # 解压缩
+        tar -zxvf atlassian-agent-v1.2.3.tar.gz     
     ```
 
-- 3.6  拷贝MySQL驱动到服务器
+- 3.2 修改环境变量
+
+    ```
+        cd /opt/atlassian/confluence/bin
+
+        [root@confluence bin]# vim setenv.sh
+
+        #在文件最末尾添加这段，根据包的存放实际路径
+
+        export JAVA_OPTS="-javaagent:/opt/atlassian/atlassian-agent-v1.2.3/atlassian-agent.jar ${JAVA_OPTS}"
+    ```
+
+- 3.3  拷贝MySQL驱动到服务器(用于数据库连接，后续配置会用到)
 
     ```
         scp mysqlconnectorjava5.1.44bin.jar root@ip:/opt/atlassian/confluence/confluence/WEB-INF/lib/
+    ```  
+
+- 3.4 开启服务
+
+    ```
+        sh /opt/atlassian/confluence/bin/start-confluence.sh
+    ```      
+
+- 3.5 Confluence 授权码获取
+
+    ```
+        cd /opt/atlassian/confluence/bin
+
+        # 破解 
+        java -jar /opt/atlassian/atlassian-agent-v1.2.3/atlassian-agent.jar -p conf -m 12345@qq.com -n confluence -o confluence -s 服务器ID(从页面获取)
+
+        # 将执行得出的Code复制到页面上即可，按流程进行操作
     ```
 
-- 3.7 重启confluence
+
+- 3.6 confluence关闭启用命令
 
     ```
         停止：sh /opt/atlassian/confluence/bin/stop-confluence.sh
         启动：sh /opt/atlassian/confluence/bin/start-confluence.sh
     ```
 
-- 3.8 登录web页面 localhost:8090 复制授权码并粘贴
+- 3.7 登录web页面 localhost:8090 复制授权码并粘贴
     ![img](../images/2024-8-22/7.png)
 
 <h2 id="c-4-0" class="mh1">四、软件配置</h2>
@@ -176,6 +197,7 @@ author: feng6917
 - [Confluence7.4安装并汉化](https://blog.whsir.com/post-5854.html)
 - [Confluence官网下载地址](https://www.atlassian.com/software/confluence/download-archives)
 - [为博客添加Gitalk评论插件](https://qiubaiying.github.io/2017/12/19/为博客添加-Gitalk-评论插件/)
+- [wiki的confluence 8.5.4安装部署及破j](https://blog.csdn.net/weixin_44024436/article/details/135389431)
 
 <hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
 
