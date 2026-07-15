@@ -98,6 +98,7 @@ author: feng6917
 - [png素材(不需要抠图)](https://pngimg.com/)
 - [在线游戏](https://dos.zone/)
 - [在线喂金鱼](https://feedgoldfish.top/)
+- [EasyRCV3.8.11.0 一键装机](https://firpe.cn/page-196)
 - []()
 
 <h2 id="c-4-0" class="mh1">四、问题解决在线参考</h2>
