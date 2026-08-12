@@ -1,8 +1,8 @@
 /**
- * 胖橘轨迹拖拽
- * - 按下不触发；滑动即在起点出现胖橘，轨迹按真实路径绘制
- * - <2s 停手：左瞄一眼、右瞄一眼后消失
- * - ≥2s 停手：胖橘挣扎着沿轨迹被拉到鼠标停止处，再消失
+ * 胖橘拖拽吐口水
+ * - 按下不触发；滑动满 1s 才在起点出现（不足 1s 不显示）
+ * - 不画线；停手后沿隐藏轨迹挣扎拽到停止点
+ * - 消失前放大 2 倍，朝屏幕吐口水，水花四溅
  */
 (function () {
   "use strict";
@@ -13,11 +13,11 @@
     return;
   }
 
-  var STATE = { IDLE: 0, SHOW: 1, GLANCE: 2, DRAG: 3, FADE: 4 };
+  var STATE = { IDLE: 0, TRACK: 1, SHOW: 2, DRAG: 3, SPIT: 4, FADE: 5 };
 
-  var CAT_SIZE = 72;
+  var CAT_SIZE = 78;
   var IDLE_MS = 320;
-  var DRAG_MIN_MS = 2000;
+  var MIN_SHOW_MS = 1000;
   var MOVE_EPS = 2.2;
   var PATH_MIN_DIST = 4;
   var PATH_MAX = 600;
@@ -25,13 +25,11 @@
   var canvas, ctx, raf = 0, running = false;
   var W = 0, H = 0;
   var mouse = { x: 0, y: 0 };
+  var start = { x: 0, y: 0 };
   var path = [];
   var pathLen = 0;
   var cumLen = [];
-  var cat = {
-    x: 0, y: 0, scale: 0, alpha: 1,
-    angle: 0, stretch: 1, squash: 1,
-  };
+  var cat = { x: 0, y: 0, scale: 0, alpha: 1, angle: 0, stretch: 1, squash: 1 };
   var state = STATE.IDLE;
   var moveStart = 0;
   var lastMove = 0;
@@ -39,7 +37,6 @@
   var moveDuration = 0;
   var phaseStart = 0;
   var phaseDur = 0;
-  var dragProgress = 0;
   var t = 0;
   var breath = 0;
   var blinkT = 0;
@@ -48,12 +45,21 @@
   var lookY = -0.15;
   var bob = 0;
   var pawPhase = 0;
+  var snot = 0.55;
+  var mouthOpen = 0;
+  var spitBlob = null;
+  var splashes = [];
   var sweat = [];
   var dust = [];
   var reducedListener;
 
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
   function lerp(a, b, p) { return a + (b - a) * p; }
+  function easeOut(p) { return 1 - Math.pow(1 - p, 2); }
+  function easeIn(p) { return p * p; }
+  function easeInOut(p) {
+    return p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+  }
 
   function resize() {
     W = window.innerWidth;
@@ -80,6 +86,10 @@
     cumLen = [];
     sweat = [];
     dust = [];
+    splashes = [];
+    spitBlob = null;
+    mouthOpen = 0;
+    snot = 0.55;
     cat.scale = 0;
     cat.alpha = 0;
     cat.stretch = 1;
@@ -101,7 +111,7 @@
   }
 
   function pointAt(dist) {
-    if (path.length === 0) return { x: cat.x, y: cat.y, tx: 1, ty: 0 };
+    if (!path.length) return { x: cat.x, y: cat.y, tx: 1, ty: 0 };
     if (path.length === 1 || pathLen <= 0) {
       return { x: path[0].x, y: path[0].y, tx: 1, ty: 0 };
     }
@@ -136,15 +146,13 @@
     var dy = y - last.y;
     if (dx * dx + dy * dy < PATH_MIN_DIST * PATH_MIN_DIST) return;
     path.push({ x: x, y: y });
-    if (path.length > PATH_MAX) {
-      path.shift();
-    }
+    if (path.length > PATH_MAX) path.shift();
     rebuildCumLen();
   }
 
-  function spawnAt(x, y) {
-    cat.x = clamp(x, CAT_SIZE * 0.4, W - CAT_SIZE * 0.4);
-    cat.y = clamp(y, CAT_SIZE * 0.4, H - CAT_SIZE * 0.4);
+  function spawnVisible() {
+    cat.x = clamp(start.x, CAT_SIZE * 0.45, W - CAT_SIZE * 0.45);
+    cat.y = clamp(start.y, CAT_SIZE * 0.45, H - CAT_SIZE * 0.45);
     cat.scale = 0;
     cat.alpha = 1;
     cat.angle = 0;
@@ -152,25 +160,87 @@
     cat.squash = 1;
     lookX = 0;
     lookY = -0.2;
+    snot = 0.4 + Math.random() * 0.3;
+    mouthOpen = 0;
+  }
+
+  function beginTrack(x, y, now) {
+    start.x = x;
+    start.y = y;
+    lastX = x;
+    lastY = y;
+    moveStart = now;
+    lastMove = now;
     path = [{ x: x, y: y }];
     rebuildCumLen();
+    state = STATE.TRACK;
+    cat.alpha = 0;
+    cat.scale = 0;
+    ensureLoop();
+  }
+
+  function enterStop(now) {
+    moveDuration = Math.max(0, lastMove - moveStart);
+    rebuildCumLen();
+
+    // 不足 1 秒：不显示 / 直接清掉
+    if (moveDuration < MIN_SHOW_MS || state === STATE.TRACK) {
+      resetAll();
+      return;
+    }
+
+    state = STATE.DRAG;
+    phaseStart = now;
+    phaseDur = clamp(moveDuration / 3, 800, 3000);
+    pawPhase = 0;
+  }
+
+  function burstSplash(cx, cy) {
+    var i, ang, sp;
+    for (i = 0; i < 42; i++) {
+      ang = Math.random() * Math.PI * 2;
+      sp = 3 + Math.random() * 14;
+      splashes.push({
+        x: cx,
+        y: cy,
+        vx: Math.cos(ang) * sp,
+        vy: Math.sin(ang) * sp - 2,
+        r: 2 + Math.random() * 7,
+        life: 1,
+        g: 0.35 + Math.random() * 0.4,
+      });
+    }
+    // 朝镜头扑面的大水花环
+    for (i = 0; i < 16; i++) {
+      ang = (i / 16) * Math.PI * 2;
+      sp = 8 + Math.random() * 10;
+      splashes.push({
+        x: cx,
+        y: cy,
+        vx: Math.cos(ang) * sp,
+        vy: Math.sin(ang) * sp,
+        r: 6 + Math.random() * 10,
+        life: 1,
+        g: 0.2,
+      });
+    }
   }
 
   function addSweat() {
     if (Math.random() > 0.45) return;
     sweat.push({
-      x: cat.x + 16 + Math.random() * 10,
-      y: cat.y - 22,
+      x: cat.x + 18 + Math.random() * 8,
+      y: cat.y - 24,
       vx: 0.6 + Math.random(),
-      vy: -0.4 + Math.random() * 0.5,
+      vy: -0.3 + Math.random() * 0.4,
       life: 1,
     });
   }
 
   function addDust() {
     dust.push({
-      x: cat.x + (Math.random() - 0.5) * 20,
-      y: cat.y + 18 + Math.random() * 6,
+      x: cat.x + (Math.random() - 0.5) * 22,
+      y: cat.y + 22 + Math.random() * 6,
       vx: (Math.random() - 0.5) * 2,
       vy: -0.5 - Math.random(),
       life: 1,
@@ -195,50 +265,38 @@
       s.life -= dt * 1.8;
       if (s.life <= 0) dust.splice(i, 1);
     }
-  }
-
-  function enterStop(now) {
-    moveDuration = Math.max(0, lastMove - moveStart);
-    rebuildCumLen();
-
-    if (moveDuration < DRAG_MIN_MS || path.length < 3 || pathLen < 28) {
-      state = STATE.GLANCE;
-      phaseStart = now;
-      phaseDur = 1100;
-      lookX = 0;
-      lookY = -0.15;
-      return;
+    for (i = splashes.length - 1; i >= 0; i--) {
+      s = splashes[i];
+      s.x += s.vx;
+      s.y += s.vy;
+      s.vy += s.g;
+      s.vx *= 0.985;
+      s.r *= 0.992;
+      s.life -= dt * 1.15;
+      if (s.life <= 0) splashes.splice(i, 1);
     }
-
-    state = STATE.DRAG;
-    phaseStart = now;
-    // 拖拽时长：滑动时长 / 3，夹在 0.9s ~ 3.2s
-    phaseDur = clamp(moveDuration / 3, 900, 3200);
-    dragProgress = 0;
-    pawPhase = 0;
-  }
-
-  function beginShow(x, y, now) {
-    spawnAt(x, y);
-    state = STATE.SHOW;
-    moveStart = now;
-    lastMove = now;
-    lastX = x;
-    lastY = y;
-    ensureLoop();
+    if (spitBlob) {
+      spitBlob.t += dt;
+      spitBlob.z = easeOut(clamp(spitBlob.t / spitBlob.dur, 0, 1));
+      spitBlob.x = lerp(spitBlob.sx, W * 0.5, spitBlob.z);
+      spitBlob.y = lerp(spitBlob.sy, H * 0.42, spitBlob.z);
+      spitBlob.r = lerp(6, Math.min(W, H) * 0.22, spitBlob.z);
+      if (spitBlob.z >= 1 && !spitBlob.burst) {
+        spitBlob.burst = true;
+        burstSplash(spitBlob.x, spitBlob.y);
+      }
+    }
   }
 
   function onMouseDown() {
-    if (state === STATE.SHOW || state === STATE.GLANCE) {
-      resetAll();
-    } else if (state === STATE.DRAG) {
+    if (state === STATE.TRACK || state === STATE.SHOW || state === STATE.DRAG) {
       resetAll();
     }
   }
 
   function onMouseMove(e) {
     if (e.buttons !== 0) {
-      if (state === STATE.SHOW) resetAll();
+      if (state === STATE.TRACK || state === STATE.SHOW) resetAll();
       mouse.x = e.clientX;
       mouse.y = e.clientY;
       return;
@@ -251,196 +309,131 @@
     var dy = mouse.y - lastY;
     var dist = Math.sqrt(dx * dx + dy * dy);
 
-    if (state === STATE.IDLE || (state === STATE.FADE && cat.alpha < 0.2)) {
-      beginShow(mouse.x, mouse.y, now);
+    if (state === STATE.IDLE || (state === STATE.FADE && cat.alpha < 0.15 && !splashes.length)) {
+      beginTrack(mouse.x, mouse.y, now);
       return;
     }
 
-    if (state === STATE.GLANCE || state === STATE.DRAG) {
-      // 演出中再动：开新一段
-      beginShow(mouse.x, mouse.y, now);
+    if (state === STATE.SPIT) {
+      lastMove = now;
       return;
     }
 
-    if (state === STATE.SHOW) {
+    if (state === STATE.DRAG) {
+      beginTrack(mouse.x, mouse.y, now);
+      return;
+    }
+
+    if (state === STATE.TRACK || state === STATE.SHOW) {
       if (dist >= MOVE_EPS) {
         lastMove = now;
         lastX = mouse.x;
         lastY = mouse.y;
         pushPath(mouse.x, mouse.y);
       }
+      if (state === STATE.TRACK && now - moveStart >= MIN_SHOW_MS) {
+        spawnVisible();
+        state = STATE.SHOW;
+      }
     }
   }
 
-  function drawPath(untilDist, alpha) {
-    if (path.length < 2) return;
-    var maxD = untilDist == null ? pathLen : untilDist;
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-
-    // 阴影
-    ctx.strokeStyle = "rgba(120,85,45,0.22)";
-    ctx.lineWidth = 3.4;
-    ctx.beginPath();
-    var started = false;
-    var i, d0, d1, a, b, cut, p;
-    for (i = 0; i < path.length - 1; i++) {
-      d0 = cumLen[i];
-      d1 = cumLen[i + 1];
-      if (d0 > maxD) break;
-      a = path[i];
-      b = path[i + 1];
-      if (d1 <= maxD) {
-        if (!started) { ctx.moveTo(a.x + 1, a.y + 1.5); started = true; }
-        ctx.lineTo(b.x + 1, b.y + 1.5);
-      } else {
-        cut = (maxD - d0) / (d1 - d0 || 1);
-        if (!started) { ctx.moveTo(a.x + 1, a.y + 1.5); started = true; }
-        ctx.lineTo(lerp(a.x, b.x, cut) + 1, lerp(a.y, b.y, cut) + 1.5);
-      }
-    }
-    if (started) ctx.stroke();
-
-    // 主线：略有起伏的手绘感
-    ctx.strokeStyle = "#d2a56a";
-    ctx.lineWidth = 2.3;
-    ctx.beginPath();
-    started = false;
-    for (i = 0; i < path.length - 1; i++) {
-      d0 = cumLen[i];
-      d1 = cumLen[i + 1];
-      if (d0 > maxD) break;
-      a = path[i];
-      b = path[i + 1];
-      var wobble = Math.sin(i * 0.9 + t * 2) * 0.6;
-      var nx = -(b.y - a.y);
-      var ny = b.x - a.x;
-      var nl = Math.sqrt(nx * nx + ny * ny) || 1;
-      nx = (nx / nl) * wobble;
-      ny = (ny / nl) * wobble;
-      if (d1 <= maxD) {
-        if (!started) { ctx.moveTo(a.x, a.y); started = true; }
-        ctx.lineTo(b.x + nx, b.y + ny);
-      } else {
-        cut = (maxD - d0) / (d1 - d0 || 1);
-        p = { x: lerp(a.x, b.x, cut), y: lerp(a.y, b.y, cut) };
-        if (!started) { ctx.moveTo(a.x, a.y); started = true; }
-        ctx.lineTo(p.x + nx * cut, p.y + ny * cut);
-      }
-    }
-    if (started) ctx.stroke();
-
-    // 高光细线
-    ctx.strokeStyle = "rgba(255,245,220,0.4)";
-    ctx.lineWidth = 0.85;
-    ctx.beginPath();
-    started = false;
-    for (i = 0; i < path.length - 1; i++) {
-      d0 = cumLen[i];
-      if (d0 > maxD) break;
-      a = path[i];
-      b = path[Math.min(i + 1, path.length - 1)];
-      if (!started) { ctx.moveTo(a.x - 0.5, a.y - 0.5); started = true; }
-      if (cumLen[Math.min(i + 1, cumLen.length - 1)] <= maxD) {
-        ctx.lineTo(b.x - 0.5, b.y - 0.5);
-      }
-    }
-    if (started) ctx.stroke();
-    ctx.restore();
-  }
-
-  /** 按参考图手绘：大头、奶油嘴、大红腮红、滴溜眼珠；带呼吸/瞄看/挣扎 */
-  function drawCatChibi(mode) {
-    if (cat.alpha < 0.02 || cat.scale < 0.05) return;
+  function drawCat(mode) {
+    if (cat.alpha < 0.02 || cat.scale < 0.04) return;
     var size = CAT_SIZE * cat.scale;
     var blinking = blinkT < 0.12;
     var struggle = mode === "struggle";
+    var spit = mode === "spit";
 
     ctx.save();
     ctx.translate(cat.x, cat.y + bob);
-    ctx.rotate(cat.angle + (struggle ? Math.sin(pawPhase) * 0.1 : lookX * 0.07));
-    ctx.scale(cat.stretch * (size / CAT_SIZE), cat.squash * (size / CAT_SIZE));
+    ctx.rotate(cat.angle + (struggle ? Math.sin(pawPhase) * 0.1 : lookX * 0.06));
+    // 吐口水时略俯冲朝镜头
+    var lean = spit ? 1 + mouthOpen * 0.15 : 1;
+    ctx.scale(cat.stretch * (size / CAT_SIZE) * lean, cat.squash * (size / CAT_SIZE) * lean);
     ctx.globalAlpha = cat.alpha;
 
+    // 影
     ctx.beginPath();
-    ctx.ellipse(0, 38, 20, 6, 0, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(50,30,10,0.15)";
+    ctx.ellipse(0, 48, 26, 7, 0, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(50,30,10,0.16)";
     ctx.fill();
 
-    drawCatFallback(struggle, blinking);
-    ctx.restore();
-  }
-
-  function drawCatFallback(struggle, blinking) {
-    // 身（小）
-    var bodyG = ctx.createRadialGradient(-3, 28, 2, 0, 30, 18);
-    bodyG.addColorStop(0, "#ffe6c2");
-    bodyG.addColorStop(1, "#efb56a");
-    ctx.fillStyle = bodyG;
+    // —— 大肚子 ——
+    var belly = ctx.createRadialGradient(-6, 34, 4, 0, 38, 30);
+    belly.addColorStop(0, "#ffe8c8");
+    belly.addColorStop(0.45, "#f5c486");
+    belly.addColorStop(1, "#e39a4a");
+    ctx.fillStyle = belly;
     ctx.beginPath();
-    ctx.ellipse(0, 30, 15, 12, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 36, 28, 24, 0, 0, Math.PI * 2);
     ctx.fill();
-    ctx.fillStyle = "#fff8ee";
+    // 肚皮高光
+    ctx.fillStyle = "rgba(255,250,240,0.9)";
     ctx.beginPath();
-    ctx.ellipse(0, 32, 8, 7, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 40, 16, 14, 0, 0, Math.PI * 2);
     ctx.fill();
+    // 肚脐
+    ctx.strokeStyle = "rgba(200,140,80,0.45)";
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.arc(0, 44, 2.2, 0.2, Math.PI - 0.2);
+    ctx.stroke();
 
     // 小手
-    var pawL = struggle ? -12 - Math.sin(pawPhase) * 10 : -10;
-    var pawR = struggle ? 12 + Math.cos(pawPhase * 1.25) * 10 : 10;
-    var pawY = struggle ? 22 + Math.sin(pawPhase * 1.1) * 5 : 26;
+    var pawL = struggle ? -16 - Math.sin(pawPhase) * 11 : -14;
+    var pawR = struggle ? 16 + Math.cos(pawPhase * 1.25) * 11 : 14;
+    var pawY = struggle ? 28 + Math.sin(pawPhase * 1.1) * 5 : 32;
     ctx.fillStyle = "#f3c48a";
     ctx.beginPath();
-    ctx.ellipse(pawL, pawY, 7, 5.5, -0.5, 0, Math.PI * 2);
-    ctx.ellipse(pawR, pawY, 7, 5.5, 0.5, 0, Math.PI * 2);
+    ctx.ellipse(pawL, pawY, 8, 6, -0.45, 0, Math.PI * 2);
+    ctx.ellipse(pawR, pawY, 8, 6, 0.45, 0, Math.PI * 2);
     ctx.fill();
 
-    // 头（超大圆）
-    var headG = ctx.createRadialGradient(-8, -10, 6, 2, 2, 32);
+    // 头
+    var headG = ctx.createRadialGradient(-8, -12, 6, 2, 0, 32);
     headG.addColorStop(0, "#ffe9c8");
     headG.addColorStop(0.5, "#f7c88a");
     headG.addColorStop(1, "#e8a85c");
     ctx.fillStyle = headG;
     ctx.beginPath();
-    ctx.ellipse(0, -2, 28, 26, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, -4, 28, 26, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // 圆耳
+    // 耳
     ctx.fillStyle = "#f0b56a";
     ctx.beginPath();
-    ctx.ellipse(-20, -22, 8, 7, -0.35, 0, Math.PI * 2);
-    ctx.ellipse(20, -22, 8, 7, 0.35, 0, Math.PI * 2);
+    ctx.ellipse(-20, -24, 8, 7, -0.35, 0, Math.PI * 2);
+    ctx.ellipse(20, -24, 8, 7, 0.35, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = "#ffb7c5";
     ctx.beginPath();
-    ctx.ellipse(-20, -22, 4, 3.5, -0.35, 0, Math.PI * 2);
-    ctx.ellipse(20, -22, 4, 3.5, 0.35, 0, Math.PI * 2);
+    ctx.ellipse(-20, -24, 4, 3.5, -0.35, 0, Math.PI * 2);
+    ctx.ellipse(20, -24, 4, 3.5, 0.35, 0, Math.PI * 2);
     ctx.fill();
 
     // 奶油脸
     ctx.fillStyle = "#fffaf3";
     ctx.beginPath();
-    ctx.ellipse(0, 6, 13, 10, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 5, 13, 10, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // 大红腮红
+    // 腮红
     ctx.fillStyle = "rgba(255,64,88,0.78)";
     ctx.beginPath();
-    ctx.ellipse(-15, 3, 7.5, 6.5, 0, 0, Math.PI * 2);
-    ctx.ellipse(15, 3, 7.5, 6.5, 0, 0, Math.PI * 2);
+    ctx.ellipse(-15, 2, 7.5, 6.5, 0, 0, Math.PI * 2);
+    ctx.ellipse(15, 2, 7.5, 6.5, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // 大眼白
-    var eyeY = -5;
+    // 眼
+    var eyeY = -6;
     ctx.fillStyle = "#fff";
     ctx.beginPath();
     ctx.ellipse(-10, eyeY, 9.5, 11, -0.04, 0, Math.PI * 2);
     ctx.ellipse(10, eyeY, 9.5, 11, 0.04, 0, Math.PI * 2);
     ctx.fill();
 
-    if (blinking && !struggle) {
+    if (blinking && !struggle && !spit) {
       ctx.strokeStyle = "#3a2a20";
       ctx.lineWidth = 2.2;
       ctx.lineCap = "round";
@@ -453,7 +446,6 @@
     } else if (struggle) {
       ctx.strokeStyle = "#3a2a20";
       ctx.lineWidth = 2.4;
-      ctx.lineCap = "round";
       ctx.beginPath();
       ctx.moveTo(-16, eyeY - 4);
       ctx.lineTo(-4, eyeY);
@@ -461,6 +453,16 @@
       ctx.moveTo(16, eyeY - 4);
       ctx.lineTo(4, eyeY);
       ctx.lineTo(16, eyeY + 4);
+      ctx.stroke();
+    } else if (spit) {
+      // 用力眯眼
+      ctx.strokeStyle = "#3a2a20";
+      ctx.lineWidth = 2.6;
+      ctx.beginPath();
+      ctx.moveTo(-17, eyeY + 1);
+      ctx.quadraticCurveTo(-10, eyeY - 3, -3, eyeY + 1);
+      ctx.moveTo(3, eyeY + 1);
+      ctx.quadraticCurveTo(10, eyeY - 3, 17, eyeY + 1);
       ctx.stroke();
     } else {
       var px = lookX * 5.5;
@@ -477,27 +479,69 @@
       ctx.fill();
     }
 
-    // 小鼻小嘴
+    // 鼻子
     ctx.fillStyle = "#4a3228";
     ctx.beginPath();
-    ctx.ellipse(0, 5, 1.7, 1.3, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 4, 1.7, 1.3, 0, 0, Math.PI * 2);
     ctx.fill();
+
+    // —— 鼻涕泡 ——
+    if (!spit || mouthOpen < 0.4) {
+      var sn = snot * (0.85 + Math.sin(breath * 3.2) * 0.15);
+      var bx = 3.5;
+      var by = 7 + sn * 2;
+      var br = 3.2 + sn * 5.5;
+      var sg = ctx.createRadialGradient(bx - br * 0.25, by - br * 0.3, br * 0.1, bx, by, br);
+      sg.addColorStop(0, "rgba(190,255,210,0.95)");
+      sg.addColorStop(0.55, "rgba(120,220,160,0.75)");
+      sg.addColorStop(1, "rgba(70,180,120,0.35)");
+      ctx.fillStyle = sg;
+      ctx.beginPath();
+      ctx.arc(bx, by, br, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(255,255,255,0.75)";
+      ctx.beginPath();
+      ctx.arc(bx - br * 0.28, by - br * 0.32, br * 0.22, 0, Math.PI * 2);
+      ctx.fill();
+      // 鼻孔到泡的细丝
+      ctx.strokeStyle = "rgba(100,200,140,0.55)";
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(1.2, 5.2);
+      ctx.quadraticCurveTo(2.5, 6.5, bx, by - br * 0.85);
+      ctx.stroke();
+    }
+
+    // 嘴
     ctx.strokeStyle = "#4a3228";
-    ctx.lineWidth = 1.15;
+    ctx.lineWidth = 1.2;
     ctx.lineCap = "round";
     ctx.beginPath();
-    if (struggle) {
+    if (spit) {
+      // 大张嘴吐
+      ctx.fillStyle = "#5a2030";
+      ctx.beginPath();
+      ctx.ellipse(0, 12 + mouthOpen * 4, 5 + mouthOpen * 6, 3 + mouthOpen * 7, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#ff8a9a";
+      ctx.beginPath();
+      ctx.ellipse(0, 14 + mouthOpen * 3, 3 + mouthOpen * 3, 1.5 + mouthOpen * 2, 0, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (struggle) {
       ctx.moveTo(-3.5, 11);
       ctx.quadraticCurveTo(0, 8.5, 3.5, 11);
+      ctx.stroke();
     } else {
-      ctx.moveTo(0, 6.3);
-      ctx.lineTo(0, 8.2);
-      ctx.moveTo(0, 8.2);
-      ctx.quadraticCurveTo(-3.2, 10.5, -5, 9.2);
-      ctx.moveTo(0, 8.2);
-      ctx.quadraticCurveTo(3.2, 10.5, 5, 9.2);
+      ctx.moveTo(0, 5.5);
+      ctx.lineTo(0, 7.5);
+      ctx.moveTo(0, 7.5);
+      ctx.quadraticCurveTo(-3.2, 10, -5, 8.8);
+      ctx.moveTo(0, 7.5);
+      ctx.quadraticCurveTo(3.2, 10, 5, 8.8);
+      ctx.stroke();
     }
-    ctx.stroke();
+
+    ctx.restore();
   }
 
   function drawFX() {
@@ -517,10 +561,48 @@
     for (i = 0; i < dust.length; i++) {
       s = dust[i];
       ctx.save();
-      ctx.globalAlpha = Math.max(0, s.life) * 0.55;
+      ctx.globalAlpha = Math.max(0, s.life) * 0.5;
       ctx.fillStyle = "#c9a06a";
       ctx.beginPath();
       ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    if (spitBlob && !spitBlob.burst) {
+      ctx.save();
+      ctx.globalAlpha = 0.55 + spitBlob.z * 0.4;
+      var g = ctx.createRadialGradient(
+        spitBlob.x - spitBlob.r * 0.2,
+        spitBlob.y - spitBlob.r * 0.25,
+        spitBlob.r * 0.1,
+        spitBlob.x,
+        spitBlob.y,
+        spitBlob.r
+      );
+      g.addColorStop(0, "rgba(230,255,245,0.95)");
+      g.addColorStop(0.45, "rgba(140,220,190,0.75)");
+      g.addColorStop(1, "rgba(80,180,140,0.15)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(spitBlob.x, spitBlob.y, spitBlob.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(255,255,255,0.65)";
+      ctx.beginPath();
+      ctx.arc(spitBlob.x - spitBlob.r * 0.25, spitBlob.y - spitBlob.r * 0.3, spitBlob.r * 0.18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+    for (i = 0; i < splashes.length; i++) {
+      s = splashes[i];
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, s.life) * 0.85;
+      var dg = ctx.createRadialGradient(s.x - s.r * 0.2, s.y - s.r * 0.2, 0, s.x, s.y, s.r);
+      dg.addColorStop(0, "rgba(210,255,235,0.95)");
+      dg.addColorStop(0.6, "rgba(120,210,180,0.7)");
+      dg.addColorStop(1, "rgba(80,170,140,0.05)");
+      ctx.fillStyle = dg;
+      ctx.beginPath();
+      ctx.ellipse(s.x, s.y, s.r, s.r * (0.7 + Math.random() * 0.05), 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
     }
@@ -540,128 +622,133 @@
       nextBlink = 1.4 + Math.random() * 2.8;
     }
 
+    // 鼻涕泡随呼吸胀缩
+    if (state === STATE.SHOW || state === STATE.TRACK) {
+      snot = clamp(snot + Math.sin(breath * 2.4) * dt * 0.35, 0.25, 1);
+    }
+
     ctx.clearRect(0, 0, W, H);
-    bob = Math.sin(breath * 2.8) * 1.6;
+    bob = Math.sin(breath * 2.6) * 1.5;
     updateFX(dt);
 
-    if (state === STATE.SHOW) {
-      if (cat.scale < 1) cat.scale = Math.min(1.12, cat.scale + dt * 4.5);
+    if (state === STATE.TRACK) {
+      if (now - lastMove > IDLE_MS) {
+        // <1s 停手：不显示
+        resetAll();
+      }
+    } else if (state === STATE.SHOW) {
+      if (cat.scale < 1) cat.scale = Math.min(1.1, cat.scale + dt * 4.2);
       else if (cat.scale > 1) cat.scale = Math.max(1, cat.scale - dt * 2);
       cat.alpha = 1;
-      // 跟随中微微把玩视线，不抢戏
-      lookX = Math.sin(breath * 1.3) * 0.25;
-      lookY = -0.2 + Math.sin(breath * 0.9) * 0.08;
+      lookX = Math.sin(breath * 1.2) * 0.3;
+      lookY = -0.18 + Math.sin(breath * 0.9) * 0.08;
       cat.stretch = 1;
-      cat.squash = 1 + Math.sin(breath * 2.8) * 0.02;
+      cat.squash = 1 + Math.sin(breath * 2.6) * 0.025;
       cat.angle = 0;
-
-      drawPath(null, 0.95);
-      drawCatChibi("idle");
-
+      // 大肚子呼吸更明显
+      cat.squash = 1 + Math.sin(breath * 2.2) * 0.04;
+      drawCat("idle");
       if (now - lastMove > IDLE_MS) enterStop(now);
-    } else if (state === STATE.GLANCE) {
-      var gp = (now - phaseStart) / phaseDur;
-      // 0~0.35 左瞄，0.35~0.7 右瞄，0.7~1 回正并淡出
-      if (gp < 0.32) {
-        var g1 = gp / 0.32;
-        lookX = lerp(0, -1, easeOut(g1));
-        lookY = -0.1;
-        cat.angle = lookX * 0.06;
-      } else if (gp < 0.68) {
-        var g2 = (gp - 0.32) / 0.36;
-        lookX = lerp(-1, 1, easeInOut(g2));
-        lookY = -0.1;
-        cat.angle = lookX * 0.06;
-      } else {
-        var g3 = (gp - 0.68) / 0.32;
-        lookX = lerp(1, 0, easeIn(g3));
-        cat.alpha = 1 - g3;
-        cat.scale = 1 - g3 * 0.25;
-      }
-      cat.squash = 1 + Math.sin(breath * 5) * 0.015;
-      drawPath(null, cat.alpha * 0.7);
-      drawCatChibi("idle");
-      if (gp >= 1) resetAll();
     } else if (state === STATE.DRAG) {
       var dp = Math.min(1, (now - phaseStart) / phaseDur);
-      // 先蓄力后仰再被拽走
-      var travel = dp < 0.12 ? 0 : easeInOut((dp - 0.12) / 0.88);
-      dragProgress = travel;
-      var along = pointAt(pathLen * travel);
+      var travel = dp < 0.1 ? 0 : easeInOut((dp - 0.1) / 0.9);
+      var along = pointAt(Math.max(pathLen, 1) * travel);
+      // 路径太短则直线拽向鼠标落点
+      if (pathLen < 20) {
+        along = {
+          x: lerp(cat.x, mouse.x, travel),
+          y: lerp(start.y, mouse.y, travel),
+          tx: mouse.x - start.x,
+          ty: mouse.y - start.y,
+        };
+        // 修正：从起点插值
+        along.x = lerp(start.x, mouse.x, travel);
+        along.y = lerp(start.y, mouse.y, travel);
+      }
       cat.x = along.x;
       cat.y = along.y;
-      cat.angle = Math.atan2(along.ty, along.tx) * 0.35 + Math.sin(now * 0.03) * 0.12;
-      cat.stretch = 1.12 + Math.sin(now * 0.04) * 0.08;
-      cat.squash = 0.88 - Math.sin(now * 0.05) * 0.04;
+      cat.angle = Math.atan2(along.ty || 0, along.tx || 1) * 0.35 + Math.sin(now * 0.03) * 0.12;
+      cat.stretch = 1.1 + Math.sin(now * 0.04) * 0.08;
+      cat.squash = 0.9 - Math.sin(now * 0.05) * 0.04;
+      cat.scale = 1;
+      cat.alpha = 1;
       pawPhase += dt * 14;
       bob = Math.sin(now * 0.04) * 2.5;
+      snot = clamp(snot + dt * 0.8, 0.5, 1.2);
       addSweat();
-      if (Math.random() < 0.5) addDust();
-
-      // 已走过的轨迹变淡，前方还在
-      drawPath(pathLen, 0.35 + (1 - travel) * 0.5);
-      // 强调「还没被拖过的绳」
-      drawPathRemaining(pathLen * travel, 0.95);
-      drawCatChibi("struggle");
+      if (Math.random() < 0.45) addDust();
+      drawCat("struggle");
       drawFX();
 
       if (dp >= 1) {
-        state = STATE.FADE;
+        state = STATE.SPIT;
         phaseStart = now;
-        phaseDur = 550;
+        phaseDur = 1100;
+        mouthOpen = 0;
+        spitBlob = null;
+        lookX = 0;
+        lookY = 0;
+        cat.angle = 0;
+        cat.stretch = 1;
+        cat.squash = 1;
+      }
+    } else if (state === STATE.SPIT) {
+      var sp = Math.min(1, (now - phaseStart) / phaseDur);
+      // 0~0.28 放大到 2 倍并张嘴；0.28 吐出飞向镜头；随后炸开水花并淡出
+      if (sp < 0.28) {
+        var z = easeOut(sp / 0.28);
+        cat.scale = lerp(1, 2, z);
+        mouthOpen = z;
+        snot = Math.max(0, 0.8 - z);
+        drawCat("spit");
+      } else if (sp < 0.5) {
+        cat.scale = 2;
+        mouthOpen = 1;
+        if (!spitBlob) {
+          spitBlob = {
+            sx: cat.x,
+            sy: cat.y + 22,
+            x: cat.x,
+            y: cat.y + 22,
+            r: 6,
+            t: 0,
+            dur: 0.22,
+            z: 0,
+            burst: false,
+          };
+        }
+        var fadeEarly = sp > 0.42 ? (sp - 0.42) / 0.08 : 0;
+        cat.alpha = 1 - fadeEarly * 0.35;
+        drawCat("spit");
+        drawFX();
+      } else {
+        cat.scale = 2;
+        mouthOpen = 0.55;
+        var fadeP = (sp - 0.5) / 0.5;
+        cat.alpha = Math.max(0, 1 - easeIn(fadeP));
+        if (cat.alpha > 0.02) drawCat("spit");
+        drawFX();
+      }
+
+      if (sp >= 1) {
+        cat.alpha = 0;
+        drawFX();
+        if (!splashes.length && (!spitBlob || spitBlob.burst)) {
+          resetAll();
+        }
       }
     } else if (state === STATE.FADE) {
       var fp = Math.min(1, (now - phaseStart) / phaseDur);
       cat.alpha = 1 - fp;
-      cat.scale = 1 - fp * 0.35;
-      cat.y -= dt * 8;
-      cat.squash = 1 + fp * 0.1;
-      drawPath(null, (1 - fp) * 0.4);
-      drawCatChibi("idle");
+      drawCat("idle");
       drawFX();
       if (fp >= 1) resetAll();
     }
 
-    if (state === STATE.IDLE) {
+    if (state === STATE.IDLE && !splashes.length) {
       running = false;
       ctx.clearRect(0, 0, W, H);
     }
-  }
-
-  function drawPathRemaining(fromDist, alpha) {
-    if (path.length < 2 || fromDist >= pathLen) return;
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = "#e0b57a";
-    ctx.lineWidth = 2.5;
-    ctx.beginPath();
-    var started = false;
-    for (var i = 0; i < path.length - 1; i++) {
-      var d0 = cumLen[i];
-      var d1 = cumLen[i + 1];
-      if (d1 < fromDist) continue;
-      var a = path[i];
-      var b = path[i + 1];
-      var x0 = a.x, y0 = a.y, x1 = b.x, y1 = b.y;
-      if (d0 < fromDist) {
-        var c = (fromDist - d0) / (d1 - d0 || 1);
-        x0 = lerp(a.x, b.x, c);
-        y0 = lerp(a.y, b.y, c);
-      }
-      if (!started) { ctx.moveTo(x0, y0); started = true; }
-      else ctx.lineTo(x0, y0);
-      ctx.lineTo(x1, y1);
-    }
-    if (started) ctx.stroke();
-    ctx.restore();
-  }
-
-  function easeOut(p) { return 1 - Math.pow(1 - p, 2); }
-  function easeIn(p) { return p * p; }
-  function easeInOut(p) {
-    return p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
   }
 
   function onVisibility() {
