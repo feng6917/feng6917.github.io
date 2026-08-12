@@ -54,10 +54,14 @@
   var bob = 0;
   var pawPhase = 0;
   var snot = 0.7;
+  var snotPhase = 0;
+  var snotDir = 1;
   var mouthOpen = 0;
   var spitBlob = null;
   var splashes = [];
   var sweat = [];
+  var pinL = { x: 0, y: 0 };
+  var pinR = { x: 0, y: 0 };
   var reducedListener;
 
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
@@ -96,6 +100,8 @@
     spitBlob = null;
     mouthOpen = 0;
     snot = 0.7;
+    snotPhase = 0;
+    snotDir = 1;
     cat.scale = 0;
     cat.alpha = 0;
     cat.stretch = 1;
@@ -178,6 +184,11 @@
     home.y = clamp(start.y, CAT_SIZE * 0.5, H - CAT_SIZE * 0.5);
     cat.x = home.x;
     cat.y = home.y;
+    // 爪子钉点：钉在出现位置两侧，之后身子被拽走爪子仍钉在这
+    pinL.x = home.x - 22;
+    pinL.y = home.y + 38;
+    pinR.x = home.x + 22;
+    pinR.y = home.y + 38;
     cat.scale = 0;
     cat.alpha = 1;
     cat.angle = 0;
@@ -185,8 +196,22 @@
     cat.squash = 1;
     lookX = 0;
     lookY = -0.15;
-    snot = 0.55 + Math.random() * 0.25;
+    snot = 0.45;
+    snotPhase = 0;
+    snotDir = 1;
     mouthOpen = 0;
+  }
+
+  /** 鼻涕泡吸溜吸溜：鼓胀慢、瘪下去稍快，忽大忽小 */
+  function updateSnot(dt) {
+    snotPhase += dt;
+    // 主波 + 次波，制造「吸溜」不规则感
+    var wave = Math.sin(snotPhase * 2.1) * 0.55 + Math.sin(snotPhase * 4.7) * 0.2;
+    var target = 0.55 + wave * 0.55;
+    // 鼓时慢跟，瘪时快跟
+    var rate = target > snot ? 2.2 : 4.5;
+    snot += (target - snot) * Math.min(1, dt * rate);
+    snot = clamp(snot, 0.2, 1.35);
   }
 
   function enterReturn(now) {
@@ -351,20 +376,26 @@
   }
 
   /**
-   * 主流审美胖橘：姜黄色虎斑、巨圆肚、白下巴、三角耳、贱萌表情 + 鼻涕泡
+   * 参考图胖橘：坐姿巨肚、白肚脐、三角耳、>< 贱脸、吸溜鼻涕泡
+   * tug/struggle 时前爪在世界坐标钉死拉长
    */
   function drawCat(mode) {
     if (cat.alpha < 0.02 || cat.scale < 0.04) return;
     var size = CAT_SIZE * cat.scale;
     var blinking = blinkT < 0.12;
-    var struggle = mode === "struggle" || mode === "tug";
+    var pinned = mode === "struggle" || mode === "tug";
     var spit = mode === "spit";
-    var bellyPulse = 1 + Math.sin(breath * 2.4) * 0.045;
+    var bellyPulse = 1 + Math.sin(breath * 2.2) * 0.035;
+
+    // 先画钉在原地的拉长爪子（世界坐标）
+    if (pinned) {
+      drawPinnedArms(size);
+    }
 
     ctx.save();
     ctx.translate(cat.x, cat.y + bob);
-    ctx.rotate(cat.angle + (struggle ? Math.sin(pawPhase) * 0.12 : lookX * 0.08));
-    var lean = spit ? 1 + mouthOpen * 0.12 : 1;
+    ctx.rotate(cat.angle + (pinned ? Math.sin(pawPhase) * 0.08 : lookX * 0.07));
+    var lean = spit ? 1 + mouthOpen * 0.1 : 1;
     ctx.scale(
       cat.stretch * (size / CAT_SIZE) * lean,
       cat.squash * (size / CAT_SIZE) * lean * bellyPulse
@@ -373,241 +404,255 @@
 
     // 影
     ctx.beginPath();
-    ctx.ellipse(0, 52, 30, 8, 0, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(40, 25, 10, 0.18)";
+    ctx.ellipse(0, 50, 28, 7, 0, 0, Math.PI * 2);
+    ctx.fillStyle = "rgba(40, 25, 10, 0.16)";
     ctx.fill();
 
-    // —— 尾巴 ——
-    var tw = Math.sin(breath * 3.5 + pawPhase * 0.2) * 10;
-    ctx.strokeStyle = "#e8903a";
-    ctx.lineWidth = 9;
+    // 尾巴（虎斑橘）
+    var tw = Math.sin(breath * 3.2) * 8;
+    ctx.strokeStyle = "#e88830";
+    ctx.lineWidth = 10;
     ctx.lineCap = "round";
     ctx.beginPath();
-    ctx.moveTo(22, 28);
-    ctx.bezierCurveTo(40, 18 + tw * 0.2, 48, 40 + tw * 0.3, 36 + tw * 0.15, 50);
+    ctx.moveTo(20, 22);
+    ctx.bezierCurveTo(38, 10 + tw, 46, 36 + tw * 0.4, 34, 46);
     ctx.stroke();
-    ctx.strokeStyle = "#f6b45a";
-    ctx.lineWidth = 5;
+    ctx.strokeStyle = "#f5b45a";
+    ctx.lineWidth = 5.5;
     ctx.beginPath();
-    ctx.moveTo(22, 28);
-    ctx.bezierCurveTo(40, 18 + tw * 0.2, 48, 40 + tw * 0.3, 36 + tw * 0.15, 50);
+    ctx.moveTo(20, 22);
+    ctx.bezierCurveTo(38, 10 + tw, 46, 36 + tw * 0.4, 34, 46);
+    ctx.stroke();
+    // 尾斑
+    ctx.strokeStyle = "rgba(200,90,20,0.45)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(28, 28);
+    ctx.lineTo(32, 36);
     ctx.stroke();
 
-    // —— 巨肚身子 ——
-    var body = ctx.createRadialGradient(-8, 30, 6, 2, 36, 34);
-    body.addColorStop(0, "#ffd39a");
-    body.addColorStop(0.4, "#f5a94a");
-    body.addColorStop(1, "#e07820");
+    // 后腿外撇（坐姿）
+    ctx.fillStyle = "#ef9a38";
+    ctx.beginPath();
+    ctx.ellipse(-24, 42, 14, 11, -0.35, 0, Math.PI * 2);
+    ctx.ellipse(24, 42, 14, 11, 0.35, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "rgba(255, 200, 170, 0.75)";
+    ctx.beginPath();
+    ctx.ellipse(-26, 46, 6, 4, 0, 0, Math.PI * 2);
+    ctx.ellipse(26, 46, 6, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 巨圆身子
+    var body = ctx.createRadialGradient(-6, 26, 4, 2, 32, 34);
+    body.addColorStop(0, "#ffd4a0");
+    body.addColorStop(0.45, "#f5a94a");
+    body.addColorStop(1, "#e07018");
     ctx.fillStyle = body;
     ctx.beginPath();
-    ctx.ellipse(0, 34, 32, 28, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 30, 30, 26, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // 虎斑
-    ctx.strokeStyle = "rgba(200, 100, 30, 0.45)";
-    ctx.lineWidth = 2.4;
+    // 身侧虎斑
+    ctx.strokeStyle = "rgba(205, 95, 25, 0.42)";
+    ctx.lineWidth = 2.3;
     ctx.lineCap = "round";
-    [[-14, 18, -8, 38], [10, 16, 14, 36], [-2, 14, 2, 42], [18, 24, 22, 40]].forEach(function (l) {
+    [[-16, 14, -10, 34], [12, 12, 16, 32], [-4, 10, 0, 36]].forEach(function (l) {
       ctx.beginPath();
       ctx.moveTo(l[0], l[1]);
-      ctx.quadraticCurveTo((l[0] + l[2]) / 2 + 3, (l[1] + l[3]) / 2, l[2], l[3]);
+      ctx.quadraticCurveTo((l[0] + l[2]) / 2 + 2, (l[1] + l[3]) / 2, l[2], l[3]);
       ctx.stroke();
     });
 
-    // 白肚皮
-    ctx.fillStyle = "#fff8ef";
+    // 大白肚 + 肚脐（参考图核心）
+    ctx.fillStyle = "#fff9f2";
     ctx.beginPath();
-    ctx.ellipse(0, 38, 18, 16, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 34, 17, 15, 0, 0, Math.PI * 2);
     ctx.fill();
-    // 肚脐
-    ctx.strokeStyle = "rgba(220, 160, 110, 0.55)";
-    ctx.lineWidth = 1.3;
+    ctx.strokeStyle = "rgba(210, 150, 100, 0.55)";
+    ctx.lineWidth = 1.4;
     ctx.beginPath();
-    ctx.arc(0, 42, 2.4, 0.15, Math.PI - 0.15);
+    ctx.arc(0, 38, 2.6, 0.2, Math.PI - 0.2);
     ctx.stroke();
 
-    // 后腿肉垫感
-    ctx.fillStyle = "#ef9a3a";
-    ctx.beginPath();
-    ctx.ellipse(-20, 48, 11, 8, -0.2, 0, Math.PI * 2);
-    ctx.ellipse(20, 48, 11, 8, 0.2, 0, Math.PI * 2);
-    ctx.fill();
+    // 闲置时小爪搭在肚上；拉扯时肩部只留短茬（长爪在世界坐标画）
+    if (!pinned) {
+      ctx.fillStyle = "#f0b056";
+      ctx.beginPath();
+      ctx.ellipse(-10, 28, 8, 6.5, -0.4, 0, Math.PI * 2);
+      ctx.ellipse(10, 28, 8, 6.5, 0.4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(255, 205, 185, 0.9)";
+      ctx.beginPath();
+      ctx.ellipse(-10, 29, 4, 3, 0, 0, Math.PI * 2);
+      ctx.ellipse(10, 29, 4, 3, 0, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      // 肩部连接点
+      ctx.fillStyle = "#f0b056";
+      ctx.beginPath();
+      ctx.ellipse(-14, 22, 6, 5, 0, 0, Math.PI * 2);
+      ctx.ellipse(14, 22, 6, 5, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
 
-    // 前爪
-    var pawL = struggle ? -18 - Math.sin(pawPhase) * 12 : -12;
-    var pawR = struggle ? 18 + Math.cos(pawPhase * 1.3) * 12 : 12;
-    var pawY = struggle ? 36 + Math.sin(pawPhase * 1.15) * 6 : 42;
-    ctx.fillStyle = "#f0b056";
-    ctx.beginPath();
-    ctx.ellipse(pawL, pawY, 9, 7, -0.35, 0, Math.PI * 2);
-    ctx.ellipse(pawR, pawY, 9, 7, 0.35, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "rgba(255, 210, 190, 0.85)";
-    ctx.beginPath();
-    ctx.ellipse(pawL, pawY + 1, 4.5, 3, 0, 0, Math.PI * 2);
-    ctx.ellipse(pawR, pawY + 1, 4.5, 3, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // —— 头 ——
-    var head = ctx.createRadialGradient(-10, -14, 5, 0, -2, 30);
-    head.addColorStop(0, "#ffe0b0");
+    // 头
+    var head = ctx.createRadialGradient(-8, -16, 4, 0, -4, 28);
+    head.addColorStop(0, "#ffe2b5");
     head.addColorStop(0.5, "#f6b45a");
     head.addColorStop(1, "#e88828");
     ctx.fillStyle = head;
     ctx.beginPath();
-    ctx.ellipse(0, -6, 27, 25, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, -8, 26, 24, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // 三角圆耳（猫耳）
+    // 尖耳 + 粉内
     ctx.fillStyle = "#f0a848";
     ctx.beginPath();
-    ctx.moveTo(-18, -18);
-    ctx.lineTo(-26, -38);
-    ctx.lineTo(-6, -26);
+    ctx.moveTo(-16, -22);
+    ctx.lineTo(-24, -40);
+    ctx.lineTo(-5, -28);
     ctx.closePath();
     ctx.fill();
     ctx.beginPath();
-    ctx.moveTo(18, -18);
-    ctx.lineTo(26, -38);
-    ctx.lineTo(6, -26);
+    ctx.moveTo(16, -22);
+    ctx.lineTo(24, -40);
+    ctx.lineTo(5, -28);
     ctx.closePath();
     ctx.fill();
-    ctx.fillStyle = "#ffb6c8";
+    ctx.fillStyle = "#ffb0c0";
     ctx.beginPath();
-    ctx.moveTo(-17, -20);
-    ctx.lineTo(-22, -32);
-    ctx.lineTo(-9, -25);
+    ctx.moveTo(-15, -24);
+    ctx.lineTo(-20, -34);
+    ctx.lineTo(-8, -27);
     ctx.closePath();
     ctx.fill();
     ctx.beginPath();
-    ctx.moveTo(17, -20);
-    ctx.lineTo(22, -32);
-    ctx.lineTo(9, -25);
+    ctx.moveTo(15, -24);
+    ctx.lineTo(20, -34);
+    ctx.lineTo(8, -27);
     ctx.closePath();
     ctx.fill();
 
-    // 额头 M 纹
-    ctx.strokeStyle = "rgba(200, 100, 30, 0.5)";
+    // 额头纹
+    ctx.strokeStyle = "rgba(200, 95, 25, 0.5)";
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(-8, -22);
-    ctx.lineTo(-4, -10);
-    ctx.lineTo(0, -18);
-    ctx.lineTo(4, -10);
-    ctx.lineTo(8, -22);
+    ctx.moveTo(-7, -24);
+    ctx.lineTo(-3, -12);
+    ctx.lineTo(0, -20);
+    ctx.lineTo(3, -12);
+    ctx.lineTo(7, -24);
     ctx.stroke();
+
+    // 腮红
+    ctx.fillStyle = "rgba(255, 120, 140, 0.5)";
+    ctx.beginPath();
+    ctx.ellipse(-13, 0, 5.5, 4, 0, 0, Math.PI * 2);
+    ctx.ellipse(13, 0, 5.5, 4, 0, 0, Math.PI * 2);
+    ctx.fill();
 
     // 白嘴筒
     ctx.fillStyle = "#fffaf4";
     ctx.beginPath();
-    ctx.ellipse(0, 4, 12, 9, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 2, 11, 8, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // 贱萌腮红
-    ctx.fillStyle = "rgba(255, 110, 130, 0.55)";
-    ctx.beginPath();
-    ctx.ellipse(-14, 2, 6, 4.5, 0, 0, Math.PI * 2);
-    ctx.ellipse(14, 2, 6, 4.5, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // 眼睛：略下垂的贱萌感
-    var eyeY = -8;
-    ctx.fillStyle = "#fff";
-    ctx.beginPath();
-    ctx.ellipse(-9.5, eyeY, 8.5, 9.5, 0.08, 0, Math.PI * 2);
-    ctx.ellipse(9.5, eyeY, 8.5, 9.5, -0.08, 0, Math.PI * 2);
-    ctx.fill();
-
-    if (blinking && !struggle && !spit) {
+    // 眼睛
+    var eyeY = -10;
+    if (pinned || spit) {
+      // >< 用力脸（参考图）
       ctx.strokeStyle = "#3d2918";
-      ctx.lineWidth = 2.1;
+      ctx.lineWidth = 2.6;
       ctx.lineCap = "round";
+      ctx.lineJoin = "round";
       ctx.beginPath();
-      ctx.moveTo(-16, eyeY + 1);
-      ctx.quadraticCurveTo(-9.5, eyeY + 4, -3, eyeY + 1);
-      ctx.moveTo(3, eyeY + 1);
-      ctx.quadraticCurveTo(9.5, eyeY + 4, 16, eyeY + 1);
-      ctx.stroke();
-    } else if (struggle) {
-      ctx.strokeStyle = "#3d2918";
-      ctx.lineWidth = 2.3;
-      ctx.beginPath();
-      ctx.moveTo(-15, eyeY - 3);
-      ctx.lineTo(-4, eyeY + 1);
+      ctx.moveTo(-15, eyeY - 4);
+      ctx.lineTo(-5, eyeY);
       ctx.lineTo(-15, eyeY + 4);
-      ctx.moveTo(15, eyeY - 3);
-      ctx.lineTo(4, eyeY + 1);
+      ctx.moveTo(15, eyeY - 4);
+      ctx.lineTo(5, eyeY);
       ctx.lineTo(15, eyeY + 4);
       ctx.stroke();
-    } else if (spit) {
+    } else if (blinking) {
       ctx.strokeStyle = "#3d2918";
-      ctx.lineWidth = 2.5;
+      ctx.lineWidth = 2.1;
       ctx.beginPath();
-      ctx.moveTo(-16, eyeY + 2);
-      ctx.quadraticCurveTo(-9.5, eyeY - 4, -3, eyeY + 2);
-      ctx.moveTo(3, eyeY + 2);
-      ctx.quadraticCurveTo(9.5, eyeY - 4, 16, eyeY + 2);
+      ctx.moveTo(-15, eyeY);
+      ctx.quadraticCurveTo(-9, eyeY + 3, -3, eyeY);
+      ctx.moveTo(3, eyeY);
+      ctx.quadraticCurveTo(9, eyeY + 3, 15, eyeY);
       ctx.stroke();
     } else {
-      var px = lookX * 5;
-      var py = lookY * 3.5;
-      // 圆瞳 + 高光
+      ctx.fillStyle = "#fff";
+      ctx.beginPath();
+      ctx.ellipse(-9, eyeY, 8, 9, 0.06, 0, Math.PI * 2);
+      ctx.ellipse(9, eyeY, 8, 9, -0.06, 0, Math.PI * 2);
+      ctx.fill();
+      var px = lookX * 4.8;
+      var py = lookY * 3.2;
       ctx.fillStyle = "#2c1810";
       ctx.beginPath();
-      ctx.ellipse(-9.5 + px, eyeY + py, 3.2, 4.2, 0, 0, Math.PI * 2);
-      ctx.ellipse(9.5 + px, eyeY + py, 3.2, 4.2, 0, 0, Math.PI * 2);
+      ctx.ellipse(-9 + px, eyeY + py, 3, 4, 0, 0, Math.PI * 2);
+      ctx.ellipse(9 + px, eyeY + py, 3, 4, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = "#7ec8ff";
       ctx.beginPath();
-      ctx.ellipse(-9.5 + px, eyeY + py + 0.5, 1.4, 2, 0, 0, Math.PI * 2);
-      ctx.ellipse(9.5 + px, eyeY + py + 0.5, 1.4, 2, 0, 0, Math.PI * 2);
+      ctx.ellipse(-9 + px, eyeY + py + 0.6, 1.3, 1.8, 0, 0, Math.PI * 2);
+      ctx.ellipse(9 + px, eyeY + py + 0.6, 1.3, 1.8, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = "#fff";
       ctx.beginPath();
-      ctx.arc(-8.2 + px, eyeY + py - 1.6, 1.2, 0, Math.PI * 2);
-      ctx.arc(10.8 + px, eyeY + py - 1.6, 1.2, 0, Math.PI * 2);
+      ctx.arc(-8 + px, eyeY + py - 1.5, 1.1, 0, Math.PI * 2);
+      ctx.arc(10 + px, eyeY + py - 1.5, 1.1, 0, Math.PI * 2);
       ctx.fill();
     }
 
     // 粉鼻
     ctx.fillStyle = "#ff8fab";
     ctx.beginPath();
-    ctx.moveTo(0, 2);
-    ctx.lineTo(-2.8, 5);
-    ctx.lineTo(2.8, 5);
+    ctx.moveTo(0, 0);
+    ctx.lineTo(-2.6, 3.2);
+    ctx.lineTo(2.6, 3.2);
     ctx.closePath();
     ctx.fill();
 
-    // 鼻涕泡（贱萌核心）
-    if (!spit || mouthOpen < 0.35) {
-      var sn = snot * (0.9 + Math.sin(breath * 2.8) * 0.12);
-      var bx = 4;
-      var by = 8 + sn * 3;
-      var br = 4 + sn * 7;
-      var sg = ctx.createRadialGradient(bx - br * 0.3, by - br * 0.35, 0, bx, by, br);
-      sg.addColorStop(0, "rgba(210, 255, 220, 0.95)");
-      sg.addColorStop(0.5, "rgba(130, 230, 170, 0.8)");
-      sg.addColorStop(1, "rgba(60, 180, 120, 0.25)");
+    // —— 吸溜鼻涕泡（忽大忽小）——
+    if (!spit || mouthOpen < 0.3) {
+      var br = 5 + snot * 11;
+      var bx = 3.5;
+      var by = 6 + snot * 4;
+      // 轻微扁椭圆，更像泡
+      var squash = 0.92 + Math.sin(snotPhase * 3.5) * 0.06;
+      ctx.save();
+      ctx.translate(bx, by);
+      ctx.scale(1, squash);
+      var sg = ctx.createRadialGradient(-br * 0.28, -br * 0.32, 0, 0, 0, br);
+      sg.addColorStop(0, "rgba(220, 255, 230, 0.95)");
+      sg.addColorStop(0.45, "rgba(140, 235, 180, 0.82)");
+      sg.addColorStop(1, "rgba(70, 185, 130, 0.22)");
       ctx.fillStyle = sg;
       ctx.beginPath();
-      ctx.arc(bx, by, br, 0, Math.PI * 2);
+      ctx.arc(0, 0, br, 0, Math.PI * 2);
       ctx.fill();
-      ctx.strokeStyle = "rgba(80, 170, 120, 0.35)";
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = "rgba(90, 175, 130, 0.4)";
+      ctx.lineWidth = 1.2;
       ctx.stroke();
-      ctx.fillStyle = "rgba(255,255,255,0.8)";
+      ctx.fillStyle = "rgba(255,255,255,0.85)";
       ctx.beginPath();
-      ctx.arc(bx - br * 0.3, by - br * 0.35, br * 0.22, 0, Math.PI * 2);
+      ctx.arc(-br * 0.32, -br * 0.35, br * 0.2, 0, Math.PI * 2);
       ctx.fill();
-      ctx.strokeStyle = "rgba(100, 200, 140, 0.5)";
-      ctx.lineWidth = 1.3;
+      ctx.restore();
+      // 鼻丝
+      ctx.strokeStyle = "rgba(110, 200, 150, 0.55)";
+      ctx.lineWidth = 1.4;
       ctx.beginPath();
-      ctx.moveTo(1.5, 5.5);
-      ctx.quadraticCurveTo(3, 7, bx, by - br * 0.88);
+      ctx.moveTo(1.2, 3.5);
+      ctx.quadraticCurveTo(2.5, 5, bx, by - br * squash * 0.9);
       ctx.stroke();
     }
 
-    // 嘴：贱笑 / 挣扎 / 大张
+    // 嘴
     ctx.strokeStyle = "#3d2918";
     ctx.lineWidth = 1.35;
     ctx.lineCap = "round";
@@ -615,34 +660,82 @@
     if (spit) {
       ctx.fillStyle = "#5a2030";
       ctx.beginPath();
-      ctx.ellipse(0, 12 + mouthOpen * 5, 6 + mouthOpen * 7, 3.5 + mouthOpen * 8, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 10 + mouthOpen * 5, 6 + mouthOpen * 7, 3.5 + mouthOpen * 8, 0, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = "#ff8a9a";
       ctx.beginPath();
-      ctx.ellipse(0, 14 + mouthOpen * 4, 3.5 + mouthOpen * 3.5, 2 + mouthOpen * 2.5, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 12 + mouthOpen * 4, 3.5 + mouthOpen * 3, 2 + mouthOpen * 2.5, 0, 0, Math.PI * 2);
       ctx.fill();
-    } else if (struggle) {
-      ctx.moveTo(-4, 11);
-      ctx.quadraticCurveTo(0, 8, 4, 11);
+    } else if (pinned) {
+      ctx.moveTo(-4, 9);
+      ctx.quadraticCurveTo(0, 6.5, 4, 9);
       ctx.stroke();
     } else {
-      // ω 贱萌嘴
-      ctx.moveTo(-5, 9);
-      ctx.quadraticCurveTo(-2.5, 12, 0, 9.5);
-      ctx.quadraticCurveTo(2.5, 12, 5, 9);
+      ctx.moveTo(-5, 7);
+      ctx.quadraticCurveTo(-2.5, 10.5, 0, 7.5);
+      ctx.quadraticCurveTo(2.5, 10.5, 5, 7);
       ctx.stroke();
     }
 
-    // 胡须
-    ctx.strokeStyle = "rgba(80, 50, 30, 0.35)";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(-12, 5); ctx.lineTo(-28, 2);
-    ctx.moveTo(-12, 8); ctx.lineTo(-28, 9);
-    ctx.moveTo(12, 5); ctx.lineTo(28, 2);
-    ctx.moveTo(12, 8); ctx.lineTo(28, 9);
-    ctx.stroke();
+    ctx.restore();
+  }
 
+  /** 爪子钉在 pinL/pinR，从肩部橡皮筋式拉长 */
+  function drawPinnedArms(size) {
+    var scale = size / CAT_SIZE;
+    // 肩部世界坐标（大致）
+    var shL = {
+      x: cat.x - 14 * scale * cat.stretch + Math.sin(cat.angle) * 8,
+      y: cat.y + bob + 18 * scale * cat.squash,
+    };
+    var shR = {
+      x: cat.x + 14 * scale * cat.stretch + Math.sin(cat.angle) * 8,
+      y: cat.y + bob + 18 * scale * cat.squash,
+    };
+
+    ctx.save();
+    ctx.globalAlpha = cat.alpha;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    function arm(sh, pin, side) {
+      var mx = (sh.x + pin.x) / 2 + side * 6;
+      var my = (sh.y + pin.y) / 2 + 8 + Math.sin(pawPhase + side) * 3;
+      // 爪臂
+      ctx.strokeStyle = "#e89838";
+      ctx.lineWidth = 11 * scale;
+      ctx.beginPath();
+      ctx.moveTo(sh.x, sh.y);
+      ctx.quadraticCurveTo(mx, my, pin.x, pin.y);
+      ctx.stroke();
+      ctx.strokeStyle = "#f5b85a";
+      ctx.lineWidth = 7 * scale;
+      ctx.beginPath();
+      ctx.moveTo(sh.x, sh.y);
+      ctx.quadraticCurveTo(mx, my, pin.x, pin.y);
+      ctx.stroke();
+      // 钉死的肉垫
+      ctx.fillStyle = "#f0b056";
+      ctx.beginPath();
+      ctx.ellipse(pin.x, pin.y, 10 * scale, 7.5 * scale, side * 0.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(255, 200, 180, 0.9)";
+      ctx.beginPath();
+      ctx.ellipse(pin.x, pin.y + 1, 5 * scale, 3.5 * scale, 0, 0, Math.PI * 2);
+      ctx.fill();
+      // 钉痕小线
+      ctx.strokeStyle = "rgba(160, 100, 50, 0.35)";
+      ctx.lineWidth = 1.2;
+      for (var k = -1; k <= 1; k++) {
+        ctx.beginPath();
+        ctx.moveTo(pin.x - 8 * scale + k * 5, pin.y + 6 * scale);
+        ctx.lineTo(pin.x - 4 * scale + k * 5, pin.y + 11 * scale);
+        ctx.stroke();
+      }
+    }
+
+    arm(shL, pinL, -1);
+    arm(shR, pinR, 1);
     ctx.restore();
   }
 
@@ -713,6 +806,9 @@
     ctx.clearRect(0, 0, W, H);
     bob = Math.sin(breath * 2.5) * 1.8;
     updateFX(dt);
+    if (state !== STATE.IDLE && state !== STATE.TRACK && state !== STATE.SPIT) {
+      updateSnot(dt);
+    }
 
     if (state === STATE.TRACK) {
       if (now - lastMove > IDLE_MS) resetAll();
@@ -743,7 +839,6 @@
         lookX = lerp(1, 0, easeIn((gp - 0.78) / 0.22));
         cat.angle = lookX * 0.08;
       }
-      snot = 0.6 + Math.sin(breath * 2.5) * 0.15;
       drawCat("idle");
       if (gp >= 1) {
         state = STATE.TUG;
@@ -752,22 +847,21 @@
       }
       if (now - lastMove > IDLE_MS) enterReturn(now);
     } else if (state === STATE.TUG) {
-      // 拉扯：身子被拽向鼠标，脚还钉在起点附近
+      // 身子被拽走，爪子钉在 pinL/pinR
       var dx = mouse.x - home.x;
       var dy = mouse.y - home.y;
       var dist = Math.sqrt(dx * dx + dy * dy) || 1;
-      var pull = Math.min(42, dist * 0.18);
+      var pull = Math.min(70, 18 + dist * 0.22);
       cat.x = home.x + (dx / dist) * pull;
       cat.y = home.y + (dy / dist) * pull;
-      cat.angle = Math.atan2(dy, dx) * 0.25 + Math.sin(now * 0.02) * 0.1;
-      cat.stretch = 1.08 + Math.min(0.2, dist * 0.0015) + Math.sin(now * 0.035) * 0.06;
-      cat.squash = 0.92 - Math.sin(now * 0.04) * 0.04;
+      cat.angle = Math.atan2(dy, dx) * 0.28 + Math.sin(now * 0.02) * 0.08;
+      cat.stretch = 1.1 + Math.min(0.25, dist * 0.0018) + Math.sin(now * 0.035) * 0.05;
+      cat.squash = 0.9 - Math.sin(now * 0.04) * 0.04;
       cat.scale = 1;
       cat.alpha = 1;
-      pawPhase += dt * 12;
-      bob = Math.sin(now * 0.035) * 2.2;
-      snot = clamp(snot + dt * 0.35, 0.55, 1.15);
-      lookX = (dx / dist) * 0.4;
+      pawPhase += dt * 10;
+      bob = Math.sin(now * 0.035) * 2;
+      lookX = (dx / dist) * 0.35;
       addSweat();
       drawCat("tug");
       drawFX();
@@ -775,7 +869,6 @@
       if (now - lastMove > IDLE_MS) enterReturn(now);
     } else if (state === STATE.RETURN) {
       var rp = Math.min(1, (now - phaseStart) / phaseDur);
-      // 更慢、更肉的回归曲线
       var travel = easeInOut(easeInOut(rp));
       var along;
       if (pathLen < 24) {
@@ -790,14 +883,14 @@
       }
       cat.x = along.x;
       cat.y = along.y;
-      cat.angle = Math.atan2(along.ty || 0, along.tx || 1) * 0.32 + Math.sin(now * 0.025) * 0.1;
-      cat.stretch = 1.12 + Math.sin(now * 0.03) * 0.07;
-      cat.squash = 0.88 - Math.sin(now * 0.04) * 0.04;
+      // 回归时爪子仍钉原处，臂越拉越长
+      cat.angle = Math.atan2(along.ty || 0, along.tx || 1) * 0.3 + Math.sin(now * 0.025) * 0.08;
+      cat.stretch = 1.14 + Math.sin(now * 0.03) * 0.06;
+      cat.squash = 0.86 - Math.sin(now * 0.04) * 0.03;
       cat.scale = 1;
       cat.alpha = 1;
-      pawPhase += dt * 13;
-      bob = Math.sin(now * 0.03) * 2.4;
-      snot = clamp(snot + dt * 0.5, 0.7, 1.25);
+      pawPhase += dt * 11;
+      bob = Math.sin(now * 0.03) * 2.2;
       addSweat();
       drawCat("struggle");
       drawFX();
@@ -805,7 +898,6 @@
       if (rp >= 1) {
         state = STATE.SPIT;
         phaseStart = now;
-        // 吐泡 + 满屏溅射整体放慢
         phaseDur = 2600;
         mouthOpen = 0;
         spitBlob = null;
