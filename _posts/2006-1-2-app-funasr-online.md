@@ -25,10 +25,6 @@ author: feng6917
 | SSL | 关闭（`--certfile 0`，使用 `ws://`） |
 | 压缩 | 不使用 gzip |
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
 <h2 id="c-2-0" class="mh1">二、现网模型清单（已确认）</h2>
 
 ```text
@@ -48,10 +44,6 @@ funasr-runtime-resources/models/
 ```bash
 ls /data_hdd/myz/funasr/funasr-runtime-resources/models/thuduj12/
 ```
-
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
 
 <h2 id="c-3-0" class="mh1">三、有网机打包</h2>
 
@@ -177,10 +169,6 @@ cp -a \
   /mnt/usb/funasr-offline/
 ```
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
 <h2 id="c-4-0" class="mh1">四、离线机部署</h2>
 
 部署目录：`/data_hdd/funasr`
@@ -269,10 +257,6 @@ docker exec -it funasr-online tail -f /workspace/models/log.txt
 - `--port 10096`：服务监听 **10096**
 - `--certfile 0`：关闭 SSL，客户端使用 **`ws://`**
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
 <h2 id="c-5-0" class="mh1">五、验证</h2>
 
 ```bash
@@ -316,10 +300,6 @@ listen on port:10096
 ```text
 ws://<离线机IP>:10096
 ```
-
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
 
 <h2 id="c-6-0" class="mh1">六、日常运维</h2>
 
@@ -430,10 +410,6 @@ tail -n 100 /workspace/models/log.txt
 --hotword /workspace/models/hotwords.txt
 ```
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
 <h2 id="c-7-0" class="mh1">七、路径与参数对照</h2>
 
 | 用途 | 路径/值 |
@@ -458,10 +434,6 @@ tail -n 100 /workspace/models/log.txt
 | `--port` | `10096` |
 | `--certfile` | `0` |
 
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
-
 <h2 id="c-8-0" class="mh1">八、注意事项</h2>
 
 1. **架构**：x86_64 CPU 镜像，ARM 不可用。
@@ -475,10 +447,6 @@ tail -n 100 /workspace/models/log.txt
 9. **ITN 目录名**：若不是 `fst_itn_zh`，改启动命令中 `--itn-dir`。
 10. **不要用 `curl https://` 测 WebSocket**；用 `nc` / 官方 `funasr_wss_client.py`。
 11. **`docker restart funasr-online` 后不会自动拉起 2pass 进程**，需再执行一次第六节的「启动 FunASR 2pass 服务」命令，或直接 `./start_funasr.sh`。
-
-<div style="text-align: right;">
-    <a href="#目录" style="text-decoration: none;">Top</a>
-</div>
 
 <h2 id="c-9-0" class="mh1">九、流程速查</h2>
 
@@ -496,3 +464,37 @@ tail -n 100 /workspace/models/log.txt
      或手动：docker run + docker exec run_server_2pass.sh
   → 客户端连 ws://IP:10096
 ```
+
+<hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
+
+<!-- 目录容器 -->
+<div class="mi1">
+    <strong>目录</strong>
+        <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
+            <li style="list-style-type: none;"><a href="#c-1-0">一、部署约定</a></li>
+            <li style="list-style-type: none;"><a href="#c-2-0">二、现网模型清单（已确认）</a></li>
+            <li style="list-style-type: none;"><a href="#c-3-0">三、有网机打包</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-3-1">3.1 离线安装包清单</a></li>
+                </ul>
+            <li style="list-style-type: none;"><a href="#c-4-0">四、离线机部署</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-4-1">4.1 准备与加载</a></li>
+                    <li style="list-style-type: none;"><a href="#c-4-2">4.2 方式 A：脚本启动（推荐）</a></li>
+                    <li style="list-style-type: none;"><a href="#c-4-3">4.3 方式 B：手动命令启动（与脚本等价）</a></li>
+                </ul>
+            <li style="list-style-type: none;"><a href="#c-5-0">五、验证</a></li>
+            <li style="list-style-type: none;"><a href="#c-6-0">六、日常运维</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-6-1">6.1 看日志</a></li>
+                    <li style="list-style-type: none;"><a href="#c-6-2">6.2 仅重启 FunASR 进程（不重建容器）</a></li>
+                    <li style="list-style-type: none;"><a href="#c-6-3">6.3 整容器重建启动</a></li>
+                    <li style="list-style-type: none;"><a href="#c-6-4">6.4 停止</a></li>
+                    <li style="list-style-type: none;"><a href="#c-6-5">6.5 进入容器排查</a></li>
+                </ul>
+            <li style="list-style-type: none;"><a href="#c-7-0">七、路径与参数对照</a></li>
+            <li style="list-style-type: none;"><a href="#c-8-0">八、注意事项</a></li>
+            <li style="list-style-type: none;"><a href="#c-9-0">九、流程速查</a></li>
+        </ul>
+</div>
+
