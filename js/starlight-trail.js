@@ -6,6 +6,7 @@
  * - https://github.com/hh996655/CanvasFireworks （升空→顶点爆炸、多类型绽放、拖尾）
  *
  * 交互：滑动发射；<2s 燃尽不聚字；≥2s 大烟花后余烬聚成「Big 胆」渐隐；按下不触发
+ * 开关：右上角按钮 + localStorage（当前浏览器记住开/关）
  */
 (function () {
   "use strict";
@@ -16,6 +17,7 @@
     return;
   }
 
+  var STORAGE_KEY = "feng6917-fireworks";
   var STATE = { IDLE: 0, TRAIL: 1, BOOM: 2, FORM: 3, HOLD: 4, FADE: 5, DIE: 6 };
   var TEXT = "Big 胆";
   var IDLE_MS = 300;
@@ -31,7 +33,8 @@
   var GOLDEN = Math.PI * (3 - Math.sqrt(5));
   var TYPES = ["standard", "heart", "doubleSpiral", "multiLayer", "comet", "golden"];
 
-  var canvas, ctx, raf = 0, running = false;
+  var canvas, ctx, raf = 0, running = false, active = false;
+  var toggleBtn = null;
   var W = 0, H = 0;
   var mouse = { x: 0, y: 0 };
   var state = STATE.IDLE;
@@ -48,6 +51,29 @@
   var boomCenter = { x: 0, y: 0 };
   var flash = 0;
   var reducedListener;
+
+  function isEnabled() {
+    try {
+      return localStorage.getItem(STORAGE_KEY) !== "0";
+    } catch (e) {
+      return true;
+    }
+  }
+
+  function setEnabled(on) {
+    try {
+      localStorage.setItem(STORAGE_KEY, on ? "1" : "0");
+    } catch (e) { /* ignore */ }
+  }
+
+  function updateToggleLabel() {
+    if (!toggleBtn) return;
+    var on = active;
+    toggleBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    toggleBtn.title = on ? "关闭烟花效果" : "开启烟花效果";
+    toggleBtn.setAttribute("aria-label", on ? "关闭烟花效果" : "开启烟花效果");
+    toggleBtn.textContent = on ? "关闭烟花" : "开启烟花";
+  }
 
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
   function lerp(a, b, p) { return a + (b - a) * p; }
@@ -562,7 +588,10 @@
   }
 
   function loop(now) {
-    if (!running) return;
+    if (!running || !active || !ctx) {
+      running = false;
+      return;
+    }
     raf = requestAnimationFrame(loop);
     var rawDt = Math.min(0.05, (now - (loop._last || now)) / 1000);
     loop._last = now;
@@ -671,16 +700,30 @@
 
   function destroy() {
     running = false;
+    active = false;
     cancelAnimationFrame(raf);
+    raf = 0;
     window.removeEventListener("resize", resize);
     window.removeEventListener("mousemove", onMouseMove);
     window.removeEventListener("mousedown", onMouseDown);
     document.removeEventListener("visibilitychange", onVisibility);
-    if (reducedListener) prefersReduced.removeEventListener("change", reducedListener);
+    if (reducedListener) {
+      prefersReduced.removeEventListener("change", reducedListener);
+      reducedListener = null;
+    }
     if (canvas && canvas.parentNode) canvas.parentNode.removeChild(canvas);
+    canvas = null;
+    ctx = null;
+    rockets.length = 0;
+    particles.length = 0;
+    formTargets.length = 0;
+    state = STATE.IDLE;
+    flash = 0;
+    updateToggleLabel();
   }
 
   function init() {
+    if (active) return;
     canvas = document.createElement("canvas");
     canvas.setAttribute("aria-hidden", "true");
     canvas.style.cssText =
@@ -692,13 +735,72 @@
     window.addEventListener("mousemove", onMouseMove, { passive: true });
     window.addEventListener("mousedown", onMouseDown, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
-    reducedListener = function (ev) { if (ev.matches) destroy(); };
+    reducedListener = function (ev) {
+      if (ev.matches) {
+        destroy();
+        if (toggleBtn && toggleBtn.parentNode) toggleBtn.parentNode.removeChild(toggleBtn);
+        toggleBtn = null;
+      }
+    };
     prefersReduced.addEventListener("change", reducedListener);
+    active = true;
+    updateToggleLabel();
+  }
+
+  function createToggle() {
+    if (toggleBtn) return;
+    toggleBtn = document.createElement("button");
+    toggleBtn.type = "button";
+    toggleBtn.id = "fireworks-toggle";
+    toggleBtn.style.cssText = [
+      "position:fixed",
+      "top:12px",
+      "right:12px",
+      "z-index:100000",
+      "margin:0",
+      "padding:6px 12px",
+      "border:1px solid rgba(58,52,44,0.18)",
+      "border-radius:8px",
+      "background:rgba(253,252,250,0.88)",
+      "color:#3a342c",
+      "font:12px/1.3 'Noto Serif SC','Source Han Serif SC','Songti SC',Georgia,serif",
+      "letter-spacing:0.02em",
+      "cursor:pointer",
+      "box-shadow:0 2px 10px rgba(58,52,44,0.08)",
+      "backdrop-filter:blur(6px)",
+      "-webkit-backdrop-filter:blur(6px)",
+      "user-select:none",
+      "transition:background .15s ease, border-color .15s ease, opacity .15s ease"
+    ].join(";");
+    toggleBtn.addEventListener("mouseenter", function () {
+      toggleBtn.style.background = "rgba(253,252,250,0.98)";
+      toggleBtn.style.borderColor = "rgba(58,52,44,0.28)";
+    });
+    toggleBtn.addEventListener("mouseleave", function () {
+      toggleBtn.style.background = "rgba(253,252,250,0.88)";
+      toggleBtn.style.borderColor = "rgba(58,52,44,0.18)";
+    });
+    toggleBtn.addEventListener("click", function () {
+      if (active) {
+        setEnabled(false);
+        destroy();
+      } else {
+        setEnabled(true);
+        init();
+      }
+    });
+    document.body.appendChild(toggleBtn);
+    updateToggleLabel();
+  }
+
+  function boot() {
+    createToggle();
+    if (isEnabled()) init();
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+    document.addEventListener("DOMContentLoaded", boot);
   } else {
-    init();
+    boot();
   }
 })();
