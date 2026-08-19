@@ -84,7 +84,10 @@ author: feng6917
 - [微截图(对话、账单模拟)](https://vjietu.pro/)
 - [证件照换底色](https://uutool.cn/id-photo/)
 - [免费图片托管](https://postimages.org/)
-- [传文件-(解决远程办公软件传输慢）](https://www.wenshushu.cn/)
+- [文叔叔-临时传文件（免登录 单文件5GB）](https://www.wenshushu.cn/)
+- [苏打在线工具-临时文件上传（免登录 500MB）](https://www.sodatool.com/tool/file-transfer)
+- [极速传-临时文件上传（免登录 单文件200MB）](https://jisuchuan.com/)
+- [SendFiles-临时文件上传（免登录 单文件3GB）](https://sendfiles.online/)
 - [在线粘贴板-(加密分享)](https://paste.to/)
 - [在线剪切音频](https://cdkm.com/cn/cut-audio)
 - [高效可靠的镜像源](https://docker.aityp.com/r/docker.io/mintplexlabs/anythingllm)
@@ -99,7 +102,6 @@ author: feng6917
 - [在线游戏](https://dos.zone/)
 - [在线喂金鱼](https://feedgoldfish.top/)
 - [EasyRCV3.8.11.0 一键装机](https://firpe.cn/page-196)
-- []()
 
 <h2 id="c-4-0" class="mh1">四、问题解决在线参考</h2>
 
