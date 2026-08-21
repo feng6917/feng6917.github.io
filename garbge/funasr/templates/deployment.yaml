@@ -1,0 +1,80 @@
+# ------------------- funasr Deployment ------------------- #
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  labels:
+    k8s-app: {{.Release.Name}}-funasr
+  name: {{.Release.Name}}-funasr
+spec:
+  replicas: {{.Values.funasr.deployment.replicas}}
+  selector:
+    matchLabels:
+      k8s-app: {{.Release.Name}}-funasr
+  template:
+    metadata:
+      labels:
+        k8s-app: {{.Release.Name}}-funasr
+    spec:
+      {{- if .Values.funasr.deployment.hostNetwork }}
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      {{- end }}
+      containers:
+      - name: funasr
+        image: {{.Values.funasr.deployment.image}}:{{.Values.funasr.deployment.imageVersion}}
+        imagePullPolicy: IfNotPresent
+        # 与 Docker 方案一致：run_server_2pass 后台拉起后脚本会退出，需 sleep 常驻
+        command: ["/bin/bash", "-c"]
+        args:
+        - |
+          set -euo pipefail
+          if [ ! -d /workspace/models/damo ]; then
+            echo "ERROR: 模型目录缺失 /workspace/models/damo（检查 hostPath modelsHostPath）"
+            ls -la /workspace/models || true
+            exit 1
+          fi
+          cd /workspace/FunASR/runtime
+          bash run_server_2pass.sh \
+            --download-model-dir /workspace/models \
+            --vad-dir damo/speech_fsmn_vad_zh-cn-16k-common-onnx \
+            --model-dir damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-onnx \
+            --online-model-dir damo/speech_paraformer-large_asr_nat-zh-cn-16k-common-vocab8404-online-onnx \
+            --punc-dir damo/punc_ct-transformer_zh-cn-common-vad_realtime-vocab272727-onnx \
+            --lm-dir damo/speech_ngram_lm_zh-cn-ai-wesp-fst \
+            --itn-dir thuduj12/fst_itn_zh \
+            --port {{.Values.funasr.service.ws.targetPort}} \
+            --certfile 0 \
+            > /workspace/models/log.txt 2>&1 &
+          echo "funasr started, tail log..."
+          sleep 3
+          tail -n 30 /workspace/models/log.txt || true
+          exec sleep infinity
+        ports:
+        - name: ws
+          containerPort: {{.Values.funasr.service.ws.targetPort}}
+        env:
+        - name: TZ
+          value: Asia/Shanghai
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: models
+          mountPath: /workspace/models
+        - name: coredump
+          mountPath: {{.Values.public.mountPath}}
+        - name: localtime
+          mountPath: /etc/localtime
+      volumes:
+      - name: models
+        hostPath:
+          path: {{.Values.funasr.deployment.modelsHostPath}}
+          type: Directory
+      - name: coredump
+        hostPath:
+          path: {{.Values.public.mountPath}}
+          type: DirectoryOrCreate
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+          type: ""

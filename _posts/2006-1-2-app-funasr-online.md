@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "FunASR Online：离线部署完整方案（Docker｜2pass｜ws://）"
+title: "FunASR Online：语音转文字离线部署完整方案（Docker｜Helm｜2pass｜ws://）"
 date:   2026-8-13
 tags: 
   - 软件类
@@ -8,7 +8,7 @@ comments: true
 author: feng6917
 ---
 
-本文是一份 **FunASR Online（`funasr-runtime-sdk-online-cpu-0.1.13`）离线部署手册**，覆盖有网机打包、离线机加载/启动、验证、日常运维与参数对照。目标是在 **无外网** 环境跑通实时 2pass 识别服务，客户端通过 **`ws://IP:10096`** 接入。
+本文是一份 **FunASR Online（`funasr-runtime-sdk-online-cpu-0.1.13`）语音转文字（语音识别）离线部署手册**，覆盖有网机打包、离线机加载/启动（**Docker 脚本 / 手动命令 / Helm Chart**）、验证、日常运维与参数对照。目标是在 **无外网** 环境跑通实时 2pass 识别服务，客户端通过 **`ws://IP:10096`** 接入。
 
 <!-- more -->
 
@@ -20,10 +20,11 @@ author: feng6917
 | 离线机部署路径 | `/data_hdd/funasr` |
 | 镜像 | `funasr-runtime-sdk-online-cpu-0.1.13` |
 | 容器 | `funasr-online` |
-| 网络模式 | `host`（规避 K8s 节点 iptables 冲突） |
+| 网络模式 | `host`（规避 K8s 节点 iptables 冲突；Helm 默认 `hostNetwork: true`） |
 | 对外端口 | `10096` |
 | SSL | 关闭（`--certfile 0`，使用 `ws://`） |
 | 压缩 | 不使用 gzip |
+| 部署方式 | Docker 脚本 / 手动命令 / Helm Chart（`garbge/funasr`） |
 
 <h2 id="c-2-0" class="mh1">二、现网模型清单（已确认）</h2>
 
@@ -257,6 +258,116 @@ docker exec -it funasr-online tail -f /workspace/models/log.txt
 - `--port 10096`：服务监听 **10096**
 - `--certfile 0`：关闭 SSL，客户端使用 **`ws://`**
 
+<h2 id="c-4-4" class="mh2">4.4 方式 C：Helm 部署（K8s）</h2>
+
+适用于已具备 **Kubernetes + Helm 3** 的离线/内网集群。Chart 位于仓库 **`garbge/funasr`**，与 Docker 方案共用同一套模型目录与 2pass 启动参数，默认 **`hostNetwork: true`** 直接监听节点 `10096` 端口。
+
+<h2 id="c-4-4-1" class="mh3">4.4.1 Chart 结构</h2>
+
+```text
+garbge/funasr/
+├── Chart.yaml
+├── values.yaml
+└── templates/
+    ├── deployment.yaml
+    └── service.yaml
+```
+
+<h2 id="c-4-4-2" class="mh3">4.4.2 关键配置（values.yaml）</h2>
+
+| 项 | 默认值 | 说明 |
+|----|--------|------|
+| `funasr.deployment.image` | `registry.zhst.com/tool/funasr` | 镜像仓库（可按环境改） |
+| `funasr.deployment.imageVersion` | `funasr-runtime-sdk-online-cpu-0.1.13` | 镜像 tag |
+| `funasr.deployment.modelsHostPath` | `/data_hdd/funasr/funasr-runtime-resources/models` | 宿主机模型目录（hostPath） |
+| `funasr.deployment.hostNetwork` | `true` | 与 Docker `--network host` 等价 |
+| `funasr.service.ws.port` | `10096` | Service 端口 |
+| `funasr.service.ws.targetPort` | `10096` | 容器监听端口 |
+
+默认 `values.yaml` 片段：
+
+```yaml
+funasr:
+  deployment:
+    replicas: 1
+    image: registry.zhst.com/tool/funasr
+    imageVersion: funasr-runtime-sdk-online-cpu-0.1.13
+    modelsHostPath: /data_hdd/funasr/funasr-runtime-resources/models
+    hostNetwork: true
+  service:
+    type: ClusterIP
+    ws:
+      port: 10096
+      targetPort: 10096
+```
+
+<h2 id="c-4-4-3" class="mh3">4.4.3 前置条件</h2>
+
+1. 完成 **4.1 准备与加载**：模型已解压到 `modelsHostPath`，且存在 `damo/`、`thuduj12/`。
+2. 集群节点能拉到 Chart 中配置的镜像。若仍使用阿里云离线包镜像，可在节点执行：
+
+```bash
+docker load -i /data_hdd/funasr/funasr-runtime-sdk-online-cpu-0.1.13.tar
+
+# 按 values.yaml 中的 image:tag 重新打 tag（示例）
+docker tag \
+  registry.cn-hangzhou.aliyuncs.com/funasr_repo/funasr:funasr-runtime-sdk-online-cpu-0.1.13 \
+  registry.zhst.com/tool/funasr:funasr-runtime-sdk-online-cpu-0.1.13
+```
+
+3. 部署节点上 **10096 端口未被占用**（`hostNetwork` 模式下与 Docker 方案相同）。
+
+<h2 id="c-4-4-4" class="mh3">4.4.4 安装与升级</h2>
+
+```bash
+# 进入 Chart 目录（路径按实际仓库位置调整）
+cd /path/to/feng6917.github.io/garbge/funasr
+
+# 首次安装
+helm install funasr . \
+  --namespace funasr \
+  --create-namespace
+
+# 修改 values 后升级
+helm upgrade funasr . \
+  --namespace funasr
+
+# 自定义模型路径或镜像（无需改文件）
+helm upgrade funasr . \
+  --namespace funasr \
+  --set funasr.deployment.modelsHostPath=/data_hdd/funasr/funasr-runtime-resources/models \
+  --set funasr.deployment.image=registry.cn-hangzhou.aliyuncs.com/funasr_repo/funasr \
+  --set funasr.deployment.imageVersion=funasr-runtime-sdk-online-cpu-0.1.13
+```
+
+Deployment 启动逻辑（与 Docker `run_server_2pass.sh` 参数一致）：
+
+- 校验 `/workspace/models/damo` 是否存在
+- 后台执行 `run_server_2pass.sh`，日志写入 `/workspace/models/log.txt`
+- 容器通过 `sleep infinity` 常驻（避免启动脚本退出导致 Pod 重启）
+
+<h2 id="c-4-4-5" class="mh3">4.4.5 Helm 部署验证</h2>
+
+```bash
+kubectl get pod,svc -n funasr -l k8s-app=funasr-funasr
+
+# 查看 Pod 名
+POD=$(kubectl get pod -n funasr -l k8s-app=funasr-funasr -o jsonpath='{.items[0].metadata.name}')
+
+# 服务日志（应出现 listen on port:10096）
+kubectl exec -n funasr "$POD" -- tail -n 50 /workspace/models/log.txt
+
+# 节点端口（hostNetwork 下为 Pod 所在节点 IP）
+ss -lntp | grep 10096
+nc -vz <节点IP> 10096
+```
+
+业务连接地址（与 Docker 方案相同）：
+
+```text
+ws://<Pod所在节点IP>:10096
+```
+
 <h2 id="c-5-0" class="mh1">五、验证</h2>
 
 ```bash
@@ -410,6 +521,28 @@ tail -n 100 /workspace/models/log.txt
 --hotword /workspace/models/hotwords.txt
 ```
 
+<h2 id="c-6-6" class="mh2">6.6 Helm 运维</h2>
+
+```bash
+POD=$(kubectl get pod -n funasr -l k8s-app=funasr-funasr -o jsonpath='{.items[0].metadata.name}')
+
+# 实时日志
+kubectl exec -n funasr "$POD" -- tail -f /workspace/models/log.txt
+
+# 仅重启 Pod（会重新执行 run_server_2pass.sh）
+kubectl rollout restart deployment/funasr-funasr -n funasr
+kubectl rollout status deployment/funasr-funasr -n funasr
+
+# 卸载
+helm uninstall funasr -n funasr
+```
+
+说明：
+
+- Chart 内 **未** 单独拆出「只杀 2pass 进程」步骤；日常重启推荐 `kubectl rollout restart`。
+- `hostNetwork: true` 时，Service 主要用于集群内发现；实际 WebSocket 连 **节点 IP:10096**。
+- 修改模型路径、端口或镜像后，执行 `helm upgrade` 并观察 Pod 重建是否成功。
+
 <h2 id="c-7-0" class="mh1">七、路径与参数对照</h2>
 
 | 用途 | 路径/值 |
@@ -421,6 +554,9 @@ tail -n 100 /workspace/models/log.txt
 | 端口 | `10096` |
 | SSL | 关闭（`--certfile 0`） |
 | 客户端协议 | `ws://` |
+| Helm Chart | `garbge/funasr` |
+| Helm Release | `funasr`（namespace: `funasr`） |
+| K8s Deployment | `funasr-funasr` |
 
 | 参数 | 值 |
 |------|----|
@@ -447,6 +583,8 @@ tail -n 100 /workspace/models/log.txt
 9. **ITN 目录名**：若不是 `fst_itn_zh`，改启动命令中 `--itn-dir`。
 10. **不要用 `curl https://` 测 WebSocket**；用 `nc` / 官方 `funasr_wss_client.py`。
 11. **`docker restart funasr-online` 后不会自动拉起 2pass 进程**，需再执行一次第六节的「启动 FunASR 2pass 服务」命令，或直接 `./start_funasr.sh`。
+12. **Helm 方案**：模型仍走宿主机 `hostPath`，不依赖 PV；须保证 **Pod 调度到有模型的节点**，且该节点已具备镜像。
+13. **Helm 与 Docker 勿同节点同端口并存**：均占用 `10096`，二选一或改端口。
 
 <h2 id="c-9-0" class="mh1">九、流程速查</h2>
 
@@ -460,8 +598,10 @@ tail -n 100 /workspace/models/log.txt
 离线机 (/data_hdd/funasr)
   → docker load
   → tar -xvf 模型
-  → ./start_funasr.sh
-     或手动：docker run + docker exec run_server_2pass.sh
+  → 任选一种启动方式：
+     A) ./start_funasr.sh
+     B) docker run + docker exec run_server_2pass.sh
+     C) helm install funasr garbge/funasr -n funasr --create-namespace
   → 客户端连 ws://IP:10096
 ```
 
@@ -482,6 +622,14 @@ tail -n 100 /workspace/models/log.txt
                     <li style="list-style-type: none;"><a href="#c-4-1">4.1 准备与加载</a></li>
                     <li style="list-style-type: none;"><a href="#c-4-2">4.2 方式 A：脚本启动（推荐）</a></li>
                     <li style="list-style-type: none;"><a href="#c-4-3">4.3 方式 B：手动命令启动（与脚本等价）</a></li>
+                    <li style="list-style-type: none;"><a href="#c-4-4">4.4 方式 C：Helm 部署（K8s）</a></li>
+                    <ul style="padding-left: 15px; list-style-type: none;">
+                        <li style="list-style-type: none;"><a href="#c-4-4-1">4.4.1 Chart 结构</a></li>
+                        <li style="list-style-type: none;"><a href="#c-4-4-2">4.4.2 关键配置（values.yaml）</a></li>
+                        <li style="list-style-type: none;"><a href="#c-4-4-3">4.4.3 前置条件</a></li>
+                        <li style="list-style-type: none;"><a href="#c-4-4-4">4.4.4 安装与升级</a></li>
+                        <li style="list-style-type: none;"><a href="#c-4-4-5">4.4.5 Helm 部署验证</a></li>
+                    </ul>
                 </ul>
             <li style="list-style-type: none;"><a href="#c-5-0">五、验证</a></li>
             <li style="list-style-type: none;"><a href="#c-6-0">六、日常运维</a></li>
@@ -491,6 +639,7 @@ tail -n 100 /workspace/models/log.txt
                     <li style="list-style-type: none;"><a href="#c-6-3">6.3 整容器重建启动</a></li>
                     <li style="list-style-type: none;"><a href="#c-6-4">6.4 停止</a></li>
                     <li style="list-style-type: none;"><a href="#c-6-5">6.5 进入容器排查</a></li>
+                    <li style="list-style-type: none;"><a href="#c-6-6">6.6 Helm 运维</a></li>
                 </ul>
             <li style="list-style-type: none;"><a href="#c-7-0">七、路径与参数对照</a></li>
             <li style="list-style-type: none;"><a href="#c-8-0">八、注意事项</a></li>

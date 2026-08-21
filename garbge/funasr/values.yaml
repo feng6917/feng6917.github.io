@@ -1,0 +1,17 @@
+public:
+  mountPath: /dump
+
+funasr:
+  deployment:
+    replicas: 1
+    image: registry.zhst.com/tool/funasr
+    imageVersion: funasr-runtime-sdk-online-cpu-0.1.13
+    # 模型目录：宿主机已解压的 models（非 PV；离线包 tar 解压后路径）
+    modelsHostPath: /data_hdd/funasr/funasr-runtime-resources/models
+    # 本机暴露 10096
+    hostNetwork: true
+  service:
+    type: ClusterIP
+    ws:
+      port: 10096
+      targetPort: 10096

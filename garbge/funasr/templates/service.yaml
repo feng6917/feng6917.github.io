@@ -1,0 +1,18 @@
+# ------------------- funasr Service ------------------- #
+kind: Service
+apiVersion: v1
+metadata:
+  labels:
+    k8s-app: {{.Release.Name}}-funasr
+  name: {{.Release.Name}}-funasr
+spec:
+  type: {{.Values.funasr.service.type}}
+  ports:
+  - name: ws
+    port: {{.Values.funasr.service.ws.port}}
+    targetPort: {{.Values.funasr.service.ws.targetPort}}
+{{- if and (eq .Values.funasr.service.type "NodePort") .Values.funasr.service.ws.nodePort }}
+    nodePort: {{.Values.funasr.service.ws.nodePort}}
+{{- end }}
+  selector:
+    k8s-app: {{.Release.Name}}-funasr

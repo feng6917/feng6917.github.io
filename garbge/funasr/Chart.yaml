@@ -1,0 +1,6 @@
+apiVersion: v2
+name: funasr
+description: FunASR Online 实时语音转文字（2pass）
+type: application
+version: 0.1.0
+appVersion: "0.1.13"
