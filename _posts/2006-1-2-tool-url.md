@@ -83,6 +83,7 @@ author: feng6917
 - [Base64编码/解码](https://www.base64encode.org/)
 - [微截图(对话、账单模拟)](https://vjietu.pro/)
 - [证件照换底色](https://uutool.cn/id-photo/)
+- [BgSub(自动抠图)](https://zh.bgsub.com/webapp/)
 - [免费图片托管](https://postimages.org/)
 - [文叔叔-临时传文件（免登录 单文件5GB）](https://www.wenshushu.cn/)
 - [苏打在线工具-临时文件上传（免登录 500MB）](https://www.sodatool.com/tool/file-transfer)
