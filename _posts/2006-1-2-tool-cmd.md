@@ -264,216 +264,467 @@ grep -c "pattern" file.txt                   # 统计匹配行数
 
 ---
 
-<h2 id="c-2-4" class="mh2">4. 性能监控与系统状态</h2>
+<h2 id="c-2-4" class="mh2">4. CPU 监控与排查</h2>
 
-### 进程管理
+### top 实时监控
 
 ```bash
-# 进程查询
-ps -ef | grep <process_name>                 # 查找进程
-pgrep <process_name>                         # 获取进程PID
-pstree                                       # 树状显示进程
+top                                          # 实时系统监控（默认按 %CPU 排序）
+top -o %CPU                                  # 启动时按 CPU 占用排序（procps-ng 3.3+）
+htop                                         # 增强版 top（需安装）
 
-# 杀死进程
-kill <pid>                                   # 正常终止
-kill -9 <pid>                                # 强制终止
-pkill <process_name>                         # 按名称终止进程
-killall <process_name>                       # 终止所有同名进程
+# 查看 CPU 逻辑核数
+nproc
+cat /proc/cpuinfo | grep "processor" | wc -l
 
-# 实时监控
-top                                         # 实时系统监控
-htop                                        # 增强版top（需安装）
+# CPU 硬件信息
+cat /proc/cpuinfo                            # 查看 CPU 详细信息
+lscpu                                        # 查看 CPU 架构信息
+dmidecode -s processor-version               # 查看 CPU 型号
+# 示例输出（两行表示 2 个物理 CPU）：
+# Intel(R) Xeon(R) Gold 6240R CPU @ 2.40GHz
+# Intel(R) Xeon(R) Gold 6240R CPU @ 2.40GHz
+```
 
-# 全局查看cpu, 内存等
-[root@k8s-master-253 ~]# top
+#### top 输出示例
+
+```text
 top - 14:23:39 up 81 days, 23:39,  1 user,  load average: 1.25, 2.87, 3.90
 Tasks: 1285 total,   2 running, 1283 sleeping,   0 stopped,   0 zombie
 %Cpu(s): 15.7 us,  2.5 sy,  0.0 ni, 81.8 id,  0.1 wa,  0.0 hi,  0.0 si,  0.0 st
 KiB Mem : 26358512+total, 15847916+free, 54207492 used, 50898468 buff/cache
-KiB Swap:        0 total,        0 free,        0 used. 20271936+avail Mem 
+KiB Swap:        0 total,        0 free,        0 used. 20271936+avail Mem
 
-PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                                                                                                                                                                                                                                                             
-214234 root      20   0 8053792   7.0g  15336 S  1479  2.8  26077:19 singerserver 
-
-按`x`高亮排序命令，默认应该时%CPU，按CPU占用排序
-按shift + (</>) 左右箭头，切换不同类型排序
-
-# 查看CPU逻辑核数
-[root@k8s-master-253 ~]# cat /proc/cpuinfo| grep "processor"|wc -l
+PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+214234 root      20   0 8053792   7.0g  15336 S  1479  2.8  26077:19 singerserver
 ```
 
-### 端口与网络连接
+#### 汇总区字段说明
+
+| 字段 | 说明 |
+|------|------|
+| `14:23:39` | 当前系统时间 |
+| `up 81 days, 23:39` | 系统已运行时长 |
+| `1 user` | 当前登录用户数 |
+| `load average: 1.25, 2.87, 3.90` | 1 / 5 / 15 分钟平均负载（可粗略对比 CPU 核数判断是否过载） |
+| `Tasks: total` | 进程总数 |
+| `running` | 正在运行（R 状态）的进程数 |
+| `sleeping` | 可中断睡眠（S 状态）进程数 |
+| `stopped` | 停止（T 状态）进程数 |
+| `zombie` | 僵尸进程数（长期 >0 需排查父进程） |
+| `us` | 用户态 CPU 占用百分比 |
+| `sy` | 内核态 CPU 占用百分比 |
+| `ni` | 调整过 nice 值的用户进程 CPU 占用 |
+| `id` | CPU 空闲百分比 |
+| `wa` | 等待 I/O 的 CPU 占用（磁盘慢时升高） |
+| `hi` | 硬件中断占用 |
+| `si` | 软件中断占用 |
+| `st` | 被 Hypervisor 偷走的 CPU 时间（虚拟机场景） |
+
+#### 进程列表列说明
+
+| 列 | 说明 |
+|----|------|
+| `PID` | 进程 ID |
+| `USER` | 进程所属用户 |
+| `PR` | 优先级（Priority） |
+| `NI` | nice 值（-20 最高优先级，19 最低） |
+| `VIRT` | 虚拟内存总量（含映射但未实际使用的地址空间） |
+| `RES` | 常驻物理内存（实际占用 RAM） |
+| `SHR` | 共享内存大小 |
+| `S` | 进程状态：R 运行 / S 睡眠 / D 不可中断睡眠 / Z 僵尸 / T 停止 |
+| `%CPU` | 当前 CPU 占用（多核下可超过 100%，表示占用多个核） |
+| `%MEM` | 物理内存占用百分比 |
+| `TIME+` | 累计占用 CPU 时间 |
+| `COMMAND` | 进程命令名或完整命令行 |
+
+#### 交互快捷键
+
+| 按键 | 说明 |
+|------|------|
+| `x` | 高亮当前排序列（默认 %CPU） |
+| `c` | 切换 `COMMAND` 列显示：进程名 ↔ 完整命令行 |
+| `Shift + P` | 按 CPU 占用排序 |
+| `Shift + M` | 按内存占用排序 |
+| `Shift + T` | 按累计 CPU 时间排序 |
+| `Shift + < / >` | 左右切换排序字段 |
+| `k` | 终止指定 PID 进程 |
+| `1` | 展开显示每个 CPU 核心的利用率 |
+| `q` | 退出 top |
+
+### CPU 排查常用命令
 
 ```bash
-# 端口查询
-netstat -tunlp                               # 查看所有监听端口
-netstat -tunlp | grep <port>                 # 查询指定端口
-lsof -i:<port>                               # 查看端口占用进程
-ss -tunlp                                    # 替代netstat（更快）
+# 负载除以核数，更直观（>1 表示整体偏忙）
+echo "load/核数: $(awk '{print $1}' /proc/loadavg)/$(nproc)"
 
-# 进程使用的端口
-lsof -p <pid>                                # 查看进程打开的文件/端口
+# 看谁在吃 CPU（批模式快照，-c 显示完整命令行）
+top -bn1 -c | head -20
+
+# 每 1 秒采样，共 5 次（综合看 CPU / 内存 / I/O）
+vmstat 1 5
+
+# 按 CPU 占用排序，查看 Top 20 进程
+ps aux --sort=-%cpu | head -20
+
+# 看某个进程的线程级 CPU 占用
+top -H -p <PID>
+# 或
+ps -T -p <PID> -o pid,tid,pcpu,comm
 ```
 
-### 系统资源
+#### vmstat 输出字段（CPU 相关）
 
-```bash
-# CPU信息
-cat /proc/cpuinfo                            # 查看CPU详细信息
-nproc                                        # 查看CPU核心数
-lscpu                                        # 查看CPU架构信息
-dmidecode -s processor-version               # 查看CPU型号
-# 示例输出：
-Intel(R) Xeon(R) Gold 6240R CPU @ 2.40GHz
-Intel(R) Xeon(R) Gold 6240R CPU @ 2.40GHz
-# 注：显示两行表示服务器有2个物理CPU
-
-# 内存信息
-free -h                                      # 查看内存使用情况
-# 示例输出：
-              total        used        free      shared  buff/cache   available
-Mem:           251G         51G        151G        1.9G         48G        193G
-Swap:            0B          0B          0B
-
-# 各字段解释：
-# total     - 总内存大小
-# used      - 已使用内存（包含buff/cache）
-# free      - 空闲内存
-# shared    - 共享内存
-# buff/cache - 缓存和缓冲区内存（可被回收）
-# available - 可用内存（估算可用于启动新应用的内存）
-# Swap      - 交换分区使用情况
-
-
-cat /proc/meminfo                            # 详细内存信息
-# 关键指标示例：
-MemTotal:       263585212 kB    # 总内存
-MemFree:        158479168 kB    # 空闲内存
-MemAvailable:   202719368 kB    # 可用内存
-Buffers:          1048576 kB    # 缓冲区内存
-Cached:          47457894 kB    # 页面缓存
-SwapTotal:             0 kB     # 交换分区总大小
-SwapFree:              0 kB     # 空闲交换分区
-
-vmstat 1 10                                  # 虚拟内存统计
-# 示例输出：
+```text
 procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
  2  0      0 151G   1.9G   48G     0    0     0     0  102  345 15  2 82  0  0
+```
 
-# 磁盘信息
-df -h                                        # 查看磁盘使用情况
-df -h <path>                                 # 查看指定路径磁盘
+| 字段 | 说明 |
+|------|------|
+| `r` | 运行队列中等待 CPU 的进程数 |
+| `b` | 不可中断睡眠（通常等 I/O）的进程数 |
+| `us sy id wa st` | 与 top 汇总区 `%Cpu(s)` 含义相同 |
+| `in` | 每秒中断次数 |
+| `cs` | 每秒上下文切换次数 |
+
+### 排查记录：长期占满单核
+
+**现象**：某进程 `%CPU` 长期稳定在 **100** 左右（多核机器上约等于占满 **1 个核**），`TIME+` 持续累积。
+
+```text
+# ps aux 观测示例
+root  88125  100  0.0  3523120  82016  ?  Ssl  8月21  7092:44  /myapp/zhstserver grpc2http
+```
+
+**排查步骤**：
+
+```bash
+top -H -p 88125                              # 看是否某个线程独占了 CPU
+ps -T -p 88125 -o pid,tid,pcpu,comm          # 线程级 CPU 占用
+```
+
+**结论**：`zhstserver grpc2http` 定时器/轮询逻辑有 bug，代码中存在 **`for{}` 空转阻塞**（循环内无 `sleep`/阻塞等待），导致单核被长期打满。
+
+> 单核 100% 且长期不降，优先怀疑：**忙等循环、定时器回调过重、轮询间隔为 0**。对照源码查 `for`/`select`/`tick` 是否有退出或 sleep 条件。
+
+---
+
+<h2 id="c-2-5" class="mh2">5. 内存监控</h2>
+
+```bash
+free -h                                      # 查看内存使用情况
+cat /proc/meminfo                            # 详细内存信息
+vmstat 1 5                                   # 含内存与 swap 变化趋势
+```
+
+#### free -h 示例与字段说明
+
+```text
+              total        used        free      shared  buff/cache   available
+Mem:           251G         51G        151G        1.9G         48G        193G
+Swap:            0B          0B          0B
+```
+
+| 字段 | 说明 |
+|------|------|
+| `total` | 总内存大小 |
+| `used` | 已用内存 |
+| `free` | 完全空闲内存（未计入可回收 cache，参考价值较低） |
+| `shared` | 共享内存（tmpfs 等） |
+| `buff/cache` | 缓存，压力大时可回收 |
+| `available` | 真正可用（含可回收 cache），比 `free` 更可靠；**排查内存优先看此项** |
+| `Swap` | 交换分区使用情况 |
+
+#### /proc/meminfo 关键指标
+
+```text
+MemTotal:       263585212 kB    # 总内存
+MemFree:        158479168 kB    # 空闲内存
+MemAvailable:   202719368 kB    # 可用内存（推荐关注）
+Buffers:          1048576 kB    # 缓冲区
+Cached:          47457894 kB    # 页缓存
+SwapTotal:             0 kB     # 交换分区总量
+SwapFree:              0 kB     # 空闲交换分区
+```
+
+#### vmstat 内存相关字段
+
+| 字段 | 说明 |
+|------|------|
+| `swpd` | 已使用的 swap 内存（KB） |
+| `free` | 空闲内存 |
+| `buff` | 缓冲区内存 |
+| `cache` | 页缓存 |
+| `si` | 每秒从磁盘 swap in 的量 |
+| `so` | 每秒 swap out 到磁盘的量（si/so 持续 >0 说明内存紧张） |
+
+### 内存排查常用命令
+
+```bash
+# 按内存排序
+ps aux --sort=-%mem | head -20
+
+# 更详细（RSS 物理内存 / VSZ 虚拟内存，单位 KB）
+ps -eo pid,user,rss,vsz,args --sort=-rss | head -20
+
+# 某进程内存详情
+pmap -x <PID>
+cat /proc/<PID>/status | grep -E 'VmRSS|VmSize'
+```
+
+| 字段 | 说明 |
+|------|------|
+| `RSS` / `VmRSS` | 常驻物理内存（实际占用 RAM） |
+| `VSZ` / `VmSize` | 虚拟内存总量（含未实际使用的映射空间） |
+
+```bash
+# 统计指定目录占用
 du -sh <directory>                           # 查看目录大小
 du -h --max-depth=1                          # 查看一级子目录大小
-lsblk                                        # 查看块设备信息
-# 示例输出及解析：
-NAME            MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
-sda               8:0    0 160.1T  0 disk /data_ssd       # SATA硬盘，160T，挂载到/data_ssd
-nvme0n1         259:0    0 931.5G  0 disk                # NVME固态硬盘，未直接挂载
-├─nvme0n1p1     259:2    0   200M  0 part /boot/efi      # EFI系统分区
-├─nvme0n1p2     259:3    0     1G  0 part /boot          # 引导分区
-└─nvme0n1p3     259:4    0   454G  0 part                # 主分区（LVM物理卷）
-  ├─centos-root 253:0    0    50G  0 lvm  /              # 根分区，LVM逻辑卷
-  ├─centos-swap 253:1    0     4G  0 lvm  [SWAP]         # 交换分区
-  ├─centos-home 253:2    0   100G  0 lvm  /home          # 用户家目录分区
-  └─centos-data 253:3    0   300G  0 lvm  /data          # 数据分区
-nvme1n1         259:1    0 931.5G  0 disk /data_hdd      # 另一块NVME硬盘，挂载到/data_hdd
-
-# 各字段含义：
-# NAME - 设备名称
-# MAJ:MIN - 主设备号:次设备号
-# RM - 是否可移动设备（1=可移动，0=不可移动）
-# SIZE - 设备容量
-# RO - 是否只读（1=只读，0=读写）
-# TYPE - 类型（disk=磁盘，part=分区，lvm=LVM逻辑卷）
-# MOUNTPOINT - 挂载点
-
-fdisk -l                                     # 查看磁盘分区
-
-# I/O监控
-iostat -x 1                                  # 磁盘I/O统计
-iotop                                       # 实时I/O监控（需安装）
-
-# 统计文件夹内存占用
 du -s 20000* | awk '{sum += $1} END {print sum/1024 "M"}'
 du -s $(ls -d [0-9]* 2>/dev/null | grep -E '^[0-9]{1,5}$') | awk '{sum += $1} END {print sum/1024 "M"}'
 ```
 
 ---
 
-<h2 id="c-2-5" class="mh2">5. 网络配置与管理</h2>
+<h2 id="c-2-6" class="mh2">6. 磁盘与 I/O</h2>
+
+```bash
+df -h                                        # 查看磁盘使用情况
+df -h <path>                                 # 查看指定路径所在分区
+du -sh <directory>                           # 查看目录大小
+lsblk                                        # 查看块设备与挂载点
+fdisk -l                                     # 查看磁盘分区
+```
+
+### I/O 监控
+
+```bash
+iostat -x 1 5                                # 扩展统计，每 1 秒刷新，共 5 次（需 sysstat）
+iotop                                        # 实时查看进程 I/O（需安装：yum install iotop）
+```
+
+#### iostat -x 输出字段说明
+
+```text
+Device  r/s  w/s  rkB/s  wkB/s  rrqm/s  wrqm/s  %rrqm  %wrqm  r_await  w_await  aqu-sz  rareq-sz  wareq-sz  svctm  %util
+sda    12.5  8.3  512.0  256.0    1.2     0.8   8.7    8.8    2.10     3.50    0.15     41.0      30.8   1.20  45.2
+```
+
+| 字段 | 说明 |
+|------|------|
+| `Device` | 块设备名（如 sda、nvme0n1） |
+| `r/s` | 每秒读请求数 |
+| `w/s` | 每秒写请求数 |
+| `rkB/s` | 每秒读吞吐量（KB） |
+| `wkB/s` | 每秒写吞吐量（KB） |
+| `rrqm/s` | 每秒合并的读请求数 |
+| `wrqm/s` | 每秒合并的写请求数 |
+| `%rrqm` | 读请求合并比例 |
+| `%wrqm` | 写请求合并比例 |
+| `r_await` | 读请求平均等待时间（ms） |
+| `w_await` | 写请求平均等待时间（ms） |
+| `aqu-sz` | 平均 I/O 队列长度 |
+| `rareq-sz` | 读请求平均大小（KB） |
+| `wareq-sz` | 写请求平均大小（KB） |
+| `svctm` | 平均设备服务时间（ms，部分版本已弃用） |
+| `%util` | 设备繁忙程度；**接近 100% 表示磁盘已饱和** |
+
+> 排查 I/O 瓶颈优先看：`%util`（是否打满）、`await`/`r_await`/`w_await`（延迟是否升高）、`rkB/s`/`wkB/s`（吞吐是否异常）。
+
+#### iotop 字段说明
+
+| 字段 | 说明 |
+|------|------|
+| `TID` / `PID` | 线程 ID / 进程 ID |
+| `PRIO` | I/O 优先级 |
+| `USER` | 进程所属用户 |
+| `DISK READ` | 磁盘读速率 |
+| `DISK WRITE` | 磁盘写速率 |
+| `SWAPIN` | swap in 速率 |
+| `IO%` | 该进程 I/O 占用百分比 |
+| `COMMAND` | 进程命令 |
+
+```bash
+iotop -o                                     # 只显示有 I/O 活动的进程
+iotop -b -n 5                                # 批模式，采样 5 次后退出
+```
+
+#### lsblk 示例
+
+```text
+NAME            MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
+sda               8:0    0 160.1T  0 disk /data_ssd
+nvme0n1         259:0    0 931.5G  0 disk
+├─nvme0n1p1     259:2    0   200M  0 part /boot/efi
+├─nvme0n1p2     259:3    0     1G  0 part /boot
+└─nvme0n1p3     259:4    0   454G  0 part
+  ├─centos-root 253:0    0    50G  0 lvm  /
+  ├─centos-swap 253:1    0     4G  0 lvm  [SWAP]
+  ├─centos-home 253:2    0   100G  0 lvm  /home
+  └─centos-data 253:3    0   300G  0 lvm  /data
+nvme1n1         259:1    0 931.5G  0 disk /data_hdd
+```
+
+| 字段 | 说明 |
+|------|------|
+| `NAME` | 设备名称 |
+| `MAJ:MIN` | 主设备号:次设备号 |
+| `RM` | 是否可移动（1=可移动，0=固定） |
+| `SIZE` | 容量 |
+| `RO` | 是否只读 |
+| `TYPE` | disk / part / lvm 等 |
+| `MOUNTPOINT` | 挂载点 |
+
+### 磁盘挂载（NTFS）
+
+```bash
+lsmod | grep ntfs                            # 检查 NTFS 模块
+
+# 安装 NTFS 支持（CentOS/RHEL）
+yum install epel-release -y
+yum install ntfs-3g -y
+
+mkdir /mnt/windows
+mount -t ntfs-3g /dev/sdb1 /mnt/windows
+
+# 自动挂载（/etc/fstab）
+/dev/sdb1  /mnt/windows  ntfs-3g  defaults  0  0
+```
+
+---
+
+<h2 id="c-2-7" class="mh2">7. 进程管理</h2>
+
+### 进程查询与终止
+
+```bash
+ps -ef | grep <process_name>                 # 查找进程
+pgrep <process_name>                         # 获取进程 PID
+pstree                                       # 树状显示进程
+
+kill <pid>                                   # 正常终止（SIGTERM）
+kill -9 <pid>                                # 强制终止（SIGKILL）
+pkill <process_name>                         # 按名称终止
+killall <process_name>                       # 终止所有同名进程
+```
+
+### 后台进程与作业控制
+
+```bash
+command &                                    # 后台运行
+nohup command &                              # 后台运行且退出终端不终止
+
+jobs                                         # 查看后台作业
+fg %<job_id>                                 # 切换到前台
+bg %<job_id>                                 # 切换到后台
+disown -h %<job_id>                          # 从作业列表移除（终端关闭不杀）
+
+# 输出重定向说明
+# echo log > /dev/null 2>&1
+# /dev/null  - 空设备
+# 1          - stdout 标准输出
+# 2          - stderr 标准错误
+# 2>&1       - 错误输出重定向到标准输出
+# 2>&1 &     - 任务放后台执行
+```
+
+---
+
+<h2 id="c-2-8" class="mh2">8. 网络配置与管理</h2>
+
+### 端口与连接
+
+```bash
+netstat -tunlp                               # 查看所有监听端口
+netstat -tunlp | grep <port>                 # 查询指定端口
+ss -tunlp                                    # 替代 netstat（更快）
+lsof -i:<port>                               # 查看端口占用进程
+lsof -p <pid>                                # 查看进程打开的文件/端口
+```
+
+### 网络排查
+
+```bash
+# 连接数汇总
+ss -s
+
+# 按 TCP 状态统计连接数
+netstat -ant | awk '{print $6}' | sort | uniq -c
+```
+
+#### ss -s 输出说明
+
+```text
+Total: 1850
+TCP:   1200 (estab 800, closed 350, orphaned 2, timewait 200)
+```
+
+| 字段 | 说明 |
+|------|------|
+| `Total` | 套接字总数 |
+| `TCP` | TCP 连接总数 |
+| `estab` | 已建立连接（ESTABLISHED） |
+| `closed` | 已关闭连接 |
+| `orphaned` | 孤儿连接（进程已退出但未完全释放） |
+| `timewait` | TIME_WAIT 状态连接数 |
+
+#### TCP 状态常见值
+
+| 状态 | 说明 |
+|------|------|
+| `ESTABLISHED` | 正常通信中的连接 |
+| `TIME_WAIT` | 连接关闭后等待 2MSL；数量过多可能是短连接频繁 |
+| `CLOSE_WAIT` | 对端已关闭，本端未 close；**持续增多需排查应用** |
+| `SYN_SENT` / `SYN_RECV` | 握手阶段；异常增多可能是 SYN 洪水或连接失败 |
+| `LISTEN` | 监听状态 |
+| `FIN_WAIT1/2` | 本端主动关闭，等待对端 ACK |
 
 ### 网络接口配置
 
 ```bash
-# 查看网络配置
 ifconfig                                     # 查看所有网络接口
-ip addr show                                 # 使用ip命令查看
-hostname -I                                  # 查看本机IP地址
+ip addr show                                 # 使用 ip 命令查看
+hostname -I                                  # 查看本机 IP
 
 # 修改网络配置（CentOS/RHEL）
 vi /etc/sysconfig/network-scripts/ifcfg-eth0
-
-# 典型配置文件内容
-# 网络接口类型
-TYPE="Ethernet"           # 接口类型：Ethernet（以太网）、Bridge（桥接）、Bond（绑定）
-                          # 对于虚拟化环境可能有：vlan、vxlan等
-# 启动协议
-BOOTPROTO="static"        # IP获取方式：
-                          # static/none - 静态IP（手动配置）
-                          # dhcp - 动态获取（从DHCP服务器）
-                          # bootp - 较老的协议
-                          # autoip - 自动IP（link-local）
-# 开机自启
-ONBOOT="yes"              # 系统启动时是否激活该网卡
-                          # yes - 开机自动启用
-                          # no - 需要手动启用
-# IPv4地址配置
-IPADDR="192.168.0.253"    # 主IP地址（必需）
-PREFIX="24"               # 子网掩码位数（替代NETMASK的CIDR表示法）
-NETMASK="255.255.255.0"   # 传统子网掩码表示法（与PREFIX二选一）
-                          # 掩码计算：24位 = 255.255.255.0
-# 网关配置
-GATEWAY="192.168.0.1"     # 默认网关地址
-                          # 注意：一个接口只能有一个默认网关
-# DNS服务器配置
-DNS1="114.114.114.114"    # 主DNS服务器（国内公用DNS）
-DNS2="8.8.8.8"           # 备用DNS服务器（Google DNS）
-DNS3="8.8.4.4"           # 第二备用DNS服务器
-                          # DNS配置会写入 /etc/resolv.conf
 ```
+
+典型 `ifcfg-eth0` 字段：
+
+| 字段 | 说明 |
+|------|------|
+| `TYPE="Ethernet"` | 接口类型 |
+| `BOOTPROTO="static"` | static 静态 IP / dhcp 动态获取 |
+| `ONBOOT="yes"` | 开机是否启用网卡 |
+| `IPADDR` | 主 IP 地址 |
+| `PREFIX="24"` | CIDR 子网掩码位数 |
+| `GATEWAY` | 默认网关 |
+| `DNS1/DNS2` | DNS 服务器 |
 
 ### 网络服务管理
 
 ```bash
-# 重启网络服务（CentOS 7+）
-systemctl restart network
-
-# 重启网络服务（Ubuntu）
-systemctl restart networking
-# 或
-systemctl restart systemd-networkd
-
-# 启停单个网卡
-ifdown eth0 && ifup eth0
-
-# 查看网络连接状态
-ip link show                                 # 查看链路状态
-ip route show                                # 查看路由表
+systemctl restart network                    # CentOS 7+ 重启网络
+systemctl restart networking                 # Ubuntu
+systemctl restart systemd-networkd           # Ubuntu（systemd-networkd）
+ifdown eth0 && ifup eth0                     # 启停单个网卡
+ip link show                                 # 链路状态
+ip route show                                # 路由表
 ```
 
 ### 网络测试
 
 ```bash
-ping <host>                                  # 测试网络连通性
-traceroute <host>                            # 追踪路由路径
-mtr <host>                                   # 结合ping和traceroute
-nslookup <domain>                            # DNS查询
-dig <domain>                                 # 详细DNS查询
-
-# 端口测试
-telnet <host> <port>                         # TCP端口测试
+ping <host>
+traceroute <host>
+mtr <host>
+nslookup <domain>
+dig <domain>
+telnet <host> <port>                         # TCP 端口测试
 nc -zv <host> <port>                         # 快速端口测试
 ```
 
@@ -524,35 +775,11 @@ source /root/.bashrc
 
 ---
 
-<h2 id="c-2-6" class="mh2">6. 进程管理与日志</h2>
+<h2 id="c-2-9" class="mh2">9. 日志与服务管理</h2>
 
-### 后台进程管理
-
-```bash
-# 运行后台进程
-command &                                    # 后台运行
-nohup command &                              # 后台运行且退出终端不终止
-
-# 进程管理
-jobs                                        # 查看后台作业
-fg %<job_id>                                # 切换到前台
-bg %<job_id>                                # 切换到后台
-disown -h %<job_id>                         # 从作业列表中移除
-
-# 输出重定向
-# shell中可能经常能看到：echo log > /dev/null 2>&1 命令的结果可以通过%>的形式来定义输出
-/dev/null ：代表空设备文件
->  ：代表重定向到哪里，例如：echo "123" > /home/123.txt
-1  ：表示stdout标准输出，系统默认值是1，所以">/dev/null"等同于"1>/dev/null"
-2  ：表示stderr标准错误
-&  ：表示等同于的意思，2>&1，表示2的输出重定向等同于1
-2>&1 & 将这个（标准输出&错误输出）任务放到后台去执行
-```
-
-### 服务管理（systemd）
+### systemd 服务控制
 
 ```bash
-# 服务控制
 systemctl start <service>                    # 启动服务
 systemctl stop <service>                     # 停止服务
 systemctl restart <service>                  # 重启服务
@@ -560,29 +787,14 @@ systemctl reload <service>                   # 重载配置
 systemctl enable <service>                   # 设置开机启动
 systemctl disable <service>                  # 禁用开机启动
 systemctl status <service>                   # 查看服务状态
-
-# 日志查看
-journalctl -u <service>                      # 查看服务日志
-journalctl -f -u <service>                   # 实时查看服务日志
-journalctl --since "1 hour ago"              # 查看最近1小时日志
 ```
 
-### 磁盘挂载（NTFS）
+### 日志查看
 
 ```bash
-# 查看NTFS支持
-lsmod | grep ntfs                           # 检查NTFS模块
-
-# 安装NTFS支持（CentOS/RHEL）
-yum install epel-release -y
-yum install ntfs-3g -y
-
-# 挂载NTFS磁盘
-mkdir /mnt/windows
-mount -t ntfs-3g /dev/sdb1 /mnt/windows
-
-# 自动挂载（/etc/fstab）
-/dev/sdb1  /mnt/windows  ntfs-3g  defaults  0  0
+journalctl -u <service>                      # 查看服务日志
+journalctl -f -u <service>                   # 实时查看服务日志
+journalctl --since "1 hour ago"              # 查看最近 1 小时日志
 ```
 
 ---
@@ -1598,7 +1810,17 @@ install_host eg:
             <li style="list-style-type: none;"><a href="#c-1-0">Win 快捷键</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-2-0">Linux 常用命令速查手册</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-2-1">1. 系统时间与时区</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-2">2. 包管理命令</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-3">3. 文件与目录操作</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-4">4. CPU 监控与排查</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-5">5. 内存监控</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-6">6. 磁盘与 I/O</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-7">7. 进程管理</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-8">8. 网络配置与管理</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-9">9. 日志与服务管理</a></li>
+                </ul>
             <li style="list-style-type: none;"><a href="#c-3-0">Kubernetes常用命令和操作笔记</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-4-0">Helm</a></li>
