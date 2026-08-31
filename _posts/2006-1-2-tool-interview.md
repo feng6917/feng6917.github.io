@@ -19,9 +19,17 @@ author: feng6917
 
 <h2 id="c-0-1" class="mh2">入职公司简介</h2>
 
-1. **司睿杰** 内部考核系统（监理协会、从零到一），OA 项目权限（Casbin），网盘，数据分词检索 ECK
-2. **亮风台** rust 薪资服务重写，mysql -> pg 迁移
-3. **现在公司** 业务重构，服务治理，大模型，CICD，双网架构
+<h3 id="c-0-1-1" class="mh3">1. 司睿杰</h3>
+
+内部考核系统（监理协会、从零到一），OA 项目权限（Casbin），网盘，数据分词检索 ECK
+
+<h3 id="c-0-1-2" class="mh3">2. 亮风台</h3>
+
+rust 薪资服务重写，mysql -> pg 迁移
+
+<h3 id="c-0-1-3" class="mh3">3. 现在公司</h3>
+
+业务重构，服务治理，大模型，CICD，双网架构
 
 <h2 id="c-0-2" class="mh2">Go 与 Python 进行比较？</h2>
 
@@ -38,23 +46,20 @@ author: feng6917
 
 <h2 id="c-0-3" class="mh2">框架该如何设计定义？</h2>
 
-<details>
-<summary>Ans</summary>
-
 参考 Gin、Kratos、Spring Boot 等市面框架，框架设计通常包含以下层次：
 
-**1. 定位与边界（针对性、倾向性）**
+<h3 id="c-0-3-1" class="mh3">1. 定位与边界（针对性、倾向性）</h3>
 
 - 先明确框架解决什么问题：轻量 HTTP（如 Gin）、微服务工程化（如 Kratos）、企业级全家桶（如 Spring Boot）
 - 不同定位决定抽象粒度：路由框架只关心请求链路；微服务框架还要管配置、通信、治理
 
-**2. 架构定义（分层、模块划分、模块交互）**
+<h3 id="c-0-3-2" class="mh3">2. 架构定义（分层、模块划分、模块交互）</h3>
 
 - **分层**：常见为接入层（HTTP/gRPC）→ 业务层 → 数据层；Kratos 还区分 API / Service / Biz / Data
 - **模块划分**：路由、中间件、配置、日志、依赖注入、数据访问等各司其职
 - **模块交互**：通过接口 + 依赖注入（Wire）或中间件链（Handler Chain）解耦，避免业务直接耦合底层实现
 
-**3. 三方面构成（工程落地视角）**
+<h3 id="c-0-3-3" class="mh3">3. 三方面构成（工程落地视角）</h3>
 
 | 方面 | 内容 |
 |------|------|
@@ -64,14 +69,9 @@ author: feng6917
 
 ![框架构成示意](/images/2020-3-3/30.jpg)
 
-</details>
-
 <h2 id="c-0-4" class="mh2">Gin：Radix Tree 与 Context</h2>
 
-**1. Radix Tree？**
-
-<details>
-<summary>Ans</summary>
+<h3 id="c-0-4-1" class="mh3">1. Radix Tree</h3>
 
 Gin 中基于**压缩前缀树**作为路由树的数据结构，对应 9 种 HTTP 方法共有 **9 棵树**。
 
@@ -110,12 +110,7 @@ Gin 中基于**压缩前缀树**作为路由树的数据结构，对应 9 种 HT
 
 ![Radix Tree 节点结构](/images/2020-3-3/31.jpg)
 
-</details>
-
-**2. Context？**
-
-<details>
-<summary>Ans</summary>
+<h3 id="c-0-4-2" class="mh3">2. Context</h3>
 
 `gin.Context` 对应一次 HTTP 请求，贯穿整条 **Handler Chain** 调用链路的上下文。
 
@@ -138,12 +133,7 @@ Gin 中基于**压缩前缀树**作为路由树的数据结构，对应 9 种 HT
 | `mu` | 保护 map 的读写互斥锁 |
 | `keys` | handlers 链上共享数据的 map |
 
-</details>
-
 <h2 id="c-0-5" class="mh2">Casbin 与 Open Policy Agent（OPA）是什么？</h2>
-
-<details>
-<summary>Ans</summary>
 
 **Casbin 是什么？**
 
@@ -172,12 +162,7 @@ OPA 是 CNCF 的通用**策略引擎**，用 **Rego** 语言编写策略，与�
 | 侧重点 | 应用层 RBAC/ABAC | 通用策略决策，云原生场景多 |
 | 集成方式 | 代码内 `Enforce()` | HTTP/gRPC 查询 OPA，或 WASM 嵌入 |
 
-</details>
-
 <h2 id="c-0-6" class="mh2">微服务是什么？</h2>
-
-<details>
-<summary>Ans</summary>
 
 **定义**
 
@@ -204,12 +189,7 @@ OPA 是 CNCF 的通用**策略引擎**，用 **Rego** 语言编写策略，与�
 
 ![微服务架构](/images/2020-3-3/56.jpg)
 
-</details>
-
 <h2 id="c-0-7" class="mh2">链路追踪（OpenTracing）</h2>
-
-<details>
-<summary>Ans</summary>
 
 运行时记录服务之间的调用过程，通过可视化 UI 帮助运维人员快速定位出错点。
 
@@ -245,14 +225,9 @@ OPA 是 CNCF 的通用**策略引擎**，用 **Rego** 语言编写策略，与�
 1. HTTP/gRPC 集成中间件，数据库中间件
 2. 采集点：跨进程调用处、代码埋点（`span.start` / `span.end`）
 
-</details>
-
 <h2 id="c-0-8" class="mh2">服务熔断、降级与限流</h2>
 
-**1. 服务熔断与降级**
-
-<details>
-<summary>Ans</summary>
+<h3 id="c-0-8-1" class="mh3">1. 服务熔断与降级</h3>
 
 ![熔断示意](/images/2020-3-3/42.jpg)
 
@@ -271,12 +246,7 @@ OPA 是 CNCF 的通用**策略引擎**，用 **Rego** 语言编写策略，与�
 | **Open（打开）** | 请求立即失败；超时后切 Half-Open，或定时探测下游是否恢复 |
 | **Half-Open（半开）** | 放行少量探测请求；成功 → Closed 并重置计数；仍失败 → Open，防止恢复中被打垮 |
 
-</details>
-
-**2. 服务限流**
-
-<details>
-<summary>Ans</summary>
+<h3 id="c-0-8-2" class="mh3">2. 服务限流</h3>
 
 **常见场景**：突发流量（如双十一）、恶意攻击、业务自身容量上限。
 
@@ -306,16 +276,11 @@ OPA 是 CNCF 的通用**策略引擎**，用 **Rego** 语言编写策略，与�
 
 **Go 插件示例**：`github.com/juju/ratelimit`（令牌桶）
 
-</details>
-
 <h2 id="c-1-0" class="mh1">二、Docker & K8s</h2>
 
-<h2 id="c-1-1" class="mh2">1. Docker</h2>
+<h2 id="c-1-1" class="mh2">Docker</h2>
 
-**1. 什么是 Docker、容器、镜像？**
-
-<details>
-<summary>Ans</summary>
+<h3 id="c-1-1-1" class="mh3">1. 什么是 Docker、容器、镜像？</h3>
 
 Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口。
 
@@ -323,12 +288,7 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
 
 镜像是一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含运行某个软件所需的所有内容，包括代码、运行时、库、环境变量和配置文件。
 
-</details>
-
-**2. Docker 镜像应该遵循哪些原则？**
-
-<details>
-<summary>Ans</summary>
+<h3 id="c-1-1-2" class="mh3">2. Docker 镜像应该遵循哪些原则？</h3>
 
 整体上，尽量保持镜像**功能明确**、**内容精简**：
 
@@ -340,12 +300,7 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
 6. 合理**分层**，将变化频率低的层放前面，提高构建缓存命中率
 7. 生产镜像避免包含调试工具、源码、密钥等敏感信息
 
-</details>
-
-**3. 如何更改 Docker 的默认存储路径？**
-
-<details>
-<summary>Ans</summary>
+<h3 id="c-1-1-3" class="mh3">3. 如何更改 Docker 的默认存储路径？</h3>
 
 修改配置文件：
 
@@ -362,49 +317,29 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
 
 也可使用软链接迁移已有数据目录。
 
-</details>
+<h2 id="c-1-2" class="mh2">Kubernetes</h2>
 
-<h2 id="c-1-2" class="mh2">2. Kubernetes</h2>
-
-**1. 容器化开发的好处？**
-
-<details>
-<summary>Ans</summary>
+<h3 id="c-1-2-1" class="mh3">1. 容器化开发的好处？</h3>
 
 1. 共享宿主机资源，利用率更高
 2. 一次构建，到处运行，可移植性强
 3. 秒级启动，便于弹性伸缩
 4. 契合 DevOps，缩短交付与运维周期
 
-</details>
-
-**2. 容器化开发流程？**
-
-<details>
-<summary>Ans</summary>
+<h3 id="c-1-2-2" class="mh3">2. 容器化开发流程？</h3>
 
 1. 搭建容器化平台，构建自动化运维基础设施
 2. 构建服务环境镜像，集成基本开发环境
 3. 服务持续开发及服务运维插件集成（监控、日志、链路追踪等）
 
-</details>
-
-**3. 容器化 / K8s 部署常见问题？**
-
-<details>
-<summary>Ans</summary>
+<h3 id="c-1-2-3" class="mh3">3. 容器化 / K8s 部署常见问题？</h3>
 
 1. 调用链路过长，问题定位困难
 2. 数据持久化与挂载配置不当导致数据丢失
 3. 镜像过大、启动慢，资源 limits/requests 配置不合理
 4. 网络策略、Service/Ingress 配置错误导致服务不可达
 
-</details>
-
-**4. Deployment、StatefulSet、DaemonSet 区别？**
-
-<details>
-<summary>Ans</summary>
+<h3 id="c-1-2-4" class="mh3">4. Deployment、StatefulSet、DaemonSet 区别？</h3>
 
 | | **Deployment（deploy）** | **StatefulSet（sts）** | **DaemonSet（ds）** |
 |---|--------------------------|-------------------------|----------------------|
@@ -422,8 +357,6 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
 - 要稳定 hostname、有序启停、独立存储 → **StatefulSet**
 - 每个节点都要跑一个 → **DaemonSet**
 
-</details>
-
 <hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
 
 <div class="mi1">
@@ -431,16 +364,45 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
         <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
             <li style="list-style-type: none;"><a href="#c-0-0">一、个人</a></li>
             <li style="list-style-type: none;"><a href="#c-0-1">入职公司简介</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-0-1-1">1. 司睿杰</a></li>
+                    <li style="list-style-type: none;"><a href="#c-0-1-2">2. 亮风台</a></li>
+                    <li style="list-style-type: none;"><a href="#c-0-1-3">3. 现在公司</a></li>
+                </ul>
             <li style="list-style-type: none;"><a href="#c-0-2">Go 与 Python 进行比较？</a></li>
             <li style="list-style-type: none;"><a href="#c-0-3">框架该如何设计定义？</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-0-3-1">1. 定位与边界</a></li>
+                    <li style="list-style-type: none;"><a href="#c-0-3-2">2. 架构定义</a></li>
+                    <li style="list-style-type: none;"><a href="#c-0-3-3">3. 三方面构成</a></li>
+                </ul>
             <li style="list-style-type: none;"><a href="#c-0-4">Gin：Radix Tree 与 Context</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-0-4-1">1. Radix Tree</a></li>
+                    <li style="list-style-type: none;"><a href="#c-0-4-2">2. Context</a></li>
+                </ul>
             <li style="list-style-type: none;"><a href="#c-0-5">Casbin 与 OPA 是什么？</a></li>
             <li style="list-style-type: none;"><a href="#c-0-6">微服务是什么？</a></li>
             <li style="list-style-type: none;"><a href="#c-0-7">链路追踪（OpenTracing）</a></li>
             <li style="list-style-type: none;"><a href="#c-0-8">服务熔断、降级与限流</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-0-8-1">1. 服务熔断与降级</a></li>
+                    <li style="list-style-type: none;"><a href="#c-0-8-2">2. 服务限流</a></li>
+                </ul>
             <li style="list-style-type: none;"><a href="#c-1-0">二、Docker & K8s</a></li>
-            <li style="list-style-type: none;"><a href="#c-1-1">1. Docker</a></li>
-            <li style="list-style-type: none;"><a href="#c-1-2">2. Kubernetes</a></li>
+            <li style="list-style-type: none;"><a href="#c-1-1">Docker</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-1-1-1">1. 什么是 Docker、容器、镜像？</a></li>
+                    <li style="list-style-type: none;"><a href="#c-1-1-2">2. Docker 镜像原则</a></li>
+                    <li style="list-style-type: none;"><a href="#c-1-1-3">3. 更改默认存储路径</a></li>
+                </ul>
+            <li style="list-style-type: none;"><a href="#c-1-2">Kubernetes</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-1-2-1">1. 容器化好处</a></li>
+                    <li style="list-style-type: none;"><a href="#c-1-2-2">2. 容器化流程</a></li>
+                    <li style="list-style-type: none;"><a href="#c-1-2-3">3. 部署常见问题</a></li>
+                    <li style="list-style-type: none;"><a href="#c-1-2-4">4. deploy / sts / ds 区别</a></li>
+                </ul>
         </ul>
 </div>
 
