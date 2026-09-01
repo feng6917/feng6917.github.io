@@ -13,7 +13,7 @@ author: feng6917
 
 <!-- more -->
 
-<div id="interview-gate" style="display:none">
+<div id="interview-gate-start"></div>
 
 <h2 id="c-0-0" class="mh1">一、个人</h2>
 
@@ -67,7 +67,7 @@ rust 薪资服务重写，mysql -> pg 迁移
 | **服务治理** | 注册发现、限流熔断、链路追踪、监控告警、健康检查 |
 | **打包部署** | Docker 镜像规范、CI/CD 流水线、配置外置、多环境（dev/test/prod） |
 
-![框架构成示意](/images/2020-3-3/30.jpg)
+![img](../images/2020-3-3/30.jpg)
 
 <h2 id="c-0-4" class="mh2">Gin：Radix Tree 与 Context</h2>
 
@@ -108,7 +108,7 @@ Gin 中基于**压缩前缀树**作为路由树的数据结构，对应 9 种 HT
 | `wildChild` | 是否存在通配子节点 |
 | `nType` | 节点类型：普通 / 参数 / 通配等 |
 
-![Radix Tree 节点结构](/images/2020-3-3/31.jpg)
+![img](../images/2020-3-3/31.jpg)
 
 <h3 id="c-0-4-2" class="mh3">2. Context</h3>
 
@@ -120,7 +120,7 @@ Gin 中基于**压缩前缀树**作为路由树的数据结构，对应 9 种 HT
 - 请求处理完毕归还 pool，等待复用
 - sync.Pool 更像回收站：逻辑上已删除，物理上仍可存活两轮 GC，期间可被复用
 
-![Context 对象池](/images/2020-3-3/32.jpg)
+![img](../images/2020-3-3/32.jpg)
 
 **核心字段**
 
@@ -144,6 +144,7 @@ Casbin 是一个开源的**访问控制库**（不是独立服务），嵌入业
 - 策略与模型分离：通过 `.conf` 定义模型，通过 CSV / DB 存储策略
 - 典型用法：用户请求接口 → 业务代码调用 `Enforce(sub, obj, act)` → 返回 allow / deny
 - **适用场景**：应用内权限控制（如 OA 系统的用户、角色、菜单、表单权限），你在司睿杰项目中用过
+- **表单权限（简）**：分表单级 + 字段级两层。`sub` 用 user/role（`g` 继承）；`obj` 用 `form:leave`（整表）、`form:leave/field:days`（字段）；`act` 表单用 read/create/submit/approve，字段用 visible/editable。后端每个接口 `Enforce`，写字段逐字段校验 editable；前端只管隐藏/只读。配置存 DB 后同步为 p 规则；字段少可 JSON 冗余，字段多单独建字段权限表
 
 **Open Policy Agent（OPA）是什么？**
 
@@ -187,7 +188,7 @@ OPA 是 CNCF 的通用**策略引擎**，用 **Rego** 语言编写策略，与�
 | 扩展 | 整体扩容 | 按服务独立扩容 |
 | 复杂度 | 开发简单，后期臃肿 | 研发灵活，运维与治理成本高 |
 
-![微服务架构](/images/2020-3-3/56.jpg)
+![img](../images/2020-3-3/56.jpg)
 
 <h2 id="c-0-7" class="mh2">链路追踪（OpenTracing）</h2>
 
@@ -229,7 +230,7 @@ OPA 是 CNCF 的通用**策略引擎**，用 **Rego** 语言编写策略，与�
 
 <h3 id="c-0-8-1" class="mh3">1. 服务熔断与降级</h3>
 
-![熔断示意](/images/2020-3-3/42.jpg)
+![img](../images/2020-3-3/42.jpg)
 
 **熔断**：服务异常超过一定时间、次数或失败比例时，**不再调用下游**，直接返回错误（可配合降级）。暂停一段时间后周期性探测，直到服务恢复。
 
@@ -254,25 +255,25 @@ OPA 是 CNCF 的通用**策略引擎**，用 **Rego** 语言编写策略，与�
 
 维护时间窗口内请求计数，超限则拒绝。实现简单，但窗口重置时无法平滑处理突发。
 
-![计数器限流](/images/2020-3-3/68.jpg)
+![img](../images/2020-3-3/68.jpg)
 
 **2）滑动窗口限流**
 
 将窗口切分为多个小段，逐段计数，可更好应对短时突发。
 
-![滑动窗口](/images/2020-3-3/69.jpg)
+![img](../images/2020-3-3/69.jpg)
 
 **3）漏桶算法**
 
 请求入队，按固定速率流出；队列满则拒绝。**无法应对突发**（平滑输出）。
 
-![漏桶](/images/2020-3-3/70.jpg)
+![img](../images/2020-3-3/70.jpg)
 
 **4）令牌桶算法**
 
 以固定速率向桶中放令牌，请求取令牌，无令牌则拒绝。**可应对突发**（桶内有余量时）。
 
-![令牌桶](/images/2020-3-3/71.jpg)
+![img](../images/2020-3-3/71.jpg)
 
 **Go 插件示例**：`github.com/juju/ratelimit`（令牌桶）
 
@@ -406,16 +407,36 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
         </ul>
 </div>
 
-</div>
-
 <script>
 (function () {
   var STORAGE_KEY = 'tool-interview-unlocked';
   var PASSWORD = 'myz17521';
-  var gate = document.getElementById('interview-gate');
+  var marker = document.getElementById('interview-gate-start');
+  var entry = marker && marker.parentElement;
+  var protectedEls = [];
+
+  if (marker && entry) {
+    var found = false;
+    Array.prototype.forEach.call(entry.children, function (el) {
+      if (el === marker) {
+        found = true;
+        el.style.display = 'none';
+        return;
+      }
+      if (found && el.tagName !== 'SCRIPT') {
+        protectedEls.push(el);
+      }
+    });
+  }
+
+  function setProtectedVisible(visible) {
+    protectedEls.forEach(function (el) {
+      el.style.display = visible ? '' : 'none';
+    });
+  }
 
   function unlock() {
-    if (gate) gate.style.display = 'block';
+    setProtectedVisible(true);
     try { sessionStorage.setItem(STORAGE_KEY, '1'); } catch (e) {}
   }
 
@@ -424,10 +445,12 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
     history.go(-1);
   }
 
-  if (gate && sessionStorage.getItem(STORAGE_KEY) === '1') {
+  if (sessionStorage.getItem(STORAGE_KEY) === '1') {
     unlock();
     return;
   }
+
+  setProtectedVisible(false);
 
   var attempts = 0;
   var pass = prompt('请输入访问密码：', '');
