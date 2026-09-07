@@ -25,7 +25,11 @@ layout: default
 
 
 
-  <div class="entry">
+  {% if page.protected %}
+    {% include post-password.html %}
+  {% endif %}
+
+  <div class="entry{% if page.protected %} entry--protected{% endif %}"{% if page.protected %} hidden{% endif %}>
     {{ content }}
   </div>
 
@@ -107,7 +111,7 @@ layout: default
 
 </article>
 
-<div class="comment">
+<div class="comment{% if page.protected %} comment--protected{% endif %}"{% if page.protected %} hidden{% endif %}>
   <hr>
   <div id="gitalk-container"></div>
 </div>
@@ -126,7 +130,7 @@ layout: default
   gitalk.render('gitalk-container');
 </script>
 
-<div class="pagination">
+<div class="pagination{% if page.protected %} pagination--protected{% endif %}"{% if page.protected %} hidden{% endif %}>
   {% if page.previous.url %}
   <span class="prev">
     <a href="{{ site.url }}{{ site.baseurl }}{{ page.previous.url }}">
