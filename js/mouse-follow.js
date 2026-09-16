@@ -1,5 +1,5 @@
 /**
- * 鼠标跟随：渐变铭文；左键点击涟漪 + 「咚」「功德 +1」
+ * 鼠标跟随：渐变铭文；左键点击断环涟漪 + 「功德 +1」
  * 开关：右上角「开启跟随 / 关闭跟随」，localStorage 记忆（默认关闭）
  */
 (function () {
@@ -91,7 +91,9 @@
       char: nextChar(),
       born: performance.now(),
       life: 2200 + Math.random() * 900,
-      hue: 28 + Math.random() * 42,
+      hue: Math.random() * 360,
+      sat: 52 + Math.random() * 38,
+      light: 38 + Math.random() * 28,
       drift: (Math.random() - 0.5) * 0.35,
       fontPx: 10 + Math.random() * 20,
       sizeWobble: 0.85 + Math.random() * 0.35,
@@ -112,12 +114,27 @@
     ensureLoop();
   }
 
+  function buildBrokenRingSegments() {
+    var segments = [];
+    var phase = Math.random() * Math.PI * 2;
+    var n = 4 + ((Math.random() * 3) | 0);
+    var cursor = phase;
+    var i, arcLen, gap;
+    for (i = 0; i < n; i++) {
+      arcLen = (Math.PI * 2 / n) * (0.32 + Math.random() * 0.48);
+      segments.push({ start: cursor, len: arcLen });
+      gap = 0.15 + Math.random() * 0.55;
+      cursor += arcLen + gap;
+    }
+    return segments;
+  }
+
   function spawnClickFx(x, y) {
     clickFx.push({
       x: x,
       y: y,
       born: performance.now(),
-      ripples: [{ delay: 0 }, { delay: 90 }, { delay: 180 }],
+      segments: buildBrokenRingSegments(),
       floater: { y: 0, opacity: 1 },
     });
   }
@@ -139,31 +156,27 @@
 
     var x = f.x;
     var y = f.y;
-    var i, rip, rt, rp, radius;
-
-    for (i = 0; i < f.ripples.length; i++) {
-      rip = f.ripples[i];
-      rt = t - rip.delay;
-      if (rt < 0 || rt > 700) continue;
-      rp = rt / 700;
-      radius = 16 + rp * 58;
-      ctx.strokeStyle = "rgba(180, 120, 60, " + (0.5 * (1 - rp)) + ")";
-      ctx.lineWidth = 2;
+    var rp = Math.min(1, t / 700);
+    var radius = 16 + rp * 58;
+    var alpha = 0.5 * (1 - rp);
+    var seg, j;
+    ctx.strokeStyle = "rgba(180, 120, 60, " + alpha + ")";
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    for (j = 0; j < f.segments.length; j++) {
+      seg = f.segments[j];
       ctx.beginPath();
-      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.arc(x, y, radius, seg.start, seg.start + seg.len);
       ctx.stroke();
     }
 
     ctx.save();
-    ctx.translate(x, y - 42 + f.floater.y);
-    ctx.font = "700 18px 'Noto Serif SC','Source Han Serif SC',serif";
-    ctx.fillStyle = "rgba(120, 72, 36, " + f.floater.opacity + ")";
+    ctx.translate(x, y - 36 + f.floater.y);
+    ctx.font = "12px 'Noto Serif SC','Source Han Serif SC',serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText("咚", 0, 0);
-    ctx.font = "12px 'Noto Serif SC',serif";
     ctx.fillStyle = "rgba(92, 83, 71, " + (f.floater.opacity * 0.85) + ")";
-    ctx.fillText("功德 +1", 0, 20);
+    ctx.fillText("功德 +1", 0, 0);
     ctx.restore();
 
     return true;
@@ -198,14 +211,16 @@
 
       var pad = fontSize * 0.85;
       var grd = ctx.createLinearGradient(g.x - pad, g.y - pad, g.x + pad, g.y + pad);
-      grd.addColorStop(0, "hsla(" + g.hue + ", 62%, 42%, " + alpha + ")");
-      grd.addColorStop(0.5, "hsla(" + (g.hue + 18) + ", 78%, 55%, " + (alpha * 0.95) + ")");
-      grd.addColorStop(1, "hsla(" + (g.hue + 36) + ", 55%, 38%, " + (alpha * 0.35) + ")");
+      var h2 = (g.hue + 24) % 360;
+      var h3 = (g.hue + 48) % 360;
+      grd.addColorStop(0, "hsla(" + g.hue + ", " + g.sat + "%, " + g.light + "%, " + alpha + ")");
+      grd.addColorStop(0.5, "hsla(" + h2 + ", " + Math.min(100, g.sat + 12) + "%, " + Math.min(72, g.light + 14) + "%, " + (alpha * 0.95) + ")");
+      grd.addColorStop(1, "hsla(" + h3 + ", " + g.sat + "%, " + Math.max(28, g.light - 8) + "%, " + (alpha * 0.35) + ")");
 
       ctx.save();
       ctx.font = "600 " + fontSize.toFixed(2) + "px " + fontFamily;
       ctx.fillStyle = grd;
-      ctx.shadowColor = "hsla(" + g.hue + ", 70%, 50%, " + (alpha * 0.35) + ")";
+      ctx.shadowColor = "hsla(" + g.hue + ", " + g.sat + "%, " + g.light + "%, " + (alpha * 0.35) + ")";
       ctx.shadowBlur = Math.min(12, fontSize * 0.45);
       ctx.fillText(g.char, g.x, g.y);
       ctx.restore();
