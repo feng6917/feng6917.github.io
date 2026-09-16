@@ -114,19 +114,26 @@
     ensureLoop();
   }
 
-  function buildBrokenRingSegments() {
-    var segments = [];
-    var phase = Math.random() * Math.PI * 2;
-    var n = 4 + ((Math.random() * 3) | 0);
-    var cursor = phase;
-    var i, arcLen, gap;
+  function buildIrregularStrokes() {
+    var strokes = [];
+    var n = 3 + ((Math.random() * 3) | 0);
+    var cursor = Math.random() * Math.PI * 2;
+    var i, k, steps, span, pts;
     for (i = 0; i < n; i++) {
-      arcLen = (Math.PI * 2 / n) * (0.32 + Math.random() * 0.48);
-      segments.push({ start: cursor, len: arcLen });
-      gap = 0.15 + Math.random() * 0.55;
-      cursor += arcLen + gap;
+      span = (Math.PI * 2 / n) * (0.22 + Math.random() * 0.42);
+      steps = 4 + ((Math.random() * 5) | 0);
+      pts = [];
+      for (k = 0; k <= steps; k++) {
+        pts.push({
+          t: k / steps,
+          radial: (Math.random() - 0.5) * 16,
+          twist: (Math.random() - 0.5) * 0.14,
+        });
+      }
+      strokes.push({ start: cursor, span: span, pts: pts });
+      cursor += span + 0.25 + Math.random() * 0.65;
     }
-    return segments;
+    return strokes;
   }
 
   function spawnClickFx(x, y) {
@@ -134,7 +141,7 @@
       x: x,
       y: y,
       born: performance.now(),
-      segments: buildBrokenRingSegments(),
+      strokes: buildIrregularStrokes(),
       floater: { y: 0, opacity: 1 },
     });
   }
@@ -158,15 +165,25 @@
     var y = f.y;
     var rp = Math.min(1, t / 700);
     var radius = 16 + rp * 58;
-    var alpha = 0.5 * (1 - rp);
-    var seg, j;
+    var alpha = 0.42 * (1 - rp);
+    var scale = radius / 42;
+    var stroke, j, pt, ang, r, px, py, idx;
     ctx.strokeStyle = "rgba(180, 120, 60, " + alpha + ")";
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 0.65;
     ctx.lineCap = "round";
-    for (j = 0; j < f.segments.length; j++) {
-      seg = f.segments[j];
+    ctx.lineJoin = "round";
+    for (j = 0; j < f.strokes.length; j++) {
+      stroke = f.strokes[j];
       ctx.beginPath();
-      ctx.arc(x, y, radius, seg.start, seg.start + seg.len);
+      for (idx = 0; idx < stroke.pts.length; idx++) {
+        pt = stroke.pts[idx];
+        ang = stroke.start + stroke.span * pt.t + pt.twist;
+        r = radius + pt.radial * scale;
+        px = x + Math.cos(ang) * r;
+        py = y + Math.sin(ang) * r;
+        if (idx === 0) ctx.moveTo(px, py);
+        else ctx.lineTo(px, py);
+      }
       ctx.stroke();
     }
 
