@@ -36,7 +36,7 @@ permalink: /tools/json-format/
         }
 
         .container {
-            max-width: 1280px;
+            max-width: min(1680px, calc(100vw - 32px));
             margin: 0 auto;
             position: relative;
         }
@@ -70,7 +70,7 @@ permalink: /tools/json-format/
             border-radius: 10px;
             box-shadow: 0 2px 24px rgba(58, 52, 44, 0.06);
             overflow: hidden;
-            min-height: 560px;
+            min-height: calc(100vh - 200px);
         }
 
         @media (max-width: 768px) {
@@ -115,6 +115,7 @@ permalink: /tools/json-format/
 
         textarea {
             flex: 1;
+            min-height: calc(100vh - 320px);
             padding: 14px 16px;
             border: 1px solid var(--line);
             border-radius: 6px;
@@ -195,6 +196,7 @@ permalink: /tools/json-format/
 
         .output-area {
             flex: 1;
+            min-height: calc(100vh - 320px);
             border: 1px solid var(--line);
             border-radius: 6px;
             padding: 8px 0;

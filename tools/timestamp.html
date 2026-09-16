@@ -29,8 +29,8 @@ permalink: /tools/timestamp/
       background: var(--paper);
       color: var(--ink);
       line-height: 1.65;
-      padding: 28px 18px 56px;
-      max-width: 880px;
+      padding: 28px 20px 56px;
+      max-width: min(1600px, calc(100vw - 32px));
       margin: 0 auto;
       min-height: 100vh;
     }
@@ -171,7 +171,7 @@ permalink: /tools/timestamp/
     .panel.active { display: block; }
     textarea.batch-in, textarea.batch-out {
       width: 100%;
-      min-height: 130px;
+      min-height: min(360px, calc(100vh - 420px));
       resize: vertical;
       line-height: 1.5;
     }

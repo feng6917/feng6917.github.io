@@ -1,5 +1,5 @@
 /**
- * 鼠标跟随：渐变铭文
+ * 鼠标跟随：渐变铭文；左键点击涟漪 + 「咚」「功德 +1」
  * 开关：右上角「开启跟随 / 关闭跟随」，localStorage 记忆（默认关闭）
  */
 (function () {
@@ -32,6 +32,7 @@
   var charIndex = 0;
 
   var glyphs = [];
+  var clickFx = [];
 
   var SPAWN_DIST = 22;
   var MAX_GLYPHS = 36;
@@ -92,6 +93,8 @@
       life: 2200 + Math.random() * 900,
       hue: 28 + Math.random() * 42,
       drift: (Math.random() - 0.5) * 0.35,
+      fontPx: 10 + Math.random() * 20,
+      sizeWobble: 0.85 + Math.random() * 0.35,
     });
     if (glyphs.length > MAX_GLYPHS) glyphs.shift();
   }
@@ -109,10 +112,73 @@
     ensureLoop();
   }
 
+  function spawnClickFx(x, y) {
+    clickFx.push({
+      x: x,
+      y: y,
+      born: performance.now(),
+      ripples: [{ delay: 0 }, { delay: 90 }, { delay: 180 }],
+      floater: { y: 0, opacity: 1 },
+    });
+  }
+
+  function onMouseDown(e) {
+    if (e.button !== 0) return;
+    var t = e.target;
+    if (t && t.closest && t.closest("#follow-toggle")) return;
+    spawnClickFx(e.clientX, e.clientY);
+    ensureLoop();
+  }
+
+  function drawClickFxItem(f, now) {
+    var t = now - f.born;
+    if (t > 1400) return false;
+
+    f.floater.y -= 0.55;
+    f.floater.opacity = Math.max(0, 1 - t / 900);
+
+    var x = f.x;
+    var y = f.y;
+    var i, rip, rt, rp, radius;
+
+    for (i = 0; i < f.ripples.length; i++) {
+      rip = f.ripples[i];
+      rt = t - rip.delay;
+      if (rt < 0 || rt > 700) continue;
+      rp = rt / 700;
+      radius = 16 + rp * 58;
+      ctx.strokeStyle = "rgba(180, 120, 60, " + (0.5 * (1 - rp)) + ")";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    ctx.save();
+    ctx.translate(x, y - 42 + f.floater.y);
+    ctx.font = "700 18px 'Noto Serif SC','Source Han Serif SC',serif";
+    ctx.fillStyle = "rgba(120, 72, 36, " + f.floater.opacity + ")";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("咚", 0, 0);
+    ctx.font = "12px 'Noto Serif SC',serif";
+    ctx.fillStyle = "rgba(92, 83, 71, " + (f.floater.opacity * 0.85) + ")";
+    ctx.fillText("功德 +1", 0, 20);
+    ctx.restore();
+
+    return true;
+  }
+
+  function drawClickFx(now) {
+    for (var i = clickFx.length - 1; i >= 0; i--) {
+      if (!drawClickFxItem(clickFx[i], now)) clickFx.splice(i, 1);
+    }
+  }
+
   function drawGlyphs(now) {
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.font = "600 15px 'Noto Serif SC','Source Han Serif SC','Songti SC',Georgia,serif";
+    var fontFamily = "'Noto Serif SC','Source Han Serif SC','Songti SC',Georgia,serif";
 
     for (var i = glyphs.length - 1; i >= 0; i--) {
       var g = glyphs[i];
@@ -124,23 +190,24 @@
 
       var pulse = 0.45 + Math.sin(now * 0.004 + g.x * 0.01) * 0.22;
       var alpha = (1 - p) * pulse * 0.72;
-      var scale = 0.85 + (1 - p) * 0.35;
+      var lifeScale = p < 0.12 ? 0.55 + (p / 0.12) * 0.45 : 1 - (p - 0.12) * 0.28;
+      var fontSize = g.fontPx * g.sizeWobble * lifeScale * (0.92 + pulse * 0.14);
 
       g.x += g.drift;
       g.y -= 0.12;
 
-      var grd = ctx.createLinearGradient(g.x - 12, g.y - 12, g.x + 12, g.y + 12);
+      var pad = fontSize * 0.85;
+      var grd = ctx.createLinearGradient(g.x - pad, g.y - pad, g.x + pad, g.y + pad);
       grd.addColorStop(0, "hsla(" + g.hue + ", 62%, 42%, " + alpha + ")");
       grd.addColorStop(0.5, "hsla(" + (g.hue + 18) + ", 78%, 55%, " + (alpha * 0.95) + ")");
       grd.addColorStop(1, "hsla(" + (g.hue + 36) + ", 55%, 38%, " + (alpha * 0.35) + ")");
 
       ctx.save();
-      ctx.translate(g.x, g.y);
-      ctx.scale(scale, scale);
+      ctx.font = "600 " + fontSize.toFixed(2) + "px " + fontFamily;
       ctx.fillStyle = grd;
       ctx.shadowColor = "hsla(" + g.hue + ", 70%, 50%, " + (alpha * 0.35) + ")";
-      ctx.shadowBlur = 8;
-      ctx.fillText(g.char, 0, 0);
+      ctx.shadowBlur = Math.min(12, fontSize * 0.45);
+      ctx.fillText(g.char, g.x, g.y);
       ctx.restore();
     }
   }
@@ -153,8 +220,9 @@
 
     ctx.clearRect(0, 0, W, H);
     drawGlyphs(now);
+    drawClickFx(now);
 
-    if (glyphs.length) {
+    if (glyphs.length || clickFx.length) {
       raf = requestAnimationFrame(loop);
     } else {
       running = false;
@@ -166,7 +234,7 @@
     if (document.hidden) {
       running = false;
       cancelAnimationFrame(raf);
-    } else if (active && glyphs.length) {
+    } else if (active && (glyphs.length || clickFx.length)) {
       ensureLoop();
     }
   }
@@ -178,6 +246,7 @@
     raf = 0;
     window.removeEventListener("resize", resize);
     window.removeEventListener("mousemove", onMouseMove);
+    window.removeEventListener("mousedown", onMouseDown);
     document.removeEventListener("visibilitychange", onVisibility);
     if (reducedListener) {
       prefersReduced.removeEventListener("change", reducedListener);
@@ -187,6 +256,7 @@
     canvas = null;
     ctx = null;
     glyphs = [];
+    clickFx = [];
     updateToggleLabel();
   }
 
@@ -201,6 +271,7 @@
     resize();
     window.addEventListener("resize", resize);
     window.addEventListener("mousemove", onMouseMove, { passive: true });
+    window.addEventListener("mousedown", onMouseDown, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
     reducedListener = function (ev) {
       if (ev.matches) {
