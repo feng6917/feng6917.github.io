@@ -1,5 +1,5 @@
 /**
- * 鼠标跟随：渐变铭文；左键点击断环涟漪 + 「功德 +1」
+ * 鼠标跟随：渐变铭文；左键点击上浮「功德 +1」
  * 开关：右上角「开启跟随 / 关闭跟随」，localStorage 记忆（默认关闭）
  */
 (function () {
@@ -114,34 +114,11 @@
     ensureLoop();
   }
 
-  function buildIrregularStrokes() {
-    var strokes = [];
-    var n = 3 + ((Math.random() * 3) | 0);
-    var cursor = Math.random() * Math.PI * 2;
-    var i, k, steps, span, pts;
-    for (i = 0; i < n; i++) {
-      span = (Math.PI * 2 / n) * (0.22 + Math.random() * 0.42);
-      steps = 4 + ((Math.random() * 5) | 0);
-      pts = [];
-      for (k = 0; k <= steps; k++) {
-        pts.push({
-          t: k / steps,
-          radial: (Math.random() - 0.5) * 16,
-          twist: (Math.random() - 0.5) * 0.14,
-        });
-      }
-      strokes.push({ start: cursor, span: span, pts: pts });
-      cursor += span + 0.25 + Math.random() * 0.65;
-    }
-    return strokes;
-  }
-
   function spawnClickFx(x, y) {
     clickFx.push({
       x: x,
       y: y,
       born: performance.now(),
-      strokes: buildIrregularStrokes(),
       floater: { y: 0, opacity: 1 },
     });
   }
@@ -161,34 +138,8 @@
     f.floater.y -= 0.55;
     f.floater.opacity = Math.max(0, 1 - t / 900);
 
-    var x = f.x;
-    var y = f.y;
-    var rp = Math.min(1, t / 700);
-    var radius = 16 + rp * 58;
-    var alpha = 0.42 * (1 - rp);
-    var scale = radius / 42;
-    var stroke, j, pt, ang, r, px, py, idx;
-    ctx.strokeStyle = "rgba(180, 120, 60, " + alpha + ")";
-    ctx.lineWidth = 0.65;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    for (j = 0; j < f.strokes.length; j++) {
-      stroke = f.strokes[j];
-      ctx.beginPath();
-      for (idx = 0; idx < stroke.pts.length; idx++) {
-        pt = stroke.pts[idx];
-        ang = stroke.start + stroke.span * pt.t + pt.twist;
-        r = radius + pt.radial * scale;
-        px = x + Math.cos(ang) * r;
-        py = y + Math.sin(ang) * r;
-        if (idx === 0) ctx.moveTo(px, py);
-        else ctx.lineTo(px, py);
-      }
-      ctx.stroke();
-    }
-
     ctx.save();
-    ctx.translate(x, y - 36 + f.floater.y);
+    ctx.translate(f.x, f.y - 36 + f.floater.y);
     ctx.font = "12px 'Noto Serif SC','Source Han Serif SC',serif";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
