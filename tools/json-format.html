@@ -197,12 +197,12 @@ permalink: /tools/json-format/
             flex: 1;
             border: 1px solid var(--line);
             border-radius: 6px;
-            padding: 14px 16px;
+            padding: 8px 0;
             overflow: auto;
-            background: #f0ebe3;
+            background: #fafafa;
             font-family: var(--mono);
-            font-size: 13px;
-            line-height: 1.55;
+            font-size: 12px;
+            line-height: 1.4;
             color: var(--ink);
             transition: border-color 0.2s;
         }
@@ -212,9 +212,69 @@ permalink: /tools/json-format/
             outline: none;
         }
 
+        .json-tree {
+            --json-indent: 16px;
+        }
+
+        .json-row {
+            display: flex;
+            align-items: flex-start;
+            min-height: 1.4em;
+            padding: 0 12px 0 8px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .json-row:hover {
+            background: rgba(58, 52, 44, 0.04);
+        }
+
+        .json-ln {
+            flex: 0 0 36px;
+            text-align: right;
+            padding-right: 8px;
+            color: #b0b0b0;
+            user-select: none;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .json-fold-slot {
+            flex: 0 0 14px;
+            line-height: 1.4;
+        }
+
+        .json-fold-toggle {
+            cursor: pointer;
+            color: #888;
+            font-size: 10px;
+            user-select: none;
+            display: inline-block;
+            width: 14px;
+            text-align: center;
+        }
+
+        .json-fold-toggle:hover {
+            color: var(--accent);
+        }
+
+        .json-fold-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+
+        .json-row-body {
+            flex: 1;
+            min-width: 0;
+            line-height: 1.4;
+        }
+
+        .json-fold-children.collapsed {
+            display: none;
+        }
+
         .json-key {
-            color: #8b4d47;
-            font-weight: 600;
+            color: #333;
+            font-weight: 400;
         }
 
         .json-string {
@@ -222,7 +282,7 @@ permalink: /tools/json-format/
         }
 
         .json-number {
-            color: #4a6670;
+            color: #c7254e;
         }
 
         .json-boolean {
@@ -235,46 +295,6 @@ permalink: /tools/json-format/
 
         .json-punctuation {
             color: #5c5650;
-        }
-
-        .collapsible {
-            cursor: pointer;
-            position: relative;
-            padding-left: 18px;
-            user-select: none;
-        }
-
-        .collapsible::before {
-            content: '▼';
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-            font-weight: bold;
-            font-size: 11px;
-            transition: transform 0.2s;
-        }
-
-        .collapsible.collapsed::before {
-            transform: rotate(-90deg);
-        }
-
-        .collapsible-content {
-            padding-left: 20px;
-            border-left: 1px dashed rgba(58, 52, 44, 0.18);
-            margin-left: 5px;
-            transition: all 0.3s;
-        }
-
-        .dark-theme .collapsible-content {
-            border-left-color: rgba(232, 228, 220, 0.15);
-        }
-
-        .collapsed>.collapsible-content {
-            display: none;
-        }
-
-        .json-item {
-            margin: 2px 0;
         }
 
         .error {
@@ -341,11 +361,6 @@ permalink: /tools/json-format/
             text-align: center;
         }
 
-        .json-line {
-            display: flex;
-            align-items: flex-start;
-        }
-
         .empty-array,
         .empty-object {
             color: #95a5a6;
@@ -410,13 +425,21 @@ permalink: /tools/json-format/
         }
 
         .dark-theme .output-area {
-            background: #262422;
-            color: #ddd8cf;
+            background: #1e1e1e;
+            color: #d4d4d4;
             border-color: rgba(232, 228, 220, 0.12);
         }
 
+        .dark-theme .json-ln {
+            color: #6e6e6e;
+        }
+
+        .dark-theme .json-row:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
         .dark-theme .json-key {
-            color: #d4a59a;
+            color: #9cdcfe;
         }
 
         .dark-theme .json-string {
@@ -424,7 +447,7 @@ permalink: /tools/json-format/
         }
 
         .dark-theme .json-number {
-            color: #9ab5c4;
+            color: #b5cea8;
         }
 
         .dark-theme .json-boolean {
@@ -595,8 +618,8 @@ permalink: /tools/json-format/
                 // 解析JSON
                 currentJsonObj = JSON.parse(input);
 
-                // 创建格式化后的JSON显示
-                const formattedJSON = createFormattedJSON(currentJsonObj);
+                const lineCounter = { n: 1 };
+                const formattedJSON = createFormattedJSON(currentJsonObj, 0, lineCounter);
                 output.appendChild(formattedJSON);
 
                 // 显示统计信息
@@ -613,138 +636,206 @@ permalink: /tools/json-format/
             }
         }
 
-        // 创建格式化JSON的DOM元素
-        function createFormattedJSON(obj, isRoot = true) {
-            const container = document.createElement('div');
+        function createFormattedJSON(obj, depth, lineCounter, keyLabel) {
+            const tree = document.createElement('div');
+            tree.className = 'json-tree';
 
-            if (Array.isArray(obj)) {
-                // 处理数组
-                if (obj.length === 0) {
-                    container.innerHTML = '<span class="json-punctuation">[</span><span class="empty-array">空数组</span><span class="json-punctuation">]</span>';
-                    return container;
-                }
-
-                const collapsible = document.createElement('div');
-                collapsible.className = 'collapsible json-item';
-
-                const prefix = document.createElement('span');
-                prefix.className = 'json-punctuation';
-                prefix.textContent = '[';
-                collapsible.appendChild(prefix);
-
-                const content = document.createElement('div');
-                content.className = 'collapsible-content';
-
-                obj.forEach((item, index) => {
-                    const itemElement = createFormattedJSON(item, false);
-                    content.appendChild(itemElement);
-
-                    // 添加逗号（除了最后一个元素）
-                    if (index < obj.length - 1) {
-                        const comma = document.createElement('span');
-                        comma.className = 'json-punctuation';
-                        comma.textContent = ',';
-                        content.appendChild(comma);
-                    }
-                });
-
-                collapsible.appendChild(content);
-
-                const suffix = document.createElement('span');
-                suffix.className = 'json-punctuation';
-                suffix.textContent = ']';
-                collapsible.appendChild(suffix);
-
-                // 添加点击折叠/展开功能
-                collapsible.addEventListener('click', function (e) {
-                    // 防止点击子元素时触发折叠
-                    if (e.target === this || e.target === prefix) {
-                        this.classList.toggle('collapsed');
-                    }
-                });
-
-                container.appendChild(collapsible);
-
-            } else if (obj !== null && typeof obj === 'object') {
-                // 处理对象
-                const keys = Object.keys(obj);
-                if (keys.length === 0) {
-                    container.innerHTML = '<span class="json-punctuation">{</span><span class="empty-object">空对象</span><span class="json-punctuation">}</span>';
-                    return container;
-                }
-
-                const collapsible = document.createElement('div');
-                collapsible.className = 'collapsible json-item';
-
-                const prefix = document.createElement('span');
-                prefix.className = 'json-punctuation';
-                prefix.textContent = '{';
-                collapsible.appendChild(prefix);
-
-                const content = document.createElement('div');
-                content.className = 'collapsible-content';
-
-                keys.forEach((key, index) => {
-                    const line = document.createElement('div');
-                    line.className = 'json-line';
-
-                    const keyElement = document.createElement('span');
-                    keyElement.innerHTML = `<span class="json-key">"${key}"</span><span class="json-punctuation">: </span>`;
-                    line.appendChild(keyElement);
-
-                    const valueElement = createFormattedJSON(obj[key], false);
-                    line.appendChild(valueElement);
-
-                    // 添加逗号（除了最后一个元素）
-                    if (index < keys.length - 1) {
-                        const comma = document.createElement('span');
-                        comma.className = 'json-punctuation';
-                        comma.textContent = ',';
-                        line.appendChild(comma);
-                    }
-
-                    content.appendChild(line);
-                });
-
-                collapsible.appendChild(content);
-
-                const suffix = document.createElement('span');
-                suffix.className = 'json-punctuation';
-                suffix.textContent = '}';
-                collapsible.appendChild(suffix);
-
-                // 添加点击折叠/展开功能
-                collapsible.addEventListener('click', function (e) {
-                    // 防止点击子元素时触发折叠
-                    if (e.target === this || e.target === prefix) {
-                        this.classList.toggle('collapsed');
-                    }
-                });
-
-                container.appendChild(collapsible);
-
-            } else {
-                // 处理基本类型
-                const valueElement = document.createElement('span');
-
-                if (typeof obj === 'string') {
-                    valueElement.className = 'json-string';
-                    valueElement.textContent = `"${obj}"`;
-                } else if (typeof obj === 'number') {
-                    valueElement.className = 'json-number';
-                    valueElement.textContent = obj;
-                } else if (typeof obj === 'boolean') {
-                    valueElement.className = 'json-boolean';
-                    valueElement.textContent = obj;
-                } else if (obj === null) {
-                    valueElement.className = 'json-null';
-                    valueElement.textContent = 'null';
-                }
-
-                container.appendChild(valueElement);
+            function indentPx(d) {
+                return d * 16;
             }
 
-            return container;
+            function nextLineNum() {
+                return lineCounter.n++;
+            }
+
+            function appendRow(parent, d, bodyHtml, toggleEl) {
+                const row = document.createElement('div');
+                row.className = 'json-row';
+
+                const ln = document.createElement('span');
+                ln.className = 'json-ln';
+                ln.textContent = nextLineNum();
+
+                const slot = document.createElement('span');
+                slot.className = 'json-fold-slot';
+                if (toggleEl) slot.appendChild(toggleEl);
+
+                const body = document.createElement('span');
+                body.className = 'json-row-body';
+                body.style.paddingLeft = indentPx(d) + 'px';
+                body.innerHTML = bodyHtml;
+
+                row.appendChild(ln);
+                row.appendChild(slot);
+                row.appendChild(body);
+                parent.appendChild(row);
+                return row;
+            }
+
+            function appendPrimitive(parent, d, keyLabel, value) {
+                let valHtml = '';
+                if (typeof value === 'string') {
+                    valHtml = `<span class="json-string">"${escapeHtml(value)}"</span>`;
+                } else if (typeof value === 'number') {
+                    valHtml = `<span class="json-number">${value}</span>`;
+                } else if (typeof value === 'boolean') {
+                    valHtml = `<span class="json-boolean">${value}</span>`;
+                } else if (value === null) {
+                    valHtml = '<span class="json-null">null</span>';
+                }
+                const prefix = keyLabel
+                    ? `<span class="json-key">"${escapeHtml(keyLabel)}"</span><span class="json-punctuation">: </span>`
+                    : '';
+                appendRow(parent, d, prefix + valHtml, null);
+            }
+
+            function escapeHtml(s) {
+                return String(s)
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;');
+            }
+
+            function renderValue(parent, value, d, keyLabel, addComma) {
+                const comma = addComma ? '<span class="json-punctuation">,</span>' : '';
+
+                if (Array.isArray(value)) {
+                    if (value.length === 0) {
+                        const inner = keyLabel
+                            ? `<span class="json-key">"${escapeHtml(keyLabel)}"</span><span class="json-punctuation">: </span><span class="json-punctuation">[</span><span class="empty-array">空数组</span><span class="json-punctuation">]</span>${comma}`
+                            : `<span class="json-punctuation">[</span><span class="empty-array">空数组</span><span class="json-punctuation">]</span>${comma}`;
+                        appendRow(parent, d, inner, null);
+                        return;
+                    }
+
+                    const block = document.createElement('div');
+                    block.className = 'json-block';
+
+                    const children = document.createElement('div');
+                    children.className = 'json-fold-children';
+
+                    const toggle = document.createElement('span');
+                    toggle.className = 'json-fold-toggle';
+                    toggle.textContent = '▼';
+                    const openRow = appendRow(block, d, '', toggle);
+                    const openBody = openRow.querySelector('.json-row-body');
+                    const ellipsis = document.createElement('span');
+                    ellipsis.className = 'json-collapsed-hint json-punctuation';
+                    ellipsis.textContent = ' … ]';
+                    ellipsis.hidden = true;
+
+                    const openInner = keyLabel
+                        ? `<span class="json-key">"${escapeHtml(keyLabel)}"</span><span class="json-punctuation">: </span><span class="json-punctuation">[</span>`
+                        : '<span class="json-punctuation">[</span>';
+                    openBody.insertAdjacentHTML('afterbegin', openInner);
+                    openBody.appendChild(ellipsis);
+
+                    toggle.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const collapsed = children.classList.toggle('collapsed');
+                        toggle.classList.toggle('collapsed', collapsed);
+                        ellipsis.hidden = !collapsed;
+                    });
+
+                    block.appendChild(children);
+
+                    value.forEach((item, i) => {
+                        renderNode(children, item, d + 1, null, i < value.length - 1);
+                    });
+
+                    appendRow(children, d, '<span class="json-punctuation">]</span>' + comma, null);
+                    parent.appendChild(block);
+
+                } else if (value !== null && typeof value === 'object') {
+                    const keys = Object.keys(value);
+                    if (keys.length === 0) {
+                        const inner = keyLabel
+                            ? `<span class="json-key">"${escapeHtml(keyLabel)}"</span><span class="json-punctuation">: </span><span class="json-punctuation">{</span><span class="empty-object">空对象</span><span class="json-punctuation">}</span>${comma}`
+                            : `<span class="json-punctuation">{</span><span class="empty-object">空对象</span><span class="json-punctuation">}</span>${comma}`;
+                        appendRow(parent, d, inner, null);
+                        return;
+                    }
+
+                    const block = document.createElement('div');
+                    block.className = 'json-block';
+
+                    const children = document.createElement('div');
+                    children.className = 'json-fold-children';
+
+                    const toggle = document.createElement('span');
+                    toggle.className = 'json-fold-toggle';
+                    toggle.textContent = '▼';
+                    const openRow = appendRow(block, d, '', toggle);
+                    const openBody = openRow.querySelector('.json-row-body');
+                    const ellipsis = document.createElement('span');
+                    ellipsis.className = 'json-collapsed-hint json-punctuation';
+                    ellipsis.textContent = ' … }';
+                    ellipsis.hidden = true;
+
+                    const openInner = keyLabel
+                        ? `<span class="json-key">"${escapeHtml(keyLabel)}"</span><span class="json-punctuation">: </span><span class="json-punctuation">{</span>`
+                        : '<span class="json-punctuation">{</span>';
+                    openBody.insertAdjacentHTML('afterbegin', openInner);
+                    openBody.appendChild(ellipsis);
+
+                    toggle.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const collapsed = children.classList.toggle('collapsed');
+                        toggle.classList.toggle('collapsed', collapsed);
+                        ellipsis.hidden = !collapsed;
+                    });
+
+                    block.appendChild(children);
+
+                    keys.forEach((k, i) => {
+                        renderNode(children, value[k], d + 1, k, i < keys.length - 1);
+                    });
+
+                    appendRow(children, d, '<span class="json-punctuation">}</span>' + comma, null);
+                    parent.appendChild(block);
+
+                } else {
+                    appendPrimitive(parent, d, keyLabel, value);
+                    if (addComma) {
+                        const rows = parent.querySelectorAll(':scope > .json-row');
+                        const last = rows[rows.length - 1];
+                        if (last) {
+                            last.querySelector('.json-row-body').insertAdjacentHTML('beforeend', '<span class="json-punctuation">,</span>');
+                        }
+                    }
+                }
+            }
+
+            function renderNode(parent, value, d, keyLabel, addComma) {
+                if (Array.isArray(value) || (value !== null && typeof value === 'object')) {
+                    renderValue(parent, value, d, keyLabel, addComma);
+                } else {
+                    let valHtml = '';
+                    if (typeof value === 'string') {
+                        valHtml = `<span class="json-string">"${escapeHtml(value)}"</span>`;
+                    } else if (typeof value === 'number') {
+                        valHtml = `<span class="json-number">${value}</span>`;
+                    } else if (typeof value === 'boolean') {
+                        valHtml = `<span class="json-boolean">${value}</span>`;
+                    } else if (value === null) {
+                        valHtml = '<span class="json-null">null</span>';
+                    }
+                    const prefix = keyLabel
+                        ? `<span class="json-key">"${escapeHtml(keyLabel)}"</span><span class="json-punctuation">: </span>`
+                        : '';
+                    appendRow(parent, d, prefix + valHtml + (addComma ? '<span class="json-punctuation">,</span>' : ''), null);
+                }
+            }
+
+            const rootWrap = document.createElement('div');
+            if (Array.isArray(obj) || (obj !== null && typeof obj === 'object')) {
+                renderValue(rootWrap, obj, depth, keyLabel, false);
+            } else {
+                renderNode(rootWrap, obj, depth, keyLabel, false);
+            }
+            tree.appendChild(rootWrap);
+            return tree;
         }
 
         // 显示JSON统计信息
@@ -804,17 +895,27 @@ permalink: /tools/json-format/
 
         // 全部展开
         function expandAll() {
-            const collapsibles = document.querySelectorAll('.collapsible');
-            collapsibles.forEach(el => {
+            document.querySelectorAll('.json-fold-children').forEach(el => {
                 el.classList.remove('collapsed');
+            });
+            document.querySelectorAll('.json-fold-toggle').forEach(el => {
+                el.classList.remove('collapsed');
+            });
+            document.querySelectorAll('.json-collapsed-hint').forEach(el => {
+                el.hidden = true;
             });
         }
 
         // 全部折叠
         function collapseAll() {
-            const collapsibles = document.querySelectorAll('.collapsible');
-            collapsibles.forEach(el => {
+            document.querySelectorAll('.json-fold-children').forEach(el => {
                 el.classList.add('collapsed');
+            });
+            document.querySelectorAll('.json-fold-toggle').forEach(el => {
+                el.classList.add('collapsed');
+            });
+            document.querySelectorAll('.json-collapsed-hint').forEach(el => {
+                el.hidden = false;
             });
         }
 
