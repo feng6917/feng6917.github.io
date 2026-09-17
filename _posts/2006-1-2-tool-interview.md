@@ -938,6 +938,64 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 
 ---
 
+#### Q23b. 智能体：规则/关键词路由与意图 LLM 怎么分工？
+
+**思路**：规则保确定性、低成本、合规闸门；LLM 补泛化与纠偏；执行与展示层不再二次调模型。
+
+**参考答案**：
+
+用户一句话先进 **规则路由**，得到 `ruleIntent`（及规则侧槽位/上下文）。只有规则 **拿不准** 时才调 **意图 LLM**；合并后走 **硬闸门** 执行；列表 **短总结** 只依赖最终 intent + 业务数据，**与意图 LLM 无关**。
+
+```
+用户输入（文本 / 可选图片）
+    │
+    ▼
+[1] 规则路由（必走，零 LLM）
+    · @功能：@搜图 / @档案 / … → 直接钉死 ruleIntent
+    · 关键词 / 正则：词典、业务口令
+    · 有无图：有图走图搜等固定分支
+    → 输出 ruleIntent（+ 规则已抽槽位）
+    │
+    ▼
+[2] 是否调意图 LLM？
+    跳过（不调模型）当任一成立：
+    · 已 @ 功能
+    · 「单人查档 / 词典命中 / 人脸车 / incomplete …」等钉死场景
+    否则 → 意图 LLM，结构化 JSON：
+    { intent, name/keywords/address, confidence }
+    │
+    ▼
+[3] 合并 ruleIntent × LLM intent
+    · confidence < 0.45 → **以规则为准**（防模型乱飘）
+    · 高置信 → 模型可 **纠偏**（例：口语「联系」→ 人人关系 intent）
+    · **硬闸门**（规则/配置优先，LLM 不能推翻）：
+      档案 / 轨迹 / 抓拍等多条敏感或高成本链路
+    │
+    ▼
+[4] 执行（Tool / MCP / 检索 / 档案 API）
+    · **槽位优先**：合并结果里的 name、keywords、address
+    · **本地抽词兜底**：LLM 槽位缺失时用 NER/词典/正则补全
+    │
+    ▼
+[5] 列表短总结（展示层）
+    · 按 **最终 intent + 结果列表数据** 模板或轻量生成
+    · **不再调用意图 LLM**（意图阶段一次定调，避免延迟与口径不一致）
+```
+
+| 层次 | 职责 | 为什么这样拆 |
+| --- | --- | --- |
+| 规则路由 | 高频、强约束、@ 与合规 | 确定性、毫秒级、可审计、省 token |
+| 意图 LLM | 长尾说法、抽槽、纠偏 | 泛化；低置信回退规则 |
+| 硬闸门 | 档案/轨迹/抓拍等 | 安全与成本；避免模型误路由 |
+| 执行抽槽 | 槽位优先 + 本地兜底 | 执行要稳，不绑单次 LLM |
+| 短总结 | 结果导向 | 与意图解耦，列表可读即可 |
+
+**与 Q23「Agent 死循环」的关系**：意图只 **一步 JSON**，不进入 ReAct 环；复杂多步走 Function Call/MCP，仍受 max_iterations、硬闸门路由限制。
+
+**面试怎么讲**：**规则先行、模型补位、低置信听规则的** 三层；强调 **硬闸门** 和 **意图 LLM 只负责认路，不负责列表文案**；双网/档案场景可补一句「敏感 intent 必须规则或阈值+人工策略，不能纯 LLM 放行」。
+
+---
+
 #### Q24. 作为研发组长，你怎么分配任务和控风险？
 
 **思路**：结合简历「梳理流程、分配任务、周报、攻坚难点」。
@@ -965,6 +1023,151 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 - 「直接 `go func` 快，但 Context 取消传不下去——建议绑 `ctx` 或说明为何不会泄漏。」
 
 **原则**：指出**备选方案 + 取舍依据 + 风险**；风格类意见一次性对齐规范，不逐行抠格式。
+
+---
+
+<h3 id="c-4-5" class="mh2">E. 简历补充 · 协议 / 向量双栈 / 智能体 / 多模态 / 实时 / 身份（P0）</h3>
+
+#### Q25. GA/1400 等行业协议对接，在双网架构里你怎么做？
+
+**思路**：网闸只认固定载荷；内外网业务模型不一致时要有 **适配层 + 幂等 + 对账**，和 Q8 摆渡链路一体讲。
+
+**参考答案**：
+
+1. **分层**：
+  - **协议适配**：GA/1400（及平台变种 XML/JSON）→ 内部统一事件模型（protobuf/struct）
+  - **摆渡传输**：分片、压缩、ACK（见 Q8、G55）
+  - **业务消费**：布控、摘要、状态入库，带幂等键
+2. **转换要点**：字段映射表 + 必填/枚举校验；设备 ID、时间、坐标系规范化；平台不支持的能力 **显式降级** 并打 metric，不 silent drop。
+3. **版本与联调**：协议版本号进消息头；适配层单测（golden file）+ 抓包联调；变更走配置热更或发版窗口。
+4. **可靠**：网闸重传 ≠ 业务重复写；`(deviceId, bizSeq, protocolVersion)` 幂等；日对账条数/hash，偏差告警（Q8）。
+5. **面试怎么讲**：双网难点不只有带宽，还有 **语义对齐**；我在中间层做 GA/1400→内部模型，和 checkpoint/对账绑在一起，避免「协议通了但数据重复/丢失」。
+
+---
+
+#### Q26. Vearch（人脸/形体）和 Milvus（大模型语义）为什么两套？怎么分工？
+
+**思路**：特征类型、索引基建、QPS 路径不同；讲清 **共存理由** 和 **在线查询路径**，避免「将来全迁 Milvus」空话。
+
+**参考答案**：
+
+1. **Vearch**：
+  - **人脸/形体结构化特征**，和布控、1:N、历史回溯链路深度绑定
+  - 低维、高 QPS ANN；集群与运维团队已有经验（Q12 慢查优化案例）
+2. **Milvus**：
+  - **多模态 Embedding**（以图搜图、以文搜图、流摘要向量）
+  - 向量 + 丰富 metadata（设备、时间、权限 tag）；组合检索常和 TiDB 条件过滤配合（Q9）
+3. **在线路径**：
+  - 布控命中、形体/人脸 1:N → **Vearch**
+  - 语义搜图、组合条件检索 → **Milvus**（先结构化缩小范围再 ANN，或 ANN 后 ACL 过滤，看选择性）
+4. **离线**：摘要帧/流摘要 → Embedding 任务 → 写 Milvus；结构化特征仍走原 Vearch 流水线；模型版本变更需 **双写或灰度索引**。
+5. **合规**：向量与模型在内网（G55）；检索 API 审计谁查了什么（Q15）。
+6. **面试怎么讲**：不是二选一，是 **两类特征、两条 SLA**；Vearch 守核心业务，Milvus 守大模型检索扩展。
+
+---
+
+#### Q27. 组合搜图 + 文字布控，和单次以图搜图有何不同？
+
+**思路**：多条件编排、召回融合、布控 **误报成本**；和 Q10 任务中心、Q23b 意图硬闸门衔接。
+
+**参考答案**：
+
+1. **组合搜图**：
+  - 输入：图 + 可选文本/时间窗/区域/设备列表
+  - **多路召回**：向量 ANN + TiDB/标签结构化过滤 → 交集或加权融合 → 权限过滤 → 分页
+  - 控制 topK（Q12）；避免单 ANN 拉 500 再内存过滤
+2. **文字布控**：
+  - 自然语言或关键词 → **规则/意图 LLM** 定布控类型（Q23b 硬闸门）
+  - 落 **结构化规则** 写业务中心（Q10）；Worker 无状态执行；创建/变更可审计
+3. **与单次以图搜图**：后者单模态、只读检索；组合搜图强调 **条件选择性**；文字布控是 **写路径**，失败重试、幂等、告警优先级更高。
+4. **指标**：检索 P99、融合后有效条数；布控生效延迟、误报率；Prometheus 业务 Counter（G51 storeproxy 同类做法）。
+5. **面试怎么讲**：组合搜图是 **召回工程**；文字布控是 **意图→结构化任务**，必须规则+闸门，不能纯 LLM 直接写库。
+
+---
+
+#### Q28. Function Call / MCP / Tool 在生产里怎么接？和 Q23b 路由怎么衔接？
+
+**思路**：意图只认路；执行层 **白名单 Tool + 超时 + 鉴权**；别讲成 LangChain 教程（Q23 防死循环）。
+
+**参考答案**：
+
+1. **衔接 Q23b**：`final intent` + 槽位 → **Intent→Tool 映射表**（配置/代码生成）；未在白名单的 intent 拒绝或转人工。
+2. **Function Call**：对支持 FC 的模型，Tool Schema 与内部 HTTP/gRPC **同一套参数校验**（validator）；模型只填参，服务端仍二次校验。
+3. **MCP**：适合 **可插拔、边界清晰** 的能力（文档、外部工具）；内网核心（档案、检索、Milvus）优先 **直连 gRPC**，MCP 作统一接入层时加网关鉴权与审计。
+4. **可靠性**：单 Tool `context` 超时；写操作幂等键；`max_iterations` 限制多步调用（Q23）；敏感 Tool（档案/轨迹）走硬闸门 + 租户 ACL。
+5. **可观测**：每 Tool 一次 span（Jaeger Q12）；RED 指标 + 失败分类（可重试/不可重试，G42）。
+6. **面试怎么讲**：路由 **一步 JSON** 定 intent；执行是 **确定性 Tool 链**，FC/MCP 只是调用外观，生产权在服务端白名单。
+
+---
+
+#### Q29. FunASR + CosyVoice 在多模态链路里怎么串？
+
+**思路**：语音是 **I/O 适配**；认路仍 Q23b；异步、GPU、双网模型不出内网。
+
+**参考答案**：
+
+1. **ASR（FunASR）**：
+  - 音频上传或流式 chunk → ASR 服务 → 文本 → **同一套规则路由 + 意图 LLM**
+  - 长音频分片、队列、超时；失败返回可重试错误码
+2. **TTS（CosyVoice）**：
+  - 回复文本（或模板）→ TTS → 对象存储 URL / 流式下发
+  - 常用话术可缓存；注意并发与 GPU 资源隔离
+3. **与视频摘要**：摘要向量走 Milvus（Q26）；语音智能体走文本链路，**不混在一个大模型端到端**里，便于控成本与合规。
+4. **工程**：CI 镜像与模型版本 pin（Q14）；健康检查与队列堆积告警（G51）；内网部署（G55）。
+5. **面试怎么讲**：ASR/TTS 是 **入口/出口适配**；业务语义仍 **规则先行、意图 LLM 补位**，避免语音全链路黑盒。
+
+---
+
+#### Q30. WebSocket 长连接：设备/前端实时协同你怎么设计？
+
+**思路**：和 gRPC 分工；心跳、扩缩容、广播；接 Q10 业务中心发流。
+
+**参考答案**：
+
+1. **场景**：实时状态、任务推送、大屏；比 HTTP 轮询更省资源；对内服务间仍 **gRPC**（G28）。
+2. **连接管理**：网关或专用 WS 服务；连接注册（Redis/分片 map）；**心跳 + 空闲断开**；单 IP/租户连接数上限。
+3. **消息下发**：
+  - 业务中心任务变更 → MQ 或 gRPC 广播 → WS 节点 **pub/sub** 推送到本机连接
+  - 扩缩容时避免 sticky 丢消息：以 **userId/deviceId 路由到 channel**，重连后补拉增量（version/checkpoint）
+4. **治理**：单连接限流；消息体大小上限；与 Jaeger 关联 `connectionId`（日志脱敏）。
+5. **面试怎么讲**：WS 管 **端上实时**；状态以 DB/业务中心为准（Q10），WS 只是通知，不是 source of truth。
+
+---
+
+#### Q31. 档案库 vs 知识库 RAG，产品和技术差异？
+
+**思路**：结构化精确查询 vs 非结构化文档 QA；权限与智能体硬闸门（Q23b、Q22）。
+
+**参考答案**：
+
+1. **档案库**：
+  - 强 schema：人/车/案事件/轨迹等 **精确查询 API**
+  - 智能体：`@档案`、档案/轨迹/抓拍等 **硬闸门 intent** → Tool 调档案服务，**禁止 LLM 编造**
+  - 列表短总结用结果数据生成，与意图 LLM 解耦（Q23b）
+2. **知识库 RAG**：
+  - 制度、手册、FAQ 等 PDF/Markdown → 切分 → Embedding → 向量检索
+  - **ACL tag** 检索后过滤（Q22 Advanced RAG）；答案 **必须带引用片段**；低置信拒答
+3. **不要混用**：档案库不是「把档案 PDF 扔进去向量问答」；结构化走 API，非结构化走 RAG。
+4. **双网**：索引与模型在内网；外网若有助手，仅脱敏 FAQ 或只读接口（G55、Q15）。
+5. **面试怎么讲**：档案 **Tool + 审计**；知识库 **RAG + 引用**；智能体路由里两者 intent 不同、闸门不同。
+
+---
+
+#### Q32. Keycloak + RBAC（亮风台 PaaS）和 Casbin（OA）差异？你怎么落地？
+
+**思路**：身份（IdP）vs 应用内细粒度授权（Q2）；PaaS 微服务 JWT 与控制台 SSO 一体。
+
+**参考答案**：
+
+1. **Keycloak**：
+  - 平台 **IdP**：用户、角色、客户端、OIDC/SAML
+  - 微服务验 JWT 签名 + 解析角色/租户声明；控制台、Redash 等走 **同一 SSO**
+2. **Casbin（Q2）**：
+  - 应用内 **资源/表单/字段级** 策略；适合 OA 网盘、考核等细粒度数据权限
+  - 可并存：**Keycloak 管「是谁」**，Casbin 管「能看哪张表哪一行」
+3. **与 Q6 迁移**：MySQL→PostgreSQL 同期切 IdP；服务间从共享 session 迁到 **Bearer Token**；回调 URL、证书轮换进 checklist（Q24）。
+4. **实践**：Redash/自助分析用 **只读 DB 账号 + SSO**；敏感 API 仍走服务侧二次鉴权，不单信 JWT 里的 role 字符串。
+5. **面试怎么讲**：PaaS 要 **统一身份**；OA 要 **数据面策略**；别用一个 Casbin 扛所有平台登录。
 
 ---
 
@@ -4305,6 +4508,108 @@ db.SetConnMaxLifetime(5 * time.Minute)
 | USE（资源） | Utilization、Saturation、Errors | CPU%、队列深度、磁盘 IO err |
 | 业务      | 领域 KPI                        | 下单成功率、支付金额          |
 
+**业务落地：storeproxy（preprocessstoreproxy Pod）→ Prometheus + Grafana**
+
+典型 **Pull 模型**：进程只暴露 `/metrics`，不推、不向 Prometheus 注册；Grafana **不 scrape Pod**，只向 Prometheus 发 PromQL 读 TSDB。
+
+```
+preprocessstoreproxy Pod
+│
+├─ [进程内] InitPrometheusMetrics("")
+│     ① Sink + go-metrics 全局化（全进程 metrics.* 打点都进这里）
+│     ② Register → prometheus DefaultRegisterer（与 promhttp 共用一套 Registry）
+│     ③ 格式：go-metrics → Gauge / Counter / Summary + 命名与 host 等标签规则
+│     ④ 暂存：指标在内存；Expiration 控制「运行时新建」指标的过期/剔除
+│     ⑤ :9090 上 GET /metrics → promhttp 输出当前快照（被动，不推、不注册到 Prometheus）
+│
+│     业务示例（同一条管道）：
+│     resolveScenePicIsJpg / resolveSmallPicIsJpg → 路径生成
+│     → observeImagePathGenerated → preprocess_store_image_path_total{format, kind}
+│     observeIOOperation → preprocess_store_io_total{operation, outcome}
+│
+├─ [Pod 元数据] prometheus.io/scrape=true, prometheus.io/port=9090
+│     （与 Init 无关；Helm 写在 Pod Template，可选 prometheus.io/path=/metrics）
+│
+├─ [集群] Prometheus（loki-prometheus-server）
+│     job: kubernetes-pods
+│       K8s 发现 Pod → keep scrape=true
+│       __address__ = PodIP:9090，__metrics_path__ = /metrics
+│       约每 15s GET → 解析样本 → 写入 TSDB（带时间戳的历史）
+│     查询面（本进程不调用）：
+│       Web Graph / API：/api/v1/query、/api/v1/query_range + PromQL
+│
+└─ [集群] Grafana（loki-grafana）
+      ① 数据源（一次性）：Configuration → Data sources → Prometheus
+           URL = http://loki-prometheus-server.loki:80（与 common-config [PROMETHEUS].Address 一致）
+           Save & test → UP
+      ② 查数方式：不 scrape Pod，只向 Prometheus 发 PromQL（读 TSDB）
+      ③ 建板路径（二选一）：
+           Explore → PromQL → 有曲线 → Add to dashboard
+           或 New dashboard → Add empty panel → Query 填 PromQL → Apply → Save
+      ④ 面板常用配置：
+           Visualization = Time series（时间–数值折线）
+           Legend = {{format}} 或 {{kind}}-{{format}}（图例用标签值）
+           时间范围 = Last 1 hour（Dashboard 右上角）
+      ⑤ 示例 PromQL（preprocessstoreproxy）：
+           路径 jpg/png 速率：
+             sum by (format) (rate(preprocess_store_image_path_total{k8s_app="go-server-hb-preprocessstoreproxy"}[5m]))
+           场景 vs 小图：
+             sum by (kind, format) (rate(preprocess_store_image_path_total{...}[5m]))
+      ⑥ 告警（可选）：Alerting → Contact points / Rule → 条件仍是对 Prometheus 做 PromQL
+```
+
+| 环节 | 谁负责 | 要点 |
+| --- | --- | --- |
+| 打点 | 业务 + `observe*` | 业务 Counter 与通用 `metrics.*` 同走 Sink，label 控基数（format/kind，勿用 trace_id） |
+| 暴露 | Init + `:9090/metrics` | 与业务 HTTP 端口分离；Registry 与 promhttp 一致 |
+| 发现 | Pod 注解 + `kubernetes_sd_configs` | 注解是「可被谁拉」的声明，Init 只管「拉到了什么格式」 |
+| 存储 | Prometheus TSDB | 拉取间隔、retention；K8s 发现会带上 `k8s_app` 等 meta label 供 PromQL 过滤 |
+| 展示 | Grafana 数据源 | 配置一次 Prometheus URL；面板/Explore/告警规则共用同一 PromQL 语义 |
+
+```promql
+# preprocessstoreproxy：按 format 看路径生成速率
+sum by (format) (
+  rate(preprocess_store_image_path_total{k8s_app="go-server-hb-preprocessstoreproxy"}[5m])
+)
+
+# 场景图 vs 小图
+sum by (kind, format) (
+  rate(preprocess_store_image_path_total{k8s_app="go-server-hb-preprocessstoreproxy"}[5m])
+)
+```
+
+**基础设施落地：node-exporter（DaemonSet）→ USE 资源层**
+
+与业务 Pod 一样仍是 **Pull**；差异在 **每 Node 一个 DaemonSet Pod**，指标来自 **宿主机** 而非应用进程。Prometheus / Grafana 数据源与 storeproxy 共用 **loki-prometheus-server**，Grafana 仍只发 PromQL。
+
+```
+K8s 每个 Node
+  └─ Pod: node-exporter（DaemonSet，每节点 1 个）
+        挂载宿主机 /proc、/sys、/ 等（hostPath / hostNetwork 视 Chart 而定）
+        读 CPU、内存、磁盘、网络、文件系统等
+        暴露 :9100/metrics（标准 node_* 指标族）
+              ↓ scrape（常见：Pod 注解 prometheus.io/port=9100 + job kubernetes-pods，或独立 node job）
+        loki-prometheus-server → TSDB
+              ↓
+        Grafana：node_memory_*、node_cpu_*、node_filesystem_* 等（可用官方 Node Exporter Full 模板）
+```
+
+| 对比 | 业务 Pod（如 preprocessstoreproxy） | node-exporter |
+| --- | --- | --- |
+| 部署 | Deployment / 多副本 | DaemonSet，与 Node 1:1 |
+| 指标含义 | 领域 KPI、IO、自定义 Counter | USE：CPU/内存/磁盘/网络 |
+| 端口 | 常 9090（自研 Init） | 9100（社区约定） |
+| 面试归类 | RED + 业务 | **USE**（与 G51 磁盘告警 `node_filesystem_*` 同一套） |
+
+```promql
+# 节点 CPU 非 idle 占比（示意，按实际 job/instance 过滤）
+100 - (avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+
+# 内存可用比例
+node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes
+```
+
+与 **promauto 直出** 的差异：存量服务若已用 go-metrics，用 Sink 桥接比全量改 CounterVec 成本低；新服务仍推荐原生 `client_golang` + Histogram。
 
 **Go 暴露 metrics（prometheus/client_golang）**：
 
@@ -4370,6 +4675,68 @@ groups:
         for: 10m
 ```
 
+**告警处理策略：从 PromQL 到钉钉 / 企微 / 邮件**
+
+两条常见路径（集群里可并存，避免同一规则双发）：
+
+```
+路径 A（经典）
+  Prometheus 采集 TSDB
+    → alerting rules（expr + for 持续满足才 firing）
+    → Alertmanager（去重、分组、抑制、路由、静默）
+    → receiver：webhook / email / …
+    → 钉钉适配器（Alertmanager 无原生钉钉，需中间层）
+    → 钉钉群自定义机器人（Markdown / @手机号）
+
+路径 B（Grafana Unified Alerting）
+  Grafana 对 Prometheus 数据源执行 PromQL 规则
+    → Contact points（Webhook / Email / …）
+    → 同上：Webhook → 钉钉机器人 或 Grafana 钉钉插件
+```
+
+| 阶段 | 做什么 | 策略要点 |
+| --- | --- | --- |
+| **触发** | `expr` 为真且 **`for` 窗口内持续** | 防抖动：错误率类常 `for: 5m`；`up==0` 可更短 |
+| **标签** | `labels`: severity、team、service | 路由依据：`severity=critical` → 电话/on-call 群 |
+| **分组** | Alertmanager `group_by: [alertname, cluster, service]` | 多 Pod 同时挂只发 **一条聚合**（带 instance 列表） |
+| **抑制** | `inhibit_rules` | 例：节点 down 时抑制该节点上所有 Pod 的 up 告警 |
+| **路由** | `route` → 子 route 匹配 label | 业务群 / 基础设施群 / 大模型链路分 channel |
+| **静默** | Silences（维护窗口） | 发布前建 silence，避免预期抖动轰炸 |
+| **恢复** | `resolved` 通知 | 钉钉消息标明 **已恢复**，便于值班关单 |
+
+**钉钉接入（典型）**：
+
+1. 群设置 → **自定义机器人** → 安全设置（签名校验或 IP 白名单）→ 得到 Webhook URL。  
+2. 部署 **Webhook 转换服务**（如 `prometheus-webhook-dingtalk`、自研小服务）：接收 Alertmanager `POST /api/v2/alerts` JSON，拼 Markdown（summary、description、startsAt、generatorURL 链到 Grafana/Prometheus）。  
+3. Alertmanager 配置示例：
+
+```yaml
+route:
+  group_by: ["alertname", "k8s_app"]
+  group_wait: 30s      # 同组首条稍等，凑批
+  group_interval: 5m
+  repeat_interval: 4h  # 未恢复时重复提醒上限
+  receiver: dingtalk-default
+  routes:
+    - match: { severity: critical }
+      receiver: dingtalk-oncall
+receivers:
+  - name: dingtalk-default
+    webhook_configs:
+      - url: "http://prometheus-webhook-dingtalk:8060/dingtalk/webhook1/send"
+        send_resolved: true
+```
+
+4. **Grafana**：Alerting → Contact points → Webhook 填同一适配器 URL；Notification policies 按 label 分到不同机器人（测试群 / 生产群）。
+
+**值班与闭环（和「发消息」配套）**：
+
+- **分级**：warning 仅工作群；critical @值班 + 可选电话（阿里云/腾讯云语音回调）。  
+- **模板**：告警带 `k8s_app`、`instance`、当前值、**Runbook 链接**（G51 里 Jaeger/Loki 查链）。  
+- **On-call**：谁 ACK、谁静默、事故复盘写 postmortem；非生产环境可 `repeat_interval` 拉长或单独机器人。
+
+**面试怎么讲**：规则在 Prometheus/Grafana 用 PromQL 定义；**Alertmanager 负责「别刷屏」**（group/inhibit/repeat）；钉钉走 **Webhook 适配器**；维护用 silence，恢复要通知。
+
 **Grafana Dashboard 分层**：
 
 1. **Overview**：全局 QPS、错误率、P99、Saturation
@@ -4382,7 +4749,7 @@ groups:
 - **高基数 label 禁用**：`user_id`、`trace_id` 做 label 会炸 TSDB
 - recording rule 预聚合：`job:api:http_requests:rate5m` 加速大盘
 
-**面试怎么讲**：服务层 RED、资源层 USE；histogram 设合理 bucket；告警看 **error rate + P99 + up**；label 控制基数。
+**面试怎么讲**：服务层 RED、资源层 USE；histogram 设合理 bucket；告警看 **error rate + P99 + up**；label 控制基数。可讲两条 Pull 链：**业务**（Init + 9090 + 自定义 Counter）与 **节点**（DaemonSet node-exporter + 9100 + `node_*`），最后都进同一 Prometheus，Grafana 只查 TSDB；业务例 `rate(preprocess_store_image_path_total[5m])`，资源例 `node_memory_*` / 磁盘余量。
 
 ---
 
