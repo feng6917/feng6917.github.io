@@ -41,24 +41,23 @@
 ##### 项目经验
 
 - 蜂鸟项目（双网智能分析平台）
-  1. 项目介绍
-    企业级双网智能化分析应用系统，视频流取帧与人脸/形体解析，支撑检索、布控、档案库、聚类等场景；含大模型检索与智能体业务扩展。
-  2. 工作内容
-    1. **双网与协议**：跨网闸数据传输；GA/1400 等协议转换及多平台对接；压缩、限流与大容量数据分治，支撑百亿级检索、日亿级存储。
-    2. **核心服务**：重构布控（业务中心 + 无状态工作节点）、摘要检索与历史回溯；数据分片、动态缩略图与分布式处理。
-    3. **服务治理**：任务调度；Prometheus + Jaeger + Grafana + pprof；gRPC/WebSocket；限流、熔断与链路追踪。
-    4. **大模型与智能体**：Milvus 向量检索；图/文/组合搜图与文字布控；智能体路由与意图 LLM、档案库/RAG；Function Call、MCP/Tool、Prompt；FunASR / CosyVoice。
-    5. **向量检索**：人脸/形体特征检索沿用 Vearch；大模型与智能体侧接入 Milvus。
-  3. 技术栈
-    `Gin`、`gRPC`、`WebSocket`、`MySQL`、`TiDB`、`Vearch`、`Milvus`、`MinIO`、`SeaweedFS`、`NSQ`、`Kafka`、`FunASR`、`CosyVoice`、`Docker`、`K8s`、`Helm`、`Prometheus`、`Jaeger`、`Grafana`
+
+  - **项目介绍**：企业级双网智能化分析应用系统，视频流取帧与人脸/形体解析，支撑检索、布控、档案库、聚类等场景；含大模型检索与智能体业务扩展。
+  - **工作内容**
+    - **双网与协议**：跨网闸数据传输；GA/1400 等协议转换及多平台对接；压缩、限流与大容量数据分治，支撑百亿级检索、日亿级存储。
+    - **核心服务**：重构布控（业务中心 + 无状态工作节点）、摘要检索与历史回溯；数据分片、动态缩略图与分布式处理。
+    - **服务治理**：任务调度；Prometheus + Jaeger + Grafana + pprof；gRPC/WebSocket；限流、熔断与链路追踪。
+    - **大模型与智能体**：Milvus 向量检索；图/文/组合搜图与文字布控；智能体路由与意图 LLM、档案库/RAG；Function Call、MCP/Tool、Prompt；FunASR / CosyVoice。
+    - **向量检索**：人脸/形体特征检索沿用 Vearch；大模型与智能体侧接入 Milvus。
+  - **技术栈**：`Gin`、`gRPC`、`WebSocket`、`MySQL`、`TiDB`、`Vearch`、`Milvus`、`MinIO`、`SeaweedFS`、`NSQ`、`Kafka`、`FunASR`、`CosyVoice`、`Docker`、`K8s`、`Helm`、`Prometheus`、`Jaeger`、`Grafana`
+
 - 云平台（PaaS）与工地可视化
-  1. 项目介绍
-    自研 AR PaaS（[console.hiar.com](https://console.hiar.com/)）及工地可视化场景；重构期实践 DDD 拆分与 Kratos 微服务治理。
-  2. 工作内容
-    1. **PaaS 重构**：制定并实施全量/增量数据迁移；权限体系（RBAC + Keycloak）；ARStudio 图像识别架构精简；Redash 自助分析集成；Excel 导出等通用插件。
-    2. **工地可视化**：Rust 薪资管理服务 Go 重写，统一技术栈；海康平台视频流接入与播放；业务短信发送。
-  3. 技术栈
-    `Kratos`、`Wire`、`MySQL`、`PostgreSQL`、`Keycloak`、`Nacos`、`MinIO`、`OSS`、`Prometheus`、`Rancher`、`Redash`
+
+  - **项目介绍**：自研 AR PaaS（[console.hiar.com](https://console.hiar.com/)）及工地可视化场景；重构期实践 DDD 拆分与 Kratos 微服务治理。
+  - **工作内容**
+    - **PaaS 重构**：制定并实施全量/增量数据迁移；权限体系（RBAC + Keycloak）；ARStudio 图像识别架构精简；Redash 自助分析集成；Excel 导出等通用插件。
+    - **工地可视化**：Rust 薪资管理服务 Go 重写，统一技术栈；海康平台视频流接入与播放；业务短信发送。
+  - **技术栈**：`Kratos`、`Wire`、`MySQL`、`PostgreSQL`、`Keycloak`、`Nacos`、`MinIO`、`OSS`、`Prometheus`、`Rancher`、`Redash`
 
 ##### 感谢您花时间阅读我的简历，期待能有机会和您共事
 

@@ -1,36 +1,36 @@
 ---
-layout: post
+
+## layout: post
+
 title: "知识复习"
 date:   2018-8-28
 tags: 
-  - 工具类
+
+- 工具类
 comments: false
 author: feng6917
 protected: true
 access_password: myz
----
 
 本文档为知识复习资料，打开页面后需输入密码方可查看。
 
-<!-- more -->
+## 一、个人
 
-<h2 id="c-1-0" class="mh1">一、个人</h2>
+## 入职公司简介
 
-<h2 id="c-1-1" class="mh1">入职公司简介</h2>
-
-<h3 id="c-1-1-1" class="mh2">1. 司睿杰</h3>
+### 1. 司睿杰
 
 内部考核系统（监理协会、从零到一），OA 项目权限（Casbin），网盘，数据分词检索 ECK
 
-<h3 id="c-1-1-2" class="mh2">2. 亮风台</h3>
+### 2. 亮风台
 
 rust 薪资服务重写，mysql -> pg 迁移
 
-<h3 id="c-1-1-3" class="mh2">3. 现在公司</h3>
+### 3. 现在公司
 
 业务重构，服务治理，大模型，CICD，双网架构
 
-<h2 id="c-1-2" class="mh1">Go 与 Python 进行比较？</h2>
+## Go 与 Python 进行比较？
 
 - **go:**
   1. 简单
@@ -43,22 +43,26 @@ rust 薪资服务重写，mysql -> pg 迁移
   3. 可扩展性和便携性
   4. 一种可移植和被解释的高级语言
 
-<h2 id="c-1-3" class="mh1">框架该如何设计定义？</h2>
+## 框架该如何设计定义？
 
 参考 Gin、Kratos、Spring Boot 等市面框架，框架设计通常包含以下层次：
 
-<h3 id="c-1-3-1" class="mh2">1. 定位与边界（针对性、倾向性）</h3>
+### 1. 定位与边界（针对性、倾向性）
 
 - 先明确框架解决什么问题：轻量 HTTP（如 Gin）、微服务工程化（如 Kratos）、企业级全家桶（如 Spring Boot）
 - 不同定位决定抽象粒度：路由框架只关心请求链路；微服务框架还要管配置、通信、治理
 
-<h3 id="c-1-3-2" class="mh2">2. 架构定义（分层、模块划分、模块交互）</h3>
+
+
+### 2. 架构定义（分层、模块划分、模块交互）
 
 - **分层**：常见为接入层（HTTP/gRPC）→ 业务层 → 数据层；Kratos 还区分 API / Service / Biz / Data
 - **模块划分**：路由、中间件、配置、日志、依赖注入、数据访问等各司其职
 - **模块交互**：通过接口 + 依赖注入（Wire）或中间件链（Handler Chain）解耦，避免业务直接耦合底层实现
 
-<h3 id="c-1-3-3" class="mh2">3. 三方面构成（工程落地视角）</h3>
+
+
+### 3. 三方面构成（工程落地视角）
 
 
 | 方面       | 内容                                              |
@@ -70,9 +74,11 @@ rust 薪资服务重写，mysql -> pg 迁移
 
 img
 
-<h2 id="c-1-4" class="mh1">Gin：Radix Tree 与 Context</h2>
+## Gin：Radix Tree 与 Context
 
-<h3 id="c-1-4-1" class="mh2">1. Radix Tree</h3>
+
+
+### 1. Radix Tree
 
 Gin 中基于**压缩前缀树**作为路由树的数据结构，对应 9 种 HTTP 方法共有 **9 棵树**。
 
@@ -113,7 +119,7 @@ Gin 中基于**压缩前缀树**作为路由树的数据结构，对应 9 种 HT
 
 img
 
-<h3 id="c-1-4-2" class="mh2">2. Context</h3>
+### 2. Context
 
 `gin.Context` 对应一次 HTTP 请求，贯穿整条 **Handler Chain** 调用链路的上下文。
 
@@ -138,7 +144,9 @@ img
 | `keys`               | handlers 链上共享数据的 map       |
 
 
-<h2 id="c-1-5" class="mh1">Casbin 与 Open Policy Agent（OPA）是什么？</h2>
+
+
+## Casbin 与 Open Policy Agent（OPA）是什么？
 
 **Casbin 是什么？**
 
@@ -170,7 +178,9 @@ OPA 是 CNCF 的通用**策略引擎**，用 **Rego** 语言编写策略，与�
 | 集成方式 | 代码内 `Enforce()`  | HTTP/gRPC 查询 OPA，或 WASM 嵌入 |
 
 
-<h2 id="c-1-6" class="mh1">微服务是什么？</h2>
+
+
+## 微服务是什么？
 
 **定义**
 
@@ -199,7 +209,7 @@ OPA 是 CNCF 的通用**策略引擎**，用 **Rego** 语言编写策略，与�
 
 img
 
-<h2 id="c-1-7" class="mh1">链路追踪（OpenTracing）</h2>
+## 链路追踪（OpenTracing）
 
 运行时记录服务之间的调用过程，通过可视化 UI 帮助运维人员快速定位出错点。
 
@@ -237,9 +247,13 @@ img
 1. HTTP/gRPC 集成中间件，数据库中间件
 2. 采集点：跨进程调用处、代码埋点（`span.start` / `span.end`）
 
-<h2 id="c-1-8" class="mh1">服务熔断、降级与限流</h2>
 
-<h3 id="c-1-8-1" class="mh2">1. 服务熔断与降级</h3>
+
+## 服务熔断、降级与限流
+
+
+
+### 1. 服务熔断与降级
 
 img
 
@@ -260,7 +274,9 @@ img
 | **Half-Open（半开）** | 放行少量探测请求；成功 → Closed 并重置计数；仍失败 → Open，防止恢复中被打垮 |
 
 
-<h3 id="c-1-8-2" class="mh2">2. 服务限流</h3>
+
+
+### 2. 服务限流
 
 **常见场景**：突发流量（如双十一）、恶意攻击、业务自身容量上限。
 
@@ -290,11 +306,15 @@ img
 
 **Go 插件示例**：`github.com/juju/ratelimit`（令牌桶）
 
-<h2 id="c-2-0" class="mh1">二、Docker & K8s</h2>
+## 二、Docker & K8s
 
-<h2 id="c-2-1" class="mh1">Docker</h2>
 
-<h3 id="c-2-1-1" class="mh2">1. 什么是 Docker、容器、镜像？</h3>
+
+## Docker
+
+
+
+### 1. 什么是 Docker、容器、镜像？
 
 Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口。
 
@@ -302,7 +322,7 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
 
 镜像是一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含运行某个软件所需的所有内容，包括代码、运行时、库、环境变量和配置文件。
 
-<h3 id="c-2-1-2" class="mh2">2. Docker 镜像应该遵循哪些原则？</h3>
+### 2. Docker 镜像应该遵循哪些原则？
 
 整体上，尽量保持镜像**功能明确**、**内容精简**：
 
@@ -314,7 +334,9 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
 6. 合理**分层**，将变化频率低的层放前面，提高构建缓存命中率
 7. 生产镜像避免包含调试工具、源码、密钥等敏感信息
 
-<h3 id="c-2-1-3" class="mh2">3. 如何更改 Docker 的默认存储路径？</h3>
+
+
+### 3. 如何更改 Docker 的默认存储路径？
 
 修改配置文件：
 
@@ -331,29 +353,37 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
 
 也可使用软链接迁移已有数据目录。
 
-<h2 id="c-2-2" class="mh1">Kubernetes</h2>
+## Kubernetes
 
-<h3 id="c-2-2-1" class="mh2">1. 容器化开发的好处？</h3>
+
+
+### 1. 容器化开发的好处？
 
 1. 共享宿主机资源，利用率更高
 2. 一次构建，到处运行，可移植性强
 3. 秒级启动，便于弹性伸缩
 4. 契合 DevOps，缩短交付与运维周期
 
-<h3 id="c-2-2-2" class="mh2">2. 容器化开发流程？</h3>
+
+
+### 2. 容器化开发流程？
 
 1. 搭建容器化平台，构建自动化运维基础设施
 2. 构建服务环境镜像，集成基本开发环境
 3. 服务持续开发及服务运维插件集成（监控、日志、链路追踪等）
 
-<h3 id="c-2-2-3" class="mh2">3. 容器化 / K8s 部署常见问题？</h3>
+
+
+### 3. 容器化 / K8s 部署常见问题？
 
 1. 调用链路过长，问题定位困难
 2. 数据持久化与挂载配置不当导致数据丢失
 3. 镜像过大、启动慢，资源 limits/requests 配置不合理
 4. 网络策略、Service/Ingress 配置错误导致服务不可达
 
-<h3 id="c-2-2-4" class="mh2">4. Deployment、StatefulSet、DaemonSet 区别？</h3>
+
+
+### 4. Deployment、StatefulSet、DaemonSet 区别？
 
 
 |            | **Deployment（deploy）**   | **StatefulSet（sts）**      | **DaemonSet（ds）**            |
@@ -373,9 +403,13 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
 - 要稳定 hostname、有序启停、独立存储 → **StatefulSet**
 - 每个节点都要跑一个 → **DaemonSet**
 
-<h2 id="c-3-0" class="mh1">三、AI</h2>
 
-<h2 id="c-3-1" class="mh1">RAG（Retrieval-Augmented Generation）</h2>
+
+## 三、AI
+
+
+
+## RAG（Retrieval-Augmented Generation）
 
 **RAG** = 检索外部知识 + LLM 生成
 
@@ -385,7 +419,7 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
 
 **目的**：减少幻觉，接入私有/最新知识，不依赖微调。
 
-<h3 id="c-3-1-1" class="mh2">1. 基础流程（Naive RAG）</h3>
+### 1. 基础流程（Naive RAG）
 
 ```
 Indexing（离线索引）          在线查询
@@ -396,7 +430,7 @@ Indexing（离线索引）          在线查询
 
 **痛点**：查询理解浅、检索噪声大、复杂问题效果差。
 
-<h3 id="c-3-1-2" class="mh2">2. 三代演进</h3>
+### 2. 三代演进
 
 
 | 范式               | 核心         | 流程                                                   |
@@ -408,7 +442,7 @@ Indexing（离线索引）          在线查询
 
 继承关系：**Naive ⊂ Advanced ⊂ Modular**
 
-<h3 id="c-3-1-3" class="mh2">3. Advanced RAG 关键点</h3>
+### 3. Advanced RAG 关键点
 
 
 | 阶段                 | 手段                                   | 作用            |
@@ -421,7 +455,7 @@ Indexing（离线索引）          在线查询
 
 **特点**：固定线性流水线，所有 query 走同一路径。
 
-<h3 id="c-3-1-4" class="mh2">4. Modular RAG 关键点</h3>
+### 4. Modular RAG 关键点
 
 **三层架构**
 
@@ -454,7 +488,9 @@ Indexing（离线索引）          在线查询
 | **Loop**        | 检索⇄生成循环 | Self-RAG、多跳 QA     |
 
 
-<h3 id="c-3-1-5" class="mh2">5. 常见命名模式（速查）</h3>
+
+
+### 5. 常见命名模式（速查）
 
 
 | 模式              | 一句话                    |
@@ -465,7 +501,9 @@ Indexing（离线索引）          在线查询
 | **GraphRAG**    | 基于知识图谱做关系/多跳检索         |
 
 
-<h2 id="c-3-2" class="mh1">LangChain</h2>
+
+
+## LangChain
 
 **LangChain** = 构建 LLM 应用的开源框架
 
@@ -525,13 +563,17 @@ LangChain Agent **底层基于 LangGraph**：简单用 LangChain，复杂工作�
 
 **经验法则**：涉及文档检索、多工具、多模型中 **≥2 项** 时，值得引入。
 
-<h2 id="c-4-0" class="mh1">四、简历项目深挖（问答）</h2>
+## 四、简历项目深挖（问答）
 
 > 用法：面试官常从简历项目切入。每题按 **「问题 → 思路 → 参考答案」** 组织，回答时先讲**背景与 trade-off**，再落到**你做了什么、指标如何、失败怎么办**。
 
 ---
 
-<h3 id="c-4-1" class="mh2">A. 司睿杰 · 内部 OA / 监理协会考核系统</h3>
+
+
+### A. 司睿杰 · 内部 OA / 监理协会考核系统
+
+
 
 #### Q1. 考核系统从零到一：需求拆分、选型、防作弊、交卷与异常？
 
@@ -592,6 +634,8 @@ POST /heartbeat { session_token, seq, answers_delta, events:[blur,...] }
 
 ---
 
+
+
 #### Q2. Casbin 做 OA 权限，表单级 + 字段级怎么设计？为什么不用 OPA？
 
 **思路**：讲清 Subject-Object-Action 建模 + 存储 + 变更同步 + 前后端分工。
@@ -607,6 +651,8 @@ POST /heartbeat { session_token, seq, answers_delta, events:[blur,...] }
 5. **为何 Casbin 而非 OPA**：策略模型固定（RBAC+表单），嵌入进程延迟低；OA 不需要 K8s 级通用策略引擎。若未来跨 10+ 微服务统一策略，再评估 OPA Sidecar。
 
 ---
+
+
 
 #### Q3. 网盘父子级权限 + 路径 + 在线预览，怎么设计？最易出 bug 的点？
 
@@ -653,6 +699,8 @@ POST /heartbeat { session_token, seq, answers_delta, events:[blur,...] }
 
 ---
 
+
+
 #### Q4. MySQL 文档同步到 ES 全文检索，如何保证一致性与可检索？
 
 **思路**：增量同步、失败重试、mapping 设计、中文分词。
@@ -666,7 +714,11 @@ POST /heartbeat { session_token, seq, answers_delta, events:[blur,...] }
 
 ---
 
-<h3 id="c-4-2" class="mh2">B. 亮风台 · 云平台（Rust→Go / MySQL→PG）</h3>
+
+
+### B. 亮风台 · 云平台（Rust→Go / MySQL→PG）
+
+
 
 #### Q5. 为什么把 Rust 薪资服务重写为 Go？不是 Rust 性能更好吗？
 
@@ -680,6 +732,8 @@ POST /heartbeat { session_token, seq, answers_delta, events:[blur,...] }
 4. **保留 Rust 的场景**：若热点 CPU 算子或内存安全极端敏感，可保留；本项目不满足。
 
 ---
+
+
 
 #### Q6. MySQL → PostgreSQL 迁移，你如何做到「可回滚、可验证」？
 
@@ -697,6 +751,8 @@ POST /heartbeat { session_token, seq, answers_delta, events:[blur,...] }
 
 ---
 
+
+
 #### Q7. Kratos + Wire 重构后，服务分层你怎么划？
 
 **思路**：对齐 Kratos 官方分层，讲依赖方向。
@@ -713,7 +769,11 @@ API (proto/http) → Service (DTO 转换) → Biz (领域规则) → Data (repo)
 
 ---
 
-<h3 id="c-4-3" class="mh2">C. 智慧视通 · 蜂鸟（双网 / 百亿检索 / 服务治理 / 大模型）</h3>
+
+
+### C. 智慧视通 · 蜂鸟（双网 / 百亿检索 / 服务治理 / 大模型）
+
+
 
 #### Q8. 双网架构下 4000 路设备摘要同步，核心难点是什么？
 
@@ -731,6 +791,8 @@ API (proto/http) → Service (DTO 转换) → Biz (领域规则) → Data (repo)
 
 ---
 
+
+
 #### Q9. 百亿级检索、日亿级写入，TiDB + 分区 + 缓存策略怎么配合？
 
 **思路**：冷热分离、分区键、索引、写放大、查询路径。
@@ -745,6 +807,8 @@ API (proto/http) → Service (DTO 转换) → Biz (领域规则) → Data (repo)
 6. **降级**：检索超时返回「最近 N 天」；非核心统计延迟计算。
 
 ---
+
+
 
 #### Q10. 布控服务拆成「业务中心 + 无状态 Worker」，为什么这样拆？
 
@@ -761,6 +825,8 @@ API (proto/http) → Service (DTO 转换) → Biz (领域规则) → Data (repo)
 
 ---
 
+
+
 #### Q11. 摘要复用 + 动态缩略图，怎么做到「该省的省、该算的才算」？
 
 **思路**：去重键、懒加载、异步 pipeline。
@@ -773,6 +839,8 @@ API (proto/http) → Service (DTO 转换) → Biz (领域规则) → Data (repo)
 4. **指标**：复用命中率、缩略图生成队列堆积、P95 首屏时延。
 
 ---
+
+
 
 #### Q12. Jaeger 链路追踪接入后，你实际用它解决过什么线上问题？
 
@@ -787,6 +855,8 @@ API (proto/http) → Service (DTO 转换) → Biz (领域规则) → Data (repo)
 
 ---
 
+
+
 #### Q13. 限流用令牌桶，接口级还是租户级？参数怎么定？
 
 **思路**：维度、算法、观测、调参。
@@ -800,6 +870,8 @@ API (proto/http) → Service (DTO 转换) → Biz (领域规则) → Data (repo)
 
 ---
 
+
+
 #### Q14. GitLab CI 你搭了哪些 stage？如何保证镜像可复现？
 
 **思路**：流水线阶段、缓存、tag 策略、安全扫描。
@@ -812,6 +884,8 @@ API (proto/http) → Service (DTO 转换) → Biz (领域规则) → Data (repo)
 4. **门禁**：MR 必须通过 CI；main 分支才 push latest；发布打 semver tag。
 
 ---
+
+
 
 #### Q15. 大模型以图搜图 / 文搜图，和 Vearch 向量检索怎么分工？
 
@@ -828,7 +902,11 @@ API (proto/http) → Service (DTO 转换) → Biz (领域规则) → Data (repo)
 
 ---
 
-<h3 id="c-4-4" class="mh2">D. 跨项目 · 语言 / 框架 / 运维通用深挖</h3>
+
+
+### D. 跨项目 · 语言 / 框架 / 运维通用深挖
+
+
 
 #### Q16. Gin Context 用 sync.Pool 复用，有什么坑？
 
@@ -842,6 +920,8 @@ API (proto/http) → Service (DTO 转换) → Biz (领域规则) → Data (repo)
 
 ---
 
+
+
 #### Q17. 线上 goroutine 泄漏，你怎么定位？
 
 **思路**：pprof goroutine、trace、常见泄漏模式。
@@ -853,6 +933,8 @@ API (proto/http) → Service (DTO 转换) → Biz (领域规则) → Data (repo)
 3. **预防**：长生命周期 goroutine 必须绑定 context；Review 禁止无界 `go func()`。
 
 ---
+
+
 
 #### Q18. 微服务拆分后，分布式事务你怎么处理？
 
@@ -866,6 +948,8 @@ API (proto/http) → Service (DTO 转换) → Biz (领域规则) → Data (repo)
 4. **避免**：跨 TiDB + ES + MinIO 大事务；每步可单独回滚或补偿。
 
 ---
+
+
 
 #### Q19. Deployment vs StatefulSet，蜂鸟里哪些用哪种？
 
@@ -885,6 +969,8 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 
 ---
 
+
+
 #### Q20. Prometheus 监控，你会看哪些 RED/USE 指标？
 
 **思路**：面向服务接口与资源。
@@ -898,6 +984,8 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 
 ---
 
+
+
 #### Q21. 容器镜像过大导致启动慢，你怎么优化？
 
 **思路**：多阶段构建、基础镜像、分层缓存、无关文件。
@@ -910,6 +998,8 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 4. **K8s**：合理 requests/limits；readiness 探针别太早；preStop 优雅退出。
 
 ---
+
+
 
 #### Q22. RAG 落地到企业内网，Naive RAG 不够用时你怎么升级？
 
@@ -925,6 +1015,8 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 
 ---
 
+
+
 #### Q23. LangChain 引入后，Agent 死循环怎么防？
 
 **思路**：Harness 层限制、最大步数、工具超时、人机确认。
@@ -937,6 +1029,8 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 4. **生产**：写操作工具必须 human-in-the-loop 确认。
 
 ---
+
+
 
 #### Q23b. 智能体：规则/关键词路由与意图 LLM 怎么分工？
 
@@ -982,19 +1076,23 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
     · **不再调用意图 LLM**（意图阶段一次定调，避免延迟与口径不一致）
 ```
 
-| 层次 | 职责 | 为什么这样拆 |
-| --- | --- | --- |
-| 规则路由 | 高频、强约束、@ 与合规 | 确定性、毫秒级、可审计、省 token |
-| 意图 LLM | 长尾说法、抽槽、纠偏 | 泛化；低置信回退规则 |
-| 硬闸门 | 档案/轨迹/抓拍等 | 安全与成本；避免模型误路由 |
-| 执行抽槽 | 槽位优先 + 本地兜底 | 执行要稳，不绑单次 LLM |
-| 短总结 | 结果导向 | 与意图解耦，列表可读即可 |
+
+| 层次     | 职责           | 为什么这样拆              |
+| ------ | ------------ | ------------------- |
+| 规则路由   | 高频、强约束、@ 与合规 | 确定性、毫秒级、可审计、省 token |
+| 意图 LLM | 长尾说法、抽槽、纠偏   | 泛化；低置信回退规则          |
+| 硬闸门    | 档案/轨迹/抓拍等    | 安全与成本；避免模型误路由       |
+| 执行抽槽   | 槽位优先 + 本地兜底  | 执行要稳，不绑单次 LLM       |
+| 短总结    | 结果导向         | 与意图解耦，列表可读即可        |
+
 
 **与 Q23「Agent 死循环」的关系**：意图只 **一步 JSON**，不进入 ReAct 环；复杂多步走 Function Call/MCP，仍受 max_iterations、硬闸门路由限制。
 
 **面试怎么讲**：**规则先行、模型补位、低置信听规则的** 三层；强调 **硬闸门** 和 **意图 LLM 只负责认路，不负责列表文案**；双网/档案场景可补一句「敏感 intent 必须规则或阈值+人工策略，不能纯 LLM 放行」。
 
 ---
+
+
 
 #### Q24. 作为研发组长，你怎么分配任务和控风险？
 
@@ -1026,7 +1124,11 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 
 ---
 
-<h3 id="c-4-5" class="mh2">E. 简历补充 · 协议 / 向量双栈 / 智能体 / 多模态 / 实时 / 身份（P0）</h3>
+
+
+### E. 简历补充 · 协议 / 向量双栈 / 智能体 / 多模态 / 实时 / 身份（P0）
+
+
 
 #### Q25. GA/1400 等行业协议对接，在双网架构里你怎么做？
 
@@ -1044,6 +1146,8 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 5. **面试怎么讲**：双网难点不只有带宽，还有 **语义对齐**；我在中间层做 GA/1400→内部模型，和 checkpoint/对账绑在一起，避免「协议通了但数据重复/丢失」。
 
 ---
+
+
 
 #### Q26. Vearch（人脸/形体）和 Milvus（大模型语义）为什么两套？怎么分工？
 
@@ -1066,6 +1170,8 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 
 ---
 
+
+
 #### Q27. 组合搜图 + 文字布控，和单次以图搜图有何不同？
 
 **思路**：多条件编排、召回融合、布控 **误报成本**；和 Q10 任务中心、Q23b 意图硬闸门衔接。
@@ -1085,6 +1191,8 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 
 ---
 
+
+
 #### Q28. Function Call / MCP / Tool 在生产里怎么接？和 Q23b 路由怎么衔接？
 
 **思路**：意图只认路；执行层 **白名单 Tool + 超时 + 鉴权**；别讲成 LangChain 教程（Q23 防死循环）。
@@ -1099,6 +1207,8 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 6. **面试怎么讲**：路由 **一步 JSON** 定 intent；执行是 **确定性 Tool 链**，FC/MCP 只是调用外观，生产权在服务端白名单。
 
 ---
+
+
 
 #### Q29. FunASR + CosyVoice 在多模态链路里怎么串？
 
@@ -1118,6 +1228,8 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 
 ---
 
+
+
 #### Q30. WebSocket 长连接：设备/前端实时协同你怎么设计？
 
 **思路**：和 gRPC 分工；心跳、扩缩容、广播；接 Q10 业务中心发流。
@@ -1133,6 +1245,8 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 5. **面试怎么讲**：WS 管 **端上实时**；状态以 DB/业务中心为准（Q10），WS 只是通知，不是 source of truth。
 
 ---
+
+
 
 #### Q31. 档案库 vs 知识库 RAG，产品和技术差异？
 
@@ -1153,6 +1267,8 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 
 ---
 
+
+
 #### Q32. Keycloak + RBAC（亮风台 PaaS）和 Casbin（OA）差异？你怎么落地？
 
 **思路**：身份（IdP）vs 应用内细粒度授权（Q2）；PaaS 微服务 JWT 与控制台 SSO 一体。
@@ -1171,13 +1287,19 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 
 ---
 
-<h2 id="c-5-0" class="mh1">五、高级 Go 能力深挖（语言 / 框架 / 运维 / CI/CD / 架构）</h2>
+
+
+## 五、高级 Go 能力深挖（语言 / 框架 / 运维 / CI/CD / 架构）
 
 > 按能力维度组织，共 **72 题（G1–G72）**；每题 **思路 + 参考答案（含面试怎么讲、代码/命令示例、排障步骤）**。与第四节「简历项目」互补。
 
 ---
 
-<h3 id="c-5-1" class="mh2">1. 语言（Go 本身）</h3>
+
+
+### 1. 语言（Go 本身）
+
+
 
 #### G1. 逃逸分析是什么？怎么判断变量堆还是栈分配？
 
@@ -1265,6 +1387,8 @@ go test -bench=. -benchmem ./...
 
 ---
 
+
+
 #### G2. GC 三色标记 + 写屏障，STW 在哪？
 
 **思路**：并发标记 + 写屏障；调 GOGC 是手段，少分配是根本。
@@ -1275,10 +1399,12 @@ go test -bench=. -benchmem ./...
 
 **Mark 与 Sweep 分工**：
 
-| 阶段 | 做什么 | 与业务关系 |
-| --- | --- | --- |
-| **Mark（标记）** | 从根对象出发，三色标记找出所有存活对象 | 主体并发，写屏障保正确性 |
+
+| 阶段            | 做什么                      | 与业务关系                |
+| ------------- | ------------------------ | -------------------- |
+| **Mark（标记）**  | 从根对象出发，三色标记找出所有存活对象      | 主体并发，写屏障保正确性         |
 | **Sweep（清扫）** | 回收标记阶段判定为「白色」的死亡对象，内存还给堆 | 主体并发/异步，仅少数同步点可能 STW |
+
 
 **三色标记流程**：
 
@@ -1314,11 +1440,13 @@ Sweep:  [可能极短 STW 启动/状态切换] → [并发/异步清扫，业务
 
 **STW 出现在哪**（共三处，均极短）：
 
-| 同步点 | 做什么 | 说明 |
-| --- | --- | --- |
-| 标记开始 | 短暂 STW，准备 root scan | 固定、可预期 |
-| mark termination | 短暂 STW，flush 写屏障缓冲、处理剩余 work | 固定、可预期 |
-| sweep 阶段的少数同步点 | 清扫启动或状态切换时的短 STW | **不是整段 sweep 都 STW**；Go 1.5+ 大幅缩短，Go 1.14+ 通常 < 1ms（负载相关） |
+
+| 同步点              | 做什么                          | 说明                                                        |
+| ---------------- | ---------------------------- | --------------------------------------------------------- |
+| 标记开始             | 短暂 STW，准备 root scan          | 固定、可预期                                                    |
+| mark termination | 短暂 STW，flush 写屏障缓冲、处理剩余 work | 固定、可预期                                                    |
+| sweep 阶段的少数同步点   | 清扫启动或状态切换时的短 STW             | **不是整段 sweep 都 STW**；Go 1.5+ 大幅缩短，Go 1.14+ 通常 < 1ms（负载相关） |
+
 
 与 Mark 对比：Mark 的 STW 点固定好记；Sweep 的 STW 更短、更分散，且随 Go 版本演进持续缩短，日常调优不必死盯 sweep STW。
 
@@ -1347,6 +1475,8 @@ GODEBUG=gctrace=1 ./your-app
 - 只调 GOGC 不查分配 —— 治标不治本
 
 ---
+
+
 
 #### G3. goroutine、channel、select 使用边界？
 
@@ -1454,6 +1584,8 @@ func pool(ctx context.Context, n int, jobs <-chan Job) {
 
 ---
 
+
+
 #### G4. mutex / rwmutex / atomic / sync.Map 怎么选？
 
 **思路**：按读写比例、数据结构选原语。
@@ -1529,6 +1661,8 @@ if atomic.LoadInt64(&n) > 0 { atomic.AddInt64(&n, -1) } // 竞态
 - sync.Map 当通用并发 map —— 大多数场景 Mutex+map 更清晰
 
 ---
+
+
 
 #### G5. context 超时取消怎么传递到下游？
 
@@ -1612,6 +1746,8 @@ func WithTraceID(ctx context.Context, id string) context.Context {
 
 ---
 
+
+
 #### G6. nil interface 陷阱是什么？
 
 **思路**：interface = (type, value)；typed nil 有类型信息。
@@ -1673,6 +1809,8 @@ case nil:
 - 用 `reflect.ValueOf(i).IsNil()` 前未检查 Kind 是否为 Ptr/Chan/Map 等
 
 ---
+
+
 
 #### G7. slice / map 常见坑？
 
@@ -1738,6 +1876,8 @@ s3 := make([]int, 0)   // 同 s2，常用于表达「空但非 nil」
 **性能提示**：大数据 `range map` 随机访问 cache 不友好；需要有序遍历可维护 `[]key` 索引。map 迭代顺序 **随机**，不要依赖顺序写测试。
 
 ---
+
+
 
 #### G8. errors.Is / As / Wrap 怎么用？
 
@@ -1813,6 +1953,8 @@ var ErrNotFound = errors.New("not found")
 
 ---
 
+
+
 #### G9. pprof 定位 CPU / 内存 / goroutine 泄漏？
 
 **思路**：采样 → 火焰图 → 修复 → benchmark 验证。
@@ -1876,6 +2018,8 @@ runtime.chanrecv
 **注意**：profile 有采样开销，生产采集控制 duration；heap profile 是 **采样时刻快照**，不是历史累计泄漏唯一证据，需多次对比 `inuse_objects` 是否单调涨。
 
 ---
+
+
 
 #### G10. 表驱动测试与 `-race`？
 
@@ -1947,6 +2091,8 @@ go test ./... -race -count=1 -cover -timeout 5m
 
 ---
 
+
+
 #### G11. GOMAXPROCS 与 GMP 调度模型？
 
 **思路**：G 协程、M 系统线程、P 逻辑处理器。
@@ -1997,6 +2143,8 @@ curl localhost:6060/debug/pprof/threadcreate
 
 ---
 
+
+
 #### G12. sync.Pool 适用场景与坑？
 
 **思路**：复用临时对象，减轻 GC；不是缓存。
@@ -2046,6 +2194,8 @@ func handle(w http.ResponseWriter, r *http.Request) {
 **Gin Context 启示**：归还 Pool 前必须 `Reset()` 清空 keys、请求引用，否则内存泄漏 + 数据串扰。
 
 ---
+
+
 
 #### G13. channel 关闭原则？
 
@@ -2122,6 +2272,8 @@ func merge(ctx context.Context, cs ...<-chan int) <-chan int {
 
 ---
 
+
+
 #### G14. defer / panic / recover 边界？
 
 **思路**：defer 逆序执行；recover 仅在 defer 内有效。
@@ -2195,6 +2347,8 @@ func recoveryMiddleware(next http.Handler) http.Handler {
 
 ---
 
+
+
 #### G15. interface 底层 itab / efaced？
 
 **思路**：iface 有 itab（含方法表）；eface 仅类型+数据。
@@ -2246,6 +2400,8 @@ f, ok := r.(*os.File)
 **断言失败**：`v, ok := i.(T)` 安全；`i.(T)` 失败 panic。type switch 处理多类型。
 
 ---
+
+
 
 #### G16. benchmark 与 fuzz 测试？
 
@@ -2312,6 +2468,8 @@ go test -fuzz=FuzzParse -fuzztime=30s ./...
 **fuzz vs bench**：fuzz 找正确性边界；bench 测性能回归。发版前 corpus 提交仓库，CI 可 `-fuzztime=10s` 冒烟。
 
 ---
+
+
 
 #### G17. 反射 reflect 使用边界？
 
@@ -2382,7 +2540,11 @@ go generate  # stringer, mockgen, ent, protobuf
 
 ---
 
-<h3 id="c-5-2" class="mh2">2. 框架与工程化</h3>
+
+
+### 2. 框架与工程化
+
+
 
 #### G18. Gin Radix Tree 路由为何优于 map？
 
@@ -2433,6 +2595,8 @@ func (c *Context) reset() {
 **对比 trade-off**：map O(1) 精确匹配更快，但无法表达 REST 语义；标准库 `ServeMux` Go 1.22+ 也支持 `{id}` 模式，Gin 优势在于中间件生态、性能基准与工程成熟度。
 
 ---
+
+
 
 #### G19. 中间件链顺序怎么设计？
 
@@ -2511,6 +2675,8 @@ func RecoveryMiddleware(log *zap.Logger) gin.HandlerFunc {
 
 ---
 
+
+
 #### G20. Kratos 分层 API / Service / Biz / Data？
 
 **思路**：依赖单向；Biz 无 SQL。
@@ -2588,6 +2754,8 @@ func wireApp(*conf.Server, *conf.Data, log.Logger) (*kratos.App, func(), error) 
 
 ---
 
+
+
 #### G21. Wire 依赖注入 vs 全局变量？
 
 **思路**：显式依赖、可测试。
@@ -2663,6 +2831,8 @@ func TestGetUser(t *testing.T) {
 
 ---
 
+
+
 #### G22. Viper / Nacos / Apollo 配置策略？
 
 **思路**：启动配置 vs 运行期热更。
@@ -2721,6 +2891,8 @@ client.ListenConfig(vo.ConfigParam{
 **生产 tips**：热更用 `atomic.Value` 或读写锁；不可热更项（端口、连接池）启动时校验；配置变更加 audit + 告警；敏感项 `${DB_PASSWORD}` 运行时从 Secret 注入；本地用 `config.local.yaml`（gitignore）。
 
 ---
+
+
 
 #### G23. zap / zerolog 结构化日志规范？
 
@@ -2783,6 +2955,8 @@ func TraceMiddleware(log *zap.Logger) gin.HandlerFunc {
 
 ---
 
+
+
 #### G24. GORM N+1 与深分页？
 
 **思路**：Preload/Joins；seek 分页。
@@ -2841,6 +3015,8 @@ db.Clauses(clause.OnConflict{UpdateAll: true}).Create()
 
 ---
 
+
+
 #### G25. ent / sqlx 何时替代 GORM？
 
 **思路**：类型安全 vs 灵活 SQL。
@@ -2882,6 +3058,8 @@ db.SelectContext(ctx, &stats, `
 **混用策略**：同一项目按 repo 边界分——`orderRepo` 用 GORM CRUD，`reportRepo` 用 sqlx 报表；**不要**在同一事务混用不同 driver 连接。GORM 的 `Raw`/`Exec` 可过渡，长期复杂 SQL 应隔离到 sqlx。
 
 ---
+
+
 
 #### G26. Redis 穿透 / 击穿 / 雪崩？
 
@@ -2934,6 +3112,8 @@ if ok {
 
 ---
 
+
+
 #### G27. Kafka 消费组与幂等？
 
 **思路**：at-least-once + 消费端幂等。
@@ -2982,6 +3162,8 @@ ok, _ := rdb.SetNX(ctx, "msg:"+msgID, 1, 7*24*time.Hour).Result()
 
 ---
 
+
+
 #### G28. gRPC vs REST / Protobuf 版本兼容？
 
 **思路**：内 gRPC 外 REST。
@@ -3027,6 +3209,8 @@ protoc --go_out=. --go-grpc_out=. --grpc-gateway_out=. user.proto
 一份 proto 同时生成 gRPC server 与 REST gateway。breaking change 走 `user.v2` 新 package；CI 用 `buf breaking` 检测；deadline 用 `context.WithTimeout` 传递。
 
 ---
+
+
 
 #### G29. JWT + Casbin / OPA 鉴权链路？
 
@@ -3081,6 +3265,8 @@ HTTP POST `http://localhost:8181/v1/data/authz/allow` 查策略。
 
 ---
 
+
+
 #### G30. 服务注册发现 Nacos / Consul？
 
 **思路**：健康检查 + 客户端负载均衡。
@@ -3125,6 +3311,8 @@ grpc.DialInsecure(ctx,
 
 ---
 
+
+
 #### G31. 自研中间件：限流 / 熔断 / Recovery？
 
 **思路**：对照文章「熔断限流」+ Gin 中间件。
@@ -3167,6 +3355,8 @@ func RateLimitMiddleware(r rate.Limit, burst int) gin.HandlerFunc {
 **Prometheus 指标**：`req_total`、`req_duration`、`rate_limit_hits`、`breaker_state`。阈值从 Nacos 热更，单测验证状态转换。
 
 ---
+
+
 
 #### G32. API 设计：RESTful 错误码与版本？
 
@@ -3219,7 +3409,11 @@ col := allowed[c.Query("sort_by")] // 未命中用默认值
 
 ---
 
-<h3 id="c-5-3" class="mh2">3. 插件与生态</h3>
+
+
+### 3. 插件与生态
+
+
 
 #### G33. 令牌桶 / 漏桶 / 滑动窗口？
 
@@ -3276,6 +3470,8 @@ Key 设计：`ratelimit:{tenant_id}:{api}`，TTL 略大于窗口，避免 key �
 
 ---
 
+
+
 #### G34. sentinel-golang / hystrix-go 选型？
 
 **思路**：规则可视化 vs 轻量库。
@@ -3326,6 +3522,8 @@ defer entry.Exit()
 **选型建议**：新项目优先 sentinel 或 Kratos 内置 middleware；已有 Hystrix 概念团队可短期用 hystrix-go 但需评估维护风险；仅 1～2 个外部依赖、QPS < 1k 可自研 + Prometheus 指标（`breaker_state{resource="x"}` gauge）。
 
 ---
+
+
 
 #### G35. resty 超时 / 重试 / 连接池？
 
@@ -3384,6 +3582,8 @@ func call(ctx context.Context) error {
 
 ---
 
+
+
 #### G36. validator/v10 自定义校验？
 
 **思路**：struct tag + 注册自定义 validator。
@@ -3441,6 +3641,8 @@ func BindJSON(c *gin.Context, req any) error {
 
 ---
 
+
+
 #### G37. cron / asynq / machinery？
 
 **思路**：单点 cron vs 分布式队列。
@@ -3455,7 +3657,7 @@ func BindJSON(c *gin.Context, req any) error {
 | machinery   | Redis/AMQP/SQS | 多 broker、DAG 工作流 | 配置重，小团队 asynq 更简单     |
 
 
-**多副本 cron 陷阱**：3 个 Pod 各跑 `0 0 * * `* 会执行 3 次。解法一——Redis 分布式锁：
+**多副本 cron 陷阱**：3 个 Pod 各跑 `0 0 `* * * 会执行 3 次。解法一——Redis 分布式锁：
 
 ```go
 // SET lock:cron:daily_report NX EX 300
@@ -3483,6 +3685,8 @@ mux.HandleFunc("email:send", handleEmail) // handler 必须幂等
 **任务三件套**：幂等（业务键去重）、超时（`context.WithTimeout` + asynq `Timeout` option）、死信（重试耗尽进 archived，人工 dashboard 回放）。Kafka 做事件驱动时用 Consumer Group 替代 cron 触发，cron 仅做「定时扫描补偿」。
 
 ---
+
+
 
 #### G38. Elasticsearch 接入全链路？
 
@@ -3575,6 +3779,8 @@ POST _aliases
 
 ---
 
+
+
 #### G39. MinIO / OSS / S3 SDK 实践？
 
 **思路**：私有桶 + 预签名 + 分片。
@@ -3627,6 +3833,8 @@ _, err := minioClient.PutObject(ctx, bucket, key, file, fileSize, minio.PutObjec
 **异步 hook**：上传完成后 Kafka 事件 → ClamAV 病毒扫描 → 恶意则删对象并标记；图片生成缩略图写衍生 key。
 
 ---
+
+
 
 #### G40. Milvus / Qdrant / Vearch 向量库选型？
 
@@ -3682,6 +3890,8 @@ client.Query(ctx, &qdrant.QueryPoints{
 
 ---
 
+
+
 #### G41. RAG / LangChain 生产最小集？
 
 **思路**：检索 + 权限 + 引用 + 拒答。
@@ -3723,6 +3933,8 @@ User Query → Multi-Query（LLM 改写 3 个 query）→ 向量检索 TopK=20
 **Kafka ingest 管道**：文档上传 → OCR/解析 → chunk 事件 → embedding worker → 写向量库 + ES 倒排双写（混合检索）。
 
 ---
+
+
 
 #### G42. 重试：指数退避 + 抖动？
 
@@ -3773,6 +3985,8 @@ func isRetryable(err error) bool {
 **Kafka Consumer**：`enable.auto.commit=false`，处理成功再 commit；失败进 DLQ 而非无限 poll 重试阻塞 partition。
 
 ---
+
+
 
 #### G43. 幂等键 / 去重表设计？
 
@@ -3842,7 +4056,11 @@ Kafka：`msg_id = topic-partition-offset` 或 header `event_id`（UUID）；消�
 
 ---
 
-<h3 id="c-5-4" class="mh2">4. 运维（Ops）</h3>
+
+
+### 4. 运维（Ops）
+
+
 
 #### G44. 502 / 504 / 连接池打满排障？
 
@@ -3970,6 +4188,8 @@ sudo tcpdump -i any host db.internal -nn 'tcp[tcpflags] & (tcp-rst) != 0' -c 20
 
 ---
 
+
+
 #### G45. OOMKilled / 内存飙高？
 
 **思路**：limit 与 request；heap profile。
@@ -4055,6 +4275,8 @@ cat /sys/fs/cgroup/memory/memory.stat   # 旧 cgroup v1
 **面试怎么讲**：OOM 先看 `kubectl describe` 是否 OOMKilled 和 limits 是否合理；Go 用 **heap pprof 看 inuse 增长**，区分泄漏 vs 峰值；调 limits 是缓解，根因是无界缓存或 goroutine 泄漏。
 
 ---
+
+
 
 #### G46. goroutine 泄漏线上定位？
 
@@ -4143,6 +4365,8 @@ curl -s localhost:6060/debug/pprof/goroutine?debug=1 | head -1
 
 ---
 
+
+
 #### G47. Docker 多阶段构建与安全？
 
 **思路**：最小运行时镜像。
@@ -4218,6 +4442,8 @@ securityContext:
 **面试怎么讲**：多阶段把编译器和源码留在 builder，运行时只留 **distroless + 静态二进制 + 非 root**；安全上靠 `.dockerignore`、CVE 扫描、无 shell 镜像和 readOnlyRootFS。
 
 ---
+
+
 
 #### G48. K8s Deployment / STS / DS / Job？
 
@@ -4308,6 +4534,8 @@ spec:
 **面试怎么讲**：无状态用 Deployment，要稳定身份和盘用 StatefulSet，节点级 agent 用 DaemonSet；生产必配 **requests/limits、探针、PDB、preStop**。
 
 ---
+
+
 
 #### G49. Service / Ingress / NetworkPolicy？
 
@@ -4402,6 +4630,8 @@ kubectl describe networkpolicy api-allow-ingress-only -n prod
 
 ---
 
+
+
 #### G50. MySQL / PG 慢查询与索引？
 
 **思路**：explain → 索引 → 改写 SQL。
@@ -4493,6 +4723,8 @@ db.SetConnMaxLifetime(5 * time.Minute)
 
 ---
 
+
+
 #### G51. Prometheus + Grafana 实践？
 
 **思路**：RED 服务 + USE 资源 + 业务指标。
@@ -4507,6 +4739,7 @@ db.SetConnMaxLifetime(5 * time.Minute)
 | RED（服务） | Rate、Errors、Duration          | QPS、5xx 率、P99       |
 | USE（资源） | Utilization、Saturation、Errors | CPU%、队列深度、磁盘 IO err |
 | 业务      | 领域 KPI                        | 下单成功率、支付金额          |
+
 
 **业务落地：storeproxy（preprocessstoreproxy Pod）→ Prometheus + Grafana**
 
@@ -4558,13 +4791,15 @@ preprocessstoreproxy Pod
       ⑥ 告警（可选）：Alerting → Contact points / Rule → 条件仍是对 Prometheus 做 PromQL
 ```
 
-| 环节 | 谁负责 | 要点 |
-| --- | --- | --- |
-| 打点 | 业务 + `observe*` | 业务 Counter 与通用 `metrics.*` 同走 Sink，label 控基数（format/kind，勿用 trace_id） |
-| 暴露 | Init + `:9090/metrics` | 与业务 HTTP 端口分离；Registry 与 promhttp 一致 |
-| 发现 | Pod 注解 + `kubernetes_sd_configs` | 注解是「可被谁拉」的声明，Init 只管「拉到了什么格式」 |
-| 存储 | Prometheus TSDB | 拉取间隔、retention；K8s 发现会带上 `k8s_app` 等 meta label 供 PromQL 过滤 |
-| 展示 | Grafana 数据源 | 配置一次 Prometheus URL；面板/Explore/告警规则共用同一 PromQL 语义 |
+
+| 环节  | 谁负责                              | 要点                                                                    |
+| --- | -------------------------------- | --------------------------------------------------------------------- |
+| 打点  | 业务 + `observe*`                  | 业务 Counter 与通用 `metrics.*` 同走 Sink，label 控基数（format/kind，勿用 trace_id） |
+| 暴露  | Init + `:9090/metrics`           | 与业务 HTTP 端口分离；Registry 与 promhttp 一致                                  |
+| 发现  | Pod 注解 + `kubernetes_sd_configs` | 注解是「可被谁拉」的声明，Init 只管「拉到了什么格式」                                         |
+| 存储  | Prometheus TSDB                  | 拉取间隔、retention；K8s 发现会带上 `k8s_app` 等 meta label 供 PromQL 过滤           |
+| 展示  | Grafana 数据源                      | 配置一次 Prometheus URL；面板/Explore/告警规则共用同一 PromQL 语义                     |
+
 
 ```promql
 # preprocessstoreproxy：按 format 看路径生成速率
@@ -4594,12 +4829,14 @@ K8s 每个 Node
         Grafana：node_memory_*、node_cpu_*、node_filesystem_* 等（可用官方 Node Exporter Full 模板）
 ```
 
-| 对比 | 业务 Pod（如 preprocessstoreproxy） | node-exporter |
-| --- | --- | --- |
-| 部署 | Deployment / 多副本 | DaemonSet，与 Node 1:1 |
-| 指标含义 | 领域 KPI、IO、自定义 Counter | USE：CPU/内存/磁盘/网络 |
-| 端口 | 常 9090（自研 Init） | 9100（社区约定） |
-| 面试归类 | RED + 业务 | **USE**（与 G51 磁盘告警 `node_filesystem_*` 同一套） |
+
+| 对比   | 业务 Pod（如 preprocessstoreproxy） | node-exporter                               |
+| ---- | ------------------------------ | ------------------------------------------- |
+| 部署   | Deployment / 多副本               | DaemonSet，与 Node 1:1                        |
+| 指标含义 | 领域 KPI、IO、自定义 Counter          | USE：CPU/内存/磁盘/网络                            |
+| 端口   | 常 9090（自研 Init）                | 9100（社区约定）                                  |
+| 面试归类 | RED + 业务                       | **USE**（与 G51 磁盘告警 `node_filesystem_`* 同一套） |
+
 
 ```promql
 # 节点 CPU 非 idle 占比（示意，按实际 job/instance 过滤）
@@ -4694,20 +4931,24 @@ groups:
     → 同上：Webhook → 钉钉机器人 或 Grafana 钉钉插件
 ```
 
-| 阶段 | 做什么 | 策略要点 |
-| --- | --- | --- |
-| **触发** | `expr` 为真且 **`for` 窗口内持续** | 防抖动：错误率类常 `for: 5m`；`up==0` 可更短 |
-| **标签** | `labels`: severity、team、service | 路由依据：`severity=critical` → 电话/on-call 群 |
-| **分组** | Alertmanager `group_by: [alertname, cluster, service]` | 多 Pod 同时挂只发 **一条聚合**（带 instance 列表） |
-| **抑制** | `inhibit_rules` | 例：节点 down 时抑制该节点上所有 Pod 的 up 告警 |
-| **路由** | `route` → 子 route 匹配 label | 业务群 / 基础设施群 / 大模型链路分 channel |
-| **静默** | Silences（维护窗口） | 发布前建 silence，避免预期抖动轰炸 |
-| **恢复** | `resolved` 通知 | 钉钉消息标明 **已恢复**，便于值班关单 |
+
+| 阶段     | 做什么                                                    | 策略要点                                    |
+| ------ | ------------------------------------------------------ | --------------------------------------- |
+| **触发** | `expr` 为真且 `for` **窗口内持续**                             | 防抖动：错误率类常 `for: 5m`；`up==0` 可更短         |
+| **标签** | `labels`: severity、team、service                        | 路由依据：`severity=critical` → 电话/on-call 群 |
+| **分组** | Alertmanager `group_by: [alertname, cluster, service]` | 多 Pod 同时挂只发 **一条聚合**（带 instance 列表）     |
+| **抑制** | `inhibit_rules`                                        | 例：节点 down 时抑制该节点上所有 Pod 的 up 告警         |
+| **路由** | `route` → 子 route 匹配 label                             | 业务群 / 基础设施群 / 大模型链路分 channel            |
+| **静默** | Silences（维护窗口）                                         | 发布前建 silence，避免预期抖动轰炸                   |
+| **恢复** | `resolved` 通知                                          | 钉钉消息标明 **已恢复**，便于值班关单                   |
+
+
+
 
 **钉钉接入（典型）**：
 
-1. 群设置 → **自定义机器人** → 安全设置（签名校验或 IP 白名单）→ 得到 Webhook URL。  
-2. 部署 **Webhook 转换服务**（如 `prometheus-webhook-dingtalk`、自研小服务）：接收 Alertmanager `POST /api/v2/alerts` JSON，拼 Markdown（summary、description、startsAt、generatorURL 链到 Grafana/Prometheus）。  
+1. 群设置 → **自定义机器人** → 安全设置（签名校验或 IP 白名单）→ 得到 Webhook URL。
+2. 部署 **Webhook 转换服务**（如 `prometheus-webhook-dingtalk`、自研小服务）：接收 Alertmanager `POST /api/v2/alerts` JSON，拼 Markdown（summary、description、startsAt、generatorURL 链到 Grafana/Prometheus）。
 3. Alertmanager 配置示例：
 
 ```yaml
@@ -4727,7 +4968,7 @@ receivers:
         send_resolved: true
 ```
 
-4. **Grafana**：Alerting → Contact points → Webhook 填同一适配器 URL；Notification policies 按 label 分到不同机器人（测试群 / 生产群）。
+1. **Grafana**：Alerting → Contact points → Webhook 填同一适配器 URL；Notification policies 按 label 分到不同机器人（测试群 / 生产群）。
 
 **值班与闭环（和「发消息」配套）**：
 
@@ -4749,9 +4990,11 @@ receivers:
 - **高基数 label 禁用**：`user_id`、`trace_id` 做 label 会炸 TSDB
 - recording rule 预聚合：`job:api:http_requests:rate5m` 加速大盘
 
-**面试怎么讲**：服务层 RED、资源层 USE；histogram 设合理 bucket；告警看 **error rate + P99 + up**；label 控制基数。可讲两条 Pull 链：**业务**（Init + 9090 + 自定义 Counter）与 **节点**（DaemonSet node-exporter + 9100 + `node_*`），最后都进同一 Prometheus，Grafana 只查 TSDB；业务例 `rate(preprocess_store_image_path_total[5m])`，资源例 `node_memory_*` / 磁盘余量。
+**面试怎么讲**：服务层 RED、资源层 USE；histogram 设合理 bucket；告警看 **error rate + P99 + up**；label 控制基数。可讲两条 Pull 链：**业务**（Init + 9090 + 自定义 Counter）与 **节点**（DaemonSet node-exporter + 9100 + `node_`*），最后都进同一 Prometheus，Grafana 只查 TSDB；业务例 `rate(preprocess_store_image_path_total[5m])`，资源例 `node_memory_`* / 磁盘余量。
 
 ---
+
+
 
 #### G52. Jaeger / Loki / ELK 分工？
 
@@ -4822,6 +5065,8 @@ sum(rate({app="api"} |= "level=error"[5m])) by (app)
 **面试怎么讲**：Metrics 发现异常，Trace 定位 **哪一跳慢**，Log 看 **参数和 stack**；用 trace_id 串联；生产 trace 要采样。
 
 ---
+
+
 
 #### G53. 灰度 / 金丝雀 / 蓝绿发布？
 
@@ -4899,6 +5144,8 @@ kubectl patch svc api -p '{"spec":{"selector":{"version":"green"}}}'
 **面试怎么讲**：金丝雀是 **小流量验证 metrics**，蓝绿是 **双环境瞬时切换**；K8s 可用 Ingress weight 或 Argo Rollouts；DB 变更必须 backward compatible。
 
 ---
+
+
 
 #### G54. Linux：fd / ulimit / tcp 排障？
 
@@ -4981,6 +5228,8 @@ grep -i "too many open files" /var/log/syslog
 
 ---
 
+
+
 #### G55. 双网 / 网闸 / 跳板机？
 
 **思路**：物理隔离下的同步与运维。
@@ -5039,7 +5288,11 @@ CREATE TABLE sync_batch (
 
 ---
 
-<h3 id="c-5-5" class="mh2">5. CI/CD</h3>
+
+
+### 5. CI/CD
+
+
 
 #### G56. Git Flow vs Trunk Based？
 
@@ -5099,6 +5352,8 @@ return legacyCheckout(order)
 **面试怎么讲**：先问对方发布频率和团队规模，再给出选型。强调「分支策略是组织问题，不是纯技术问题」——Trunk 要求测试与 CI 成熟，否则主干会被打红。
 
 ---
+
+
 
 #### G57. GitLab CI 完整 pipeline？
 
@@ -5262,6 +5517,8 @@ ci:    lint test build
 
 ---
 
+
+
 #### G58. golangci-lint 与质量门禁？
 
 **思路**：统一静态检查，CR 不抠风格。
@@ -5345,6 +5602,8 @@ script:
 
 ---
 
+
+
 #### G59. 镜像 digest 不可变与晋级？
 
 **思路**：同一 digest 从 test → staging → prod。
@@ -5406,6 +5665,8 @@ syft $IMAGE:$CI_COMMIT_SHA -o spdx-json > sbom.spdx.json
 **面试怎么讲**：画一条「build once, deploy many」链路，强调 digest 是内容哈希、tag 只是指针；晋级是「验证过的 digest 往前走」，不是重新 build。
 
 ---
+
+
 
 #### G60. Helm / K8s 回滚？
 
@@ -5501,6 +5762,8 @@ helm upgrade --install my-api ./helm -f values-prod.yaml --set image.tag=$SHA
 
 ---
 
+
+
 #### G61. 密钥 / 配置外置？
 
 **思路**：12-factor；不进镜像不进 git。
@@ -5592,6 +5855,8 @@ deploy:
 
 ---
 
+
+
 #### G62. CI 与 CD 边界再述？
 
 **思路**：CI 证明质量，CD 重复发布。
@@ -5663,7 +5928,11 @@ helm upgrade --install my-api ./helm --atomic --wait --timeout 5m
 
 ---
 
-<h3 id="c-5-6" class="mh2">6. 架构与软技能</h3>
+
+
+### 6. 架构与软技能
+
+
 
 #### G63. 何时拆 / 不拆微服务？
 
@@ -5718,6 +5987,8 @@ internal/
 **面试怎么讲**：先说「默认不拆，模块化单体是第一步」——这比一上来喊微服务成熟。用 Conway 定律 + 事务边界举例，体现架构权衡而非教条。
 
 ---
+
+
 
 #### G64. 幂等 / 最终一致 / Saga / TCC？
 
@@ -5838,6 +6109,8 @@ Cancel:  释放冻结库存、释放余额 （回滚预留）
 
 ---
 
+
+
 #### G65. 压测 wrk/vegeta 与容量规划？
 
 **思路**：找饱和点 → 留冗余。
@@ -5847,12 +6120,12 @@ Cancel:  释放冻结库存、释放余额 （回滚预留）
 **压测工具对比**：
 
 
-| 工具     | 特点         | 示例                                                                   |
-| ------ | ---------- | -------------------------------------------------------------------- |
-| wrk    | 高并发、Lua 脚本 | `wrk -t4 -c100 -d30s --latency http://host/api`                      |
-| vegeta | 恒定 QPS、可管道 | `echo "GET http://host/api" | vegeta attack -duration=30s -rate=200` |
-| k6     | JS 脚本、场景丰富 | 适合复杂业务流程                                                             |
-| hey    | Go 编写、简单   | `hey -n 10000 -c 50 url`                                             |
+| 工具     | 特点         | 示例                                              |
+| ------ | ---------- | ----------------------------------------------- |
+| wrk    | 高并发、Lua 脚本 | `wrk -t4 -c100 -d30s --latency http://host/api` |
+| vegeta | 恒定 QPS、可管道 | `echo "GET [http://host/api](http://host/api)"  |
+| k6     | JS 脚本、场景丰富 | 适合复杂业务流程                                        |
+| hey    | Go 编写、简单   | `hey -n 10000 -c 50 url`                        |
 
 
 **Vegeta 完整流程**：
@@ -5921,6 +6194,8 @@ DB 连接池：每 Pod max_open = (DB max_connections × 0.8) / Pod 数
 **面试怎么讲**：讲「找饱和点 → 算冗余 → 验证瓶颈组件」三步；举一个 P99 陡增 + DB 连接打满的例子，比背命令更有说服力。
 
 ---
+
+
 
 #### G66. 安全：注入 / 越权 / 脱敏？
 
@@ -6010,6 +6285,8 @@ syft dir:. -o spdx-json > sbom.json   # 软件物料清单
 
 ---
 
+
+
 #### G67. RFC / 技术方案怎么写？
 
 **思路**：背景 → 方案对比 → 决策 → 风险。
@@ -6089,6 +6366,8 @@ syft dir:. -o spdx-json > sbom.json   # 软件物料清单
 **面试怎么讲**：强调「方案对比表 + 明确非目标 + 回滚计划」三件套；体现写 RFC 是为了 **决策可追溯**，不是形式主义。
 
 ---
+
+
 
 #### G68. Swagger / OpenAPI 协作？
 
@@ -6190,6 +6469,8 @@ prism mock api/openapi.yaml
 
 ---
 
+
+
 #### G69. 带人：排期 / 风险 / 周报？
 
 **思路**：可验收、可见、可回滚。
@@ -6251,6 +6532,8 @@ prism mock api/openapi.yaml
 
 ---
 
+
+
 #### G70. Code Review trade-off（详见 Q24）？
 
 **思路**：P0 正确性；讨论方案不抠格式。
@@ -6309,6 +6592,8 @@ Revert commit xxx，无 DB 变更
 **面试怎么讲**：说「P0 安全正确性不妥协，风格交给 linter；用提问引导而非命令」——体现 senior 的 review 文化。
 
 ---
+
+
 
 #### G71. 技术债怎么还？
 
@@ -6374,6 +6659,8 @@ Sprint 容量 40 人天
 **面试怎么讲**：「触达即小改 + 每 sprint 留 10～20% 专项 + 度量验证」三句话；强调大爆炸重写是反模式。
 
 ---
+
+
 
 #### G72. DDD 轻量：聚合边界怎么划？
 
@@ -6466,7 +6753,9 @@ func (dto PaymentGatewayDTO) ToDomain() domain.Payment {
 
 ---
 
-<h3 id="c-5-7" class="mh2">7. 高级自检（速查）</h3>
+
+
+### 7. 高级自检（速查）
 
 
 | 模块           | 题号      | 题量  | 核心覆盖                                                        |
@@ -6493,89 +6782,59 @@ func (dto PaymentGatewayDTO) ToDomain() domain.Payment {
 
 **学习路径**：G1–G17 语言 → G18–G32 框架 → G44–G55 运维 → G56–G62 CI/CD → G63–G72 架构；G33–G43 按项目补插件/AI。
 
+---
 
-<hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
+**目录**
 
-<!-- 目录容器 -->
-<div class="mi1">
-    <strong>目录</strong>
-        <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
-            <li style="list-style-type: none;"><a href="#c-1-0">一、个人</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-                <li style="list-style-type: none;"><a href="#c-1-1">入职公司简介</a></li>
-                <ul style="padding-left: 15px; list-style-type: none;">
-                    <li style="list-style-type: none;"><a href="#c-1-1-1">1. 司睿杰</a></li>
-                    <li style="list-style-type: none;"><a href="#c-1-1-2">2. 亮风台</a></li>
-                    <li style="list-style-type: none;"><a href="#c-1-1-3">3. 现在公司</a></li>
-                </ul>
-                <li style="list-style-type: none;"><a href="#c-1-2">Go 与 Python 进行比较？</a></li>
-                <li style="list-style-type: none;"><a href="#c-1-3">框架该如何设计定义？</a></li>
-                <ul style="padding-left: 15px; list-style-type: none;">
-                    <li style="list-style-type: none;"><a href="#c-1-3-1">1. 定位与边界</a></li>
-                    <li style="list-style-type: none;"><a href="#c-1-3-2">2. 架构定义</a></li>
-                    <li style="list-style-type: none;"><a href="#c-1-3-3">3. 三方面构成</a></li>
-                </ul>
-                <li style="list-style-type: none;"><a href="#c-1-4">Gin：Radix Tree 与 Context</a></li>
-                <ul style="padding-left: 15px; list-style-type: none;">
-                    <li style="list-style-type: none;"><a href="#c-1-4-1">1. Radix Tree</a></li>
-                    <li style="list-style-type: none;"><a href="#c-1-4-2">2. Context</a></li>
-                </ul>
-                <li style="list-style-type: none;"><a href="#c-1-5">Casbin 与 OPA 是什么？</a></li>
-                <li style="list-style-type: none;"><a href="#c-1-6">微服务是什么？</a></li>
-                <li style="list-style-type: none;"><a href="#c-1-7">链路追踪（OpenTracing）</a></li>
-                <li style="list-style-type: none;"><a href="#c-1-8">服务熔断、降级与限流</a></li>
-                <ul style="padding-left: 15px; list-style-type: none;">
-                    <li style="list-style-type: none;"><a href="#c-1-8-1">1. 服务熔断与降级</a></li>
-                    <li style="list-style-type: none;"><a href="#c-1-8-2">2. 服务限流</a></li>
-                </ul>
-            </ul>
-            <li style="list-style-type: none;"><a href="#c-2-0">二、Docker & K8s</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-                <li style="list-style-type: none;"><a href="#c-2-1">Docker</a></li>
-                <ul style="padding-left: 15px; list-style-type: none;">
-                    <li style="list-style-type: none;"><a href="#c-2-1-1">1. 什么是 Docker、容器、镜像？</a></li>
-                    <li style="list-style-type: none;"><a href="#c-2-1-2">2. Docker 镜像原则</a></li>
-                    <li style="list-style-type: none;"><a href="#c-2-1-3">3. 更改默认存储路径</a></li>
-                </ul>
-                <li style="list-style-type: none;"><a href="#c-2-2">Kubernetes</a></li>
-                <ul style="padding-left: 15px; list-style-type: none;">
-                    <li style="list-style-type: none;"><a href="#c-2-2-1">1. 容器化好处</a></li>
-                    <li style="list-style-type: none;"><a href="#c-2-2-2">2. 容器化流程</a></li>
-                    <li style="list-style-type: none;"><a href="#c-2-2-3">3. 部署常见问题</a></li>
-                    <li style="list-style-type: none;"><a href="#c-2-2-4">4. deploy / sts / ds 区别</a></li>
-                </ul>
-            </ul>
-            <li style="list-style-type: none;"><a href="#c-3-0">三、AI</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-                <li style="list-style-type: none;"><a href="#c-3-1">RAG（Retrieval-Augmented Generation）</a></li>
-                <ul style="padding-left: 15px; list-style-type: none;">
-                    <li style="list-style-type: none;"><a href="#c-3-1-1">1. 基础流程（Naive RAG）</a></li>
-                    <li style="list-style-type: none;"><a href="#c-3-1-2">2. 三代演进</a></li>
-                    <li style="list-style-type: none;"><a href="#c-3-1-3">3. Advanced RAG 关键点</a></li>
-                    <li style="list-style-type: none;"><a href="#c-3-1-4">4. Modular RAG 关键点</a></li>
-                    <li style="list-style-type: none;"><a href="#c-3-1-5">5. 常见命名模式（速查）</a></li>
-                </ul>
-                <li style="list-style-type: none;"><a href="#c-3-2">LangChain</a></li>
-            </ul>
-            <li style="list-style-type: none;"><a href="#c-4-0">四、简历项目深挖（问答）</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-                <li style="list-style-type: none;"><a href="#c-4-1">A. 司睿杰 · 内部 OA / 监理协会考核系统</a></li>
-                <li style="list-style-type: none;"><a href="#c-4-2">B. 亮风台 · 云平台（Rust→Go / MySQL→PG）</a></li>
-                <li style="list-style-type: none;"><a href="#c-4-3">C. 智慧视通 · 蜂鸟（双网 / 百亿检索 / 服务治理 / 大模型）</a></li>
-                <li style="list-style-type: none;"><a href="#c-4-4">D. 跨项目 · 语言 / 框架 / 运维通用深挖</a></li>
-            </ul>
-            <li style="list-style-type: none;"><a href="#c-5-0">五、高级 Go 能力深挖</a></li>
-            <ul style="padding-left: 15px; list-style-type: none;">
-                <li style="list-style-type: none;"><a href="#c-5-1">1. 语言（Go 本身）</a></li>
-                <li style="list-style-type: none;"><a href="#c-5-2">2. 框架与工程化</a></li>
-                <li style="list-style-type: none;"><a href="#c-5-3">3. 插件与生态</a></li>
-                <li style="list-style-type: none;"><a href="#c-5-4">4. 运维（Ops）</a></li>
-                <li style="list-style-type: none;"><a href="#c-5-5">5. CI/CD</a></li>
-                <li style="list-style-type: none;"><a href="#c-5-6">6. 架构与软技能</a></li>
-                <li style="list-style-type: none;"><a href="#c-5-7">7. 高级自检（速查）</a></li>
-            </ul>
-        </ul>
-</div>
+- [一、个人](#c-1-0)
+  - [入职公司简介](#c-1-1)
+    - [1. 司睿杰](#c-1-1-1)
+    - [2. 亮风台](#c-1-1-2)
+    - [3. 现在公司](#c-1-1-3)
+  - [Go 与 Python 进行比较？](#c-1-2)
+  - [框架该如何设计定义？](#c-1-3)
+    - [1. 定位与边界](#c-1-3-1)
+    - [2. 架构定义](#c-1-3-2)
+    - [3. 三方面构成](#c-1-3-3)
+  - [Gin：Radix Tree 与 Context](#c-1-4)
+    - [1. Radix Tree](#c-1-4-1)
+    - [2. Context](#c-1-4-2)
+  - [Casbin 与 OPA 是什么？](#c-1-5)
+  - [微服务是什么？](#c-1-6)
+  - [链路追踪（OpenTracing）](#c-1-7)
+  - [服务熔断、降级与限流](#c-1-8)
+    - [1. 服务熔断与降级](#c-1-8-1)
+    - [2. 服务限流](#c-1-8-2)
+- [二、Docker & K8s](#c-2-0)
+  - [Docker](#c-2-1)
+    - [1. 什么是 Docker、容器、镜像？](#c-2-1-1)
+    - [2. Docker 镜像原则](#c-2-1-2)
+    - [3. 更改默认存储路径](#c-2-1-3)
+  - [Kubernetes](#c-2-2)
+    - [1. 容器化好处](#c-2-2-1)
+    - [2. 容器化流程](#c-2-2-2)
+    - [3. 部署常见问题](#c-2-2-3)
+    - [4. deploy / sts / ds 区别](#c-2-2-4)
+- [三、AI](#c-3-0)
+  - [RAG（Retrieval-Augmented Generation）](#c-3-1)
+    - [1. 基础流程（Naive RAG）](#c-3-1-1)
+    - [2. 三代演进](#c-3-1-2)
+    - [3. Advanced RAG 关键点](#c-3-1-3)
+    - [4. Modular RAG 关键点](#c-3-1-4)
+    - [5. 常见命名模式（速查）](#c-3-1-5)
+  - [LangChain](#c-3-2)
+- [四、简历项目深挖（问答）](#c-4-0)
+  - [A. 司睿杰 · 内部 OA / 监理协会考核系统](#c-4-1)
+  - [B. 亮风台 · 云平台（Rust→Go / MySQL→PG）](#c-4-2)
+  - [C. 智慧视通 · 蜂鸟（双网 / 百亿检索 / 服务治理 / 大模型）](#c-4-3)
+  - [D. 跨项目 · 语言 / 框架 / 运维通用深挖](#c-4-4)
+- [五、高级 Go 能力深挖](#c-5-0)
+  - [1. 语言（Go 本身）](#c-5-1)
+  - [2. 框架与工程化](#c-5-2)
+  - [3. 插件与生态](#c-5-3)
+  - [4. 运维（Ops）](#c-5-4)
+  - [5. CI/CD](#c-5-5)
+  - [6. 架构与软技能](#c-5-6)
+  - [7. 高级自检（速查）](#c-5-7)
 
 本技术手册将持续更新，欢迎提交Issue和Pull Request
-
