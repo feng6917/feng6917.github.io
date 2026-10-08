@@ -261,6 +261,49 @@ UUID="9685a7fb-e6a3-4ac8-9c2d-91d979b72a9b" /data_hdd ext4 defaults 0 0
 
 **经验：** 持久化挂载优先使用 `UUID=` / `LABEL=`，避免依赖不稳定的 `/dev/sdX` 设备名；写 `fstab` 后务必 `mount -a` 自检，选项拼写错误同样会导致开机挂载失败。
 
+<h2 id="c-12-0" class="mh1">12. 服务器重启后服务异常（挂载盘写满导致 Redis 初始化失败）</h2>
+
+| 项 | 内容 |
+|----|------|
+| **记录时间** | 2026-10-08 |
+| **相关服务** | Redis HA（`hummingbird` / `redis-hb-redis-ha`）、依赖 Redis 的业务服务 |
+
+**现象：** 服务器重启后，业务无法正常展示；排查发现部分服务反复启动、起不来。
+
+**排查结果：** 查看上次关闭前容器日志（`--previous`），`redis-hb-redis-ha-server-0` 的 `config-init` 报错：
+
+```text
+Could not connect to Redis at redis-hb-redis-ha:26379: Name does not resolve
+Initializing config..
+cp: write error: No space left on device
+```
+
+`df` 显示 `/data_hdd`（`/dev/sdc`）已满：
+
+```text
+/dev/sdc   ext4   917G   873G   0   100% /data_hdd
+```
+
+进一步 `du -h --max-depth=1` 看占用分布：
+
+```text
+243G    ./localpv
+37G     ./jinjie_docker
+577G    ./data2
+16G     ./registry
+873G    ./
+```
+
+根因是 **挂载盘 `/data_hdd` 空间耗尽**，Redis 初始化写配置失败，连带依赖服务异常、反复重启；DNS 解析失败多为 Redis/Sentinel 尚未就绪的连锁现象。
+
+**调整方式：**
+
+1. 清理 `/data_hdd` 上可回收目录（如过大的 `data2`、无用镜像/缓存等），腾出足够空间；
+2. 手动重启异常服务，或等待控制器自动重启；
+3. 确认 Redis 与业务 Pod 恢复正常后再验收页面展示。
+
+**经验：** 重启后服务连环失败，优先看 `--previous` 日志里是否有 `No space left on device`，再用 `df` / `du` 定位挂载盘占满，而不是只盯着业务报错本身。
+
 <hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
 
 <!-- 目录容器 -->
@@ -288,6 +331,8 @@ UUID="9685a7fb-e6a3-4ac8-9c2d-91d979b72a9b" /data_hdd ext4 defaults 0 0
             <li style="list-style-type: none;"><a href="#c-10-0">10. 编辑 ConfigMap 时 JSON 转义格式错位（尾部多余空格）</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-11-0">11. 服务器重启进入应急模式（fstab 未用 UUID / 选项拼写错误）</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-12-0">12. 服务器重启后服务异常（挂载盘写满导致 Redis 初始化失败）</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
         </ul>
 </div>
