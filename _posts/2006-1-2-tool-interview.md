@@ -1,36 +1,36 @@
 ---
-
-## layout: post
-
+layout: post
 title: "知识复习"
 date:   2018-8-28
 tags: 
-
-- 工具类
+  - 工具类
 comments: false
 author: feng6917
 protected: true
 access_password: myz
+---
 
 本文档为知识复习资料，打开页面后需输入密码方可查看。
 
-## 一、个人
+<!-- more -->
 
-## 入职公司简介
+<h2 id="c-1-0" class="mh1">一、个人</h2>
 
-### 1. 司睿杰
+<h2 id="c-1-1" class="mh1">入职公司简介</h2>
+
+<h3 id="c-1-1-1" class="mh2">1. 司睿杰</h3>
 
 内部考核系统（监理协会、从零到一），OA 项目权限（Casbin），网盘，数据分词检索 ECK
 
-### 2. 亮风台
+<h3 id="c-1-1-2" class="mh2">2. 亮风台</h3>
 
-rust 薪资服务重写，mysql -> pg 迁移, 角色权限设计
+rust 薪资服务重写，mysql -> pg 迁移
 
-### 3. 现在公司
+<h3 id="c-1-1-3" class="mh2">3. 现在公司</h3>
 
 业务重构，服务治理，大模型，CICD，双网架构
 
-## Go 与 Python 进行比较？
+<h2 id="c-1-2" class="mh1">Go 与 Python 进行比较？</h2>
 
 - **go:**
   1. 简单
@@ -43,26 +43,22 @@ rust 薪资服务重写，mysql -> pg 迁移, 角色权限设计
   3. 可扩展性和便携性
   4. 一种可移植和被解释的高级语言
 
-## 框架该如何设计定义？
+<h2 id="c-1-3" class="mh1">框架该如何设计定义？</h2>
 
 参考 Gin、Kratos、Spring Boot 等市面框架，框架设计通常包含以下层次：
 
-### 1. 定位与边界（针对性、倾向性）
+<h3 id="c-1-3-1" class="mh2">1. 定位与边界（针对性、倾向性）</h3>
 
 - 先明确框架解决什么问题：轻量 HTTP（如 Gin）、微服务工程化（如 Kratos）、企业级全家桶（如 Spring Boot）
 - 不同定位决定抽象粒度：路由框架只关心请求链路；微服务框架还要管配置、通信、治理
 
-### 2. 架构定义（分层、模块划分、模块交互）
+<h3 id="c-1-3-2" class="mh2">2. 架构定义（分层、模块划分、模块交互）</h3>
 
-- **分层**：常见为接入层（HTTP/gRPC）→ 业务层 → 数据层；Kratos 还区分 API / Service / Biz / Data，依赖单向、禁止跳层：
-  - **API**：协议层。定义 proto/HTTP 接口、入参校验、错误码与响应映射，不写业务逻辑
-  - **Service**：应用编排层。做 DTO ↔ 领域对象转换，调用一个或多个 Biz UseCase，串起一次请求的流程
-  - **Biz**：领域层。放领域规则、事务边界、实体与用例；依赖 Repo 接口，不写 SQL / 不感知 HTTP
-  - **Data**：数据实现层。实现 Biz 的 Repo，对接 GORM / Redis / MQ 等外部存储与中间件
+- **分层**：常见为接入层（HTTP/gRPC）→ 业务层 → 数据层；Kratos 还区分 API / Service / Biz / Data
 - **模块划分**：路由、中间件、配置、日志、依赖注入、数据访问等各司其职
 - **模块交互**：通过接口 + 依赖注入（Wire）或中间件链（Handler Chain）解耦，避免业务直接耦合底层实现
 
-### 3. 三方面构成（工程落地视角）
+<h3 id="c-1-3-3" class="mh2">3. 三方面构成（工程落地视角）</h3>
 
 
 | 方面       | 内容                                              |
@@ -74,9 +70,9 @@ rust 薪资服务重写，mysql -> pg 迁移, 角色权限设计
 
 img
 
-## Gin：Radix Tree 与 Context
+<h2 id="c-1-4" class="mh1">Gin：Radix Tree 与 Context</h2>
 
-### 1. Radix Tree
+<h3 id="c-1-4-1" class="mh2">1. Radix Tree</h3>
 
 Gin 中基于**压缩前缀树**作为路由树的数据结构，对应 9 种 HTTP 方法共有 **9 棵树**。
 
@@ -117,7 +113,7 @@ Gin 中基于**压缩前缀树**作为路由树的数据结构，对应 9 种 HT
 
 img
 
-### 2. Context
+<h3 id="c-1-4-2" class="mh2">2. Context</h3>
 
 `gin.Context` 对应一次 HTTP 请求，贯穿整条 **Handler Chain** 调用链路的上下文。
 
@@ -142,7 +138,7 @@ img
 | `keys`               | handlers 链上共享数据的 map       |
 
 
-## Casbin 与 Open Policy Agent（OPA）是什么？
+<h2 id="c-1-5" class="mh1">Casbin 与 Open Policy Agent（OPA）是什么？</h2>
 
 **Casbin 是什么？**
 
@@ -174,7 +170,7 @@ OPA 是 CNCF 的通用**策略引擎**，用 **Rego** 语言编写策略，与�
 | 集成方式 | 代码内 `Enforce()`  | HTTP/gRPC 查询 OPA，或 WASM 嵌入 |
 
 
-## 微服务是什么？
+<h2 id="c-1-6" class="mh1">微服务是什么？</h2>
 
 **定义**
 
@@ -203,7 +199,7 @@ OPA 是 CNCF 的通用**策略引擎**，用 **Rego** 语言编写策略，与�
 
 img
 
-## 链路追踪（OpenTracing）
+<h2 id="c-1-7" class="mh1">链路追踪（OpenTracing）</h2>
 
 运行时记录服务之间的调用过程，通过可视化 UI 帮助运维人员快速定位出错点。
 
@@ -241,9 +237,9 @@ img
 1. HTTP/gRPC 集成中间件，数据库中间件
 2. 采集点：跨进程调用处、代码埋点（`span.start` / `span.end`）
 
-## 服务熔断、降级与限流
+<h2 id="c-1-8" class="mh1">服务熔断、降级与限流</h2>
 
-### 1. 服务熔断与降级
+<h3 id="c-1-8-1" class="mh2">1. 服务熔断与降级</h3>
 
 img
 
@@ -264,7 +260,7 @@ img
 | **Half-Open（半开）** | 放行少量探测请求；成功 → Closed 并重置计数；仍失败 → Open，防止恢复中被打垮 |
 
 
-### 2. 服务限流
+<h3 id="c-1-8-2" class="mh2">2. 服务限流</h3>
 
 **常见场景**：突发流量（如双十一）、恶意攻击、业务自身容量上限。
 
@@ -294,11 +290,11 @@ img
 
 **Go 插件示例**：`github.com/juju/ratelimit`（令牌桶）
 
-## 二、Docker & K8s
+<h2 id="c-2-0" class="mh1">二、Docker & K8s</h2>
 
-## Docker
+<h2 id="c-2-1" class="mh1">Docker</h2>
 
-### 1. 什么是 Docker、容器、镜像？
+<h3 id="c-2-1-1" class="mh2">1. 什么是 Docker、容器、镜像？</h3>
 
 Docker 是一个开源的应用容器引擎，让开发者可以打包他们的应用以及依赖包到一个可移植的容器中，然后发布到任何流行的 Linux 机器上，也可以实现虚拟化。容器是完全使用沙箱机制，相互之间不会有任何接口。
 
@@ -306,7 +302,7 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
 
 镜像是一种轻量级、可执行的独立软件包，用来打包软件运行环境和基于运行环境开发的软件，它包含运行某个软件所需的所有内容，包括代码、运行时、库、环境变量和配置文件。
 
-### 2. Docker 镜像应该遵循哪些原则？
+<h3 id="c-2-1-2" class="mh2">2. Docker 镜像应该遵循哪些原则？</h3>
 
 整体上，尽量保持镜像**功能明确**、**内容精简**：
 
@@ -318,7 +314,7 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
 6. 合理**分层**，将变化频率低的层放前面，提高构建缓存命中率
 7. 生产镜像避免包含调试工具、源码、密钥等敏感信息
 
-### 3. 如何更改 Docker 的默认存储路径？
+<h3 id="c-2-1-3" class="mh2">3. 如何更改 Docker 的默认存储路径？</h3>
 
 修改配置文件：
 
@@ -335,29 +331,29 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
 
 也可使用软链接迁移已有数据目录。
 
-## Kubernetes
+<h2 id="c-2-2" class="mh1">Kubernetes</h2>
 
-### 1. 容器化开发的好处？
+<h3 id="c-2-2-1" class="mh2">1. 容器化开发的好处？</h3>
 
 1. 共享宿主机资源，利用率更高
 2. 一次构建，到处运行，可移植性强
 3. 秒级启动，便于弹性伸缩
 4. 契合 DevOps，缩短交付与运维周期
 
-### 2. 容器化开发流程？
+<h3 id="c-2-2-2" class="mh2">2. 容器化开发流程？</h3>
 
 1. 搭建容器化平台，构建自动化运维基础设施
 2. 构建服务环境镜像，集成基本开发环境
 3. 服务持续开发及服务运维插件集成（监控、日志、链路追踪等）
 
-### 3. 容器化 / K8s 部署常见问题？
+<h3 id="c-2-2-3" class="mh2">3. 容器化 / K8s 部署常见问题？</h3>
 
 1. 调用链路过长，问题定位困难
 2. 数据持久化与挂载配置不当导致数据丢失
 3. 镜像过大、启动慢，资源 limits/requests 配置不合理
 4. 网络策略、Service/Ingress 配置错误导致服务不可达
 
-### 4. Deployment、StatefulSet、DaemonSet 区别？
+<h3 id="c-2-2-4" class="mh2">4. Deployment、StatefulSet、DaemonSet 区别？</h3>
 
 
 |            | **Deployment（deploy）**   | **StatefulSet（sts）**      | **DaemonSet（ds）**            |
@@ -377,9 +373,9 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
 - 要稳定 hostname、有序启停、独立存储 → **StatefulSet**
 - 每个节点都要跑一个 → **DaemonSet**
 
-## 三、AI
+<h2 id="c-3-0" class="mh1">三、AI</h2>
 
-## RAG（Retrieval-Augmented Generation）
+<h2 id="c-3-1" class="mh1">RAG（Retrieval-Augmented Generation）</h2>
 
 **RAG** = 检索外部知识 + LLM 生成
 
@@ -389,7 +385,7 @@ Docker 是一个开源的应用容器引擎，让开发者可以打包他们的�
 
 **目的**：减少幻觉，接入私有/最新知识，不依赖微调。
 
-### 1. 基础流程（Naive RAG）
+<h3 id="c-3-1-1" class="mh2">1. 基础流程（Naive RAG）</h3>
 
 ```
 Indexing（离线索引）          在线查询
@@ -400,7 +396,7 @@ Indexing（离线索引）          在线查询
 
 **痛点**：查询理解浅、检索噪声大、复杂问题效果差。
 
-### 2. 三代演进
+<h3 id="c-3-1-2" class="mh2">2. 三代演进</h3>
 
 
 | 范式               | 核心         | 流程                                                   |
@@ -412,7 +408,7 @@ Indexing（离线索引）          在线查询
 
 继承关系：**Naive ⊂ Advanced ⊂ Modular**
 
-### 3. Advanced RAG 关键点
+<h3 id="c-3-1-3" class="mh2">3. Advanced RAG 关键点</h3>
 
 
 | 阶段                 | 手段                                   | 作用            |
@@ -425,7 +421,7 @@ Indexing（离线索引）          在线查询
 
 **特点**：固定线性流水线，所有 query 走同一路径。
 
-### 4. Modular RAG 关键点
+<h3 id="c-3-1-4" class="mh2">4. Modular RAG 关键点</h3>
 
 **三层架构**
 
@@ -458,7 +454,7 @@ Indexing（离线索引）          在线查询
 | **Loop**        | 检索⇄生成循环 | Self-RAG、多跳 QA     |
 
 
-### 5. 常见命名模式（速查）
+<h3 id="c-3-1-5" class="mh2">5. 常见命名模式（速查）</h3>
 
 
 | 模式              | 一句话                    |
@@ -469,7 +465,7 @@ Indexing（离线索引）          在线查询
 | **GraphRAG**    | 基于知识图谱做关系/多跳检索         |
 
 
-## LangChain
+<h2 id="c-3-2" class="mh1">LangChain</h2>
 
 **LangChain** = 构建 LLM 应用的开源框架
 
@@ -529,13 +525,13 @@ LangChain Agent **底层基于 LangGraph**：简单用 LangChain，复杂工作�
 
 **经验法则**：涉及文档检索、多工具、多模型中 **≥2 项** 时，值得引入。
 
-## 四、简历项目深挖（问答）
+<h2 id="c-4-0" class="mh1">四、简历项目深挖（问答）</h2>
 
 > 用法：面试官常从简历项目切入。每题按 **「问题 → 思路 → 参考答案」** 组织，回答时先讲**背景与 trade-off**，再落到**你做了什么、指标如何、失败怎么办**。
 
 ---
 
-### A. 司睿杰 · 内部 OA / 监理协会考核系统
+<h3 id="c-4-1" class="mh2">A. 司睿杰 · 内部 OA / 监理协会考核系统</h3>
 
 #### Q1. 考核系统从零到一：需求拆分、选型、防作弊、交卷与异常？
 
@@ -670,7 +666,7 @@ POST /heartbeat { session_token, seq, answers_delta, events:[blur,...] }
 
 ---
 
-### B. 亮风台 · 云平台（Rust→Go / MySQL→PG）
+<h3 id="c-4-2" class="mh2">B. 亮风台 · 云平台（Rust→Go / MySQL→PG）</h3>
 
 #### Q5. 为什么把 Rust 薪资服务重写为 Go？不是 Rust 性能更好吗？
 
@@ -717,7 +713,7 @@ API (proto/http) → Service (DTO 转换) → Biz (领域规则) → Data (repo)
 
 ---
 
-### C. 智慧视通 · 蜂鸟（双网 / 百亿检索 / 服务治理 / 大模型）
+<h3 id="c-4-3" class="mh2">C. 智慧视通 · 蜂鸟（双网 / 百亿检索 / 服务治理 / 大模型）</h3>
 
 #### Q8. 双网架构下 4000 路设备摘要同步，核心难点是什么？
 
@@ -832,7 +828,7 @@ API (proto/http) → Service (DTO 转换) → Biz (领域规则) → Data (repo)
 
 ---
 
-### D. 跨项目 · 语言 / 框架 / 运维通用深挖
+<h3 id="c-4-4" class="mh2">D. 跨项目 · 语言 / 框架 / 运维通用深挖</h3>
 
 #### Q16. Gin Context 用 sync.Pool 复用，有什么坑？
 
@@ -986,15 +982,13 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
     · **不再调用意图 LLM**（意图阶段一次定调，避免延迟与口径不一致）
 ```
 
-
-| 层次     | 职责           | 为什么这样拆              |
-| ------ | ------------ | ------------------- |
-| 规则路由   | 高频、强约束、@ 与合规 | 确定性、毫秒级、可审计、省 token |
-| 意图 LLM | 长尾说法、抽槽、纠偏   | 泛化；低置信回退规则          |
-| 硬闸门    | 档案/轨迹/抓拍等    | 安全与成本；避免模型误路由       |
-| 执行抽槽   | 槽位优先 + 本地兜底  | 执行要稳，不绑单次 LLM       |
-| 短总结    | 结果导向         | 与意图解耦，列表可读即可        |
-
+| 层次 | 职责 | 为什么这样拆 |
+| --- | --- | --- |
+| 规则路由 | 高频、强约束、@ 与合规 | 确定性、毫秒级、可审计、省 token |
+| 意图 LLM | 长尾说法、抽槽、纠偏 | 泛化；低置信回退规则 |
+| 硬闸门 | 档案/轨迹/抓拍等 | 安全与成本；避免模型误路由 |
+| 执行抽槽 | 槽位优先 + 本地兜底 | 执行要稳，不绑单次 LLM |
+| 短总结 | 结果导向 | 与意图解耦，列表可读即可 |
 
 **与 Q23「Agent 死循环」的关系**：意图只 **一步 JSON**，不进入 ReAct 环；复杂多步走 Function Call/MCP，仍受 max_iterations、硬闸门路由限制。
 
@@ -1032,7 +1026,7 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 
 ---
 
-### E. 简历补充 · 协议 / 向量双栈 / 智能体 / 多模态 / 实时 / 身份（P0）
+<h3 id="c-4-5" class="mh2">E. 简历补充 · 协议 / 向量双栈 / 智能体 / 多模态 / 实时 / 身份（P0）</h3>
 
 #### Q25. GA/1400 等行业协议对接，在双网架构里你怎么做？
 
@@ -1130,14 +1124,6 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 
 **参考答案**：
 
-**WebSocket 是什么**：基于 HTTP 握手升级后的**全双工长连接**协议（`ws`/`wss`）。连接建立后，客户端与服务端可随时双向推送消息，无需反复发起 HTTP 请求；适合实时推送、协同，比轮询更省连接与延迟。
-
-**HTTP 如何转成 WebSocket**：走 HTTP **Upgrade** 握手，成功后同一条 TCP 连接切换为 WS 帧协议。
-
-- 客户端发普通 HTTP 请求，带升级头：`Connection: Upgrade`、`Upgrade: websocket`、`Sec-WebSocket-Key`、`Sec-WebSocket-Version: 13`
-- 服务端校验后返回 **`101 Switching Protocols`**，并带上 `Sec-WebSocket-Accept`（由 Key 按协议派生）
-- 握手完成：之后不再走 HTTP 请求/响应，双方用 **WebSocket 帧**双向收发；失败则仍按普通 HTTP 错误返回，连接不升级
-
 1. **场景**：实时状态、任务推送、大屏；比 HTTP 轮询更省资源；对内服务间仍 **gRPC**（G28）。
 2. **连接管理**：网关或专用 WS 服务；连接注册（Redis/分片 map）；**心跳 + 空闲断开**；单 IP/租户连接数上限。
 3. **消息下发**：
@@ -1185,13 +1171,13 @@ Worker 无状态 → Deployment + HPA；有本地缓存需清空或走 Redis。
 
 ---
 
-## 五、高级 Go 能力深挖（语言 / 框架 / 运维 / CI/CD / 架构）
+<h2 id="c-5-0" class="mh1">五、高级 Go 能力深挖（语言 / 框架 / 运维 / CI/CD / 架构）</h2>
 
 > 按能力维度组织，共 **72 题（G1–G72）**；每题 **思路 + 参考答案（含面试怎么讲、代码/命令示例、排障步骤）**。与第四节「简历项目」互补。
 
 ---
 
-### 1. 语言（Go 本身）
+<h3 id="c-5-1" class="mh2">1. 语言（Go 本身）</h3>
 
 #### G1. 逃逸分析是什么？怎么判断变量堆还是栈分配？
 
@@ -1289,12 +1275,10 @@ go test -bench=. -benchmem ./...
 
 **Mark 与 Sweep 分工**：
 
-
-| 阶段            | 做什么                      | 与业务关系                |
-| ------------- | ------------------------ | -------------------- |
-| **Mark（标记）**  | 从根对象出发，三色标记找出所有存活对象      | 主体并发，写屏障保正确性         |
+| 阶段 | 做什么 | 与业务关系 |
+| --- | --- | --- |
+| **Mark（标记）** | 从根对象出发，三色标记找出所有存活对象 | 主体并发，写屏障保正确性 |
 | **Sweep（清扫）** | 回收标记阶段判定为「白色」的死亡对象，内存还给堆 | 主体并发/异步，仅少数同步点可能 STW |
-
 
 **三色标记流程**：
 
@@ -1330,13 +1314,11 @@ Sweep:  [可能极短 STW 启动/状态切换] → [并发/异步清扫，业务
 
 **STW 出现在哪**（共三处，均极短）：
 
-
-| 同步点              | 做什么                          | 说明                                                        |
-| ---------------- | ---------------------------- | --------------------------------------------------------- |
-| 标记开始             | 短暂 STW，准备 root scan          | 固定、可预期                                                    |
-| mark termination | 短暂 STW，flush 写屏障缓冲、处理剩余 work | 固定、可预期                                                    |
-| sweep 阶段的少数同步点   | 清扫启动或状态切换时的短 STW             | **不是整段 sweep 都 STW**；Go 1.5+ 大幅缩短，Go 1.14+ 通常 < 1ms（负载相关） |
-
+| 同步点 | 做什么 | 说明 |
+| --- | --- | --- |
+| 标记开始 | 短暂 STW，准备 root scan | 固定、可预期 |
+| mark termination | 短暂 STW，flush 写屏障缓冲、处理剩余 work | 固定、可预期 |
+| sweep 阶段的少数同步点 | 清扫启动或状态切换时的短 STW | **不是整段 sweep 都 STW**；Go 1.5+ 大幅缩短，Go 1.14+ 通常 < 1ms（负载相关） |
 
 与 Mark 对比：Mark 的 STW 点固定好记；Sweep 的 STW 更短、更分散，且随 Go 版本演进持续缩短，日常调优不必死盯 sweep STW。
 
@@ -2400,7 +2382,7 @@ go generate  # stringer, mockgen, ent, protobuf
 
 ---
 
-### 2. 框架与工程化
+<h3 id="c-5-2" class="mh2">2. 框架与工程化</h3>
 
 #### G18. Gin Radix Tree 路由为何优于 map？
 
@@ -3237,7 +3219,7 @@ col := allowed[c.Query("sort_by")] // 未命中用默认值
 
 ---
 
-### 3. 插件与生态
+<h3 id="c-5-3" class="mh2">3. 插件与生态</h3>
 
 #### G33. 令牌桶 / 漏桶 / 滑动窗口？
 
@@ -3473,7 +3455,7 @@ func BindJSON(c *gin.Context, req any) error {
 | machinery   | Redis/AMQP/SQS | 多 broker、DAG 工作流 | 配置重，小团队 asynq 更简单     |
 
 
-**多副本 cron 陷阱**：3 个 Pod 各跑 `0 0 `* * * 会执行 3 次。解法一——Redis 分布式锁：
+**多副本 cron 陷阱**：3 个 Pod 各跑 `0 0 * * `* 会执行 3 次。解法一——Redis 分布式锁：
 
 ```go
 // SET lock:cron:daily_report NX EX 300
@@ -3860,7 +3842,7 @@ Kafka：`msg_id = topic-partition-offset` 或 header `event_id`（UUID）；消�
 
 ---
 
-### 4. 运维（Ops）
+<h3 id="c-5-4" class="mh2">4. 运维（Ops）</h3>
 
 #### G44. 502 / 504 / 连接池打满排障？
 
@@ -4526,7 +4508,6 @@ db.SetConnMaxLifetime(5 * time.Minute)
 | USE（资源） | Utilization、Saturation、Errors | CPU%、队列深度、磁盘 IO err |
 | 业务      | 领域 KPI                        | 下单成功率、支付金额          |
 
-
 **业务落地：storeproxy（preprocessstoreproxy Pod）→ Prometheus + Grafana**
 
 典型 **Pull 模型**：进程只暴露 `/metrics`，不推、不向 Prometheus 注册；Grafana **不 scrape Pod**，只向 Prometheus 发 PromQL 读 TSDB。
@@ -4577,15 +4558,13 @@ preprocessstoreproxy Pod
       ⑥ 告警（可选）：Alerting → Contact points / Rule → 条件仍是对 Prometheus 做 PromQL
 ```
 
-
-| 环节  | 谁负责                              | 要点                                                                    |
-| --- | -------------------------------- | --------------------------------------------------------------------- |
-| 打点  | 业务 + `observe*`                  | 业务 Counter 与通用 `metrics.*` 同走 Sink，label 控基数（format/kind，勿用 trace_id） |
-| 暴露  | Init + `:9090/metrics`           | 与业务 HTTP 端口分离；Registry 与 promhttp 一致                                  |
-| 发现  | Pod 注解 + `kubernetes_sd_configs` | 注解是「可被谁拉」的声明，Init 只管「拉到了什么格式」                                         |
-| 存储  | Prometheus TSDB                  | 拉取间隔、retention；K8s 发现会带上 `k8s_app` 等 meta label 供 PromQL 过滤           |
-| 展示  | Grafana 数据源                      | 配置一次 Prometheus URL；面板/Explore/告警规则共用同一 PromQL 语义                     |
-
+| 环节 | 谁负责 | 要点 |
+| --- | --- | --- |
+| 打点 | 业务 + `observe*` | 业务 Counter 与通用 `metrics.*` 同走 Sink，label 控基数（format/kind，勿用 trace_id） |
+| 暴露 | Init + `:9090/metrics` | 与业务 HTTP 端口分离；Registry 与 promhttp 一致 |
+| 发现 | Pod 注解 + `kubernetes_sd_configs` | 注解是「可被谁拉」的声明，Init 只管「拉到了什么格式」 |
+| 存储 | Prometheus TSDB | 拉取间隔、retention；K8s 发现会带上 `k8s_app` 等 meta label 供 PromQL 过滤 |
+| 展示 | Grafana 数据源 | 配置一次 Prometheus URL；面板/Explore/告警规则共用同一 PromQL 语义 |
 
 ```promql
 # preprocessstoreproxy：按 format 看路径生成速率
@@ -4615,14 +4594,12 @@ K8s 每个 Node
         Grafana：node_memory_*、node_cpu_*、node_filesystem_* 等（可用官方 Node Exporter Full 模板）
 ```
 
-
-| 对比   | 业务 Pod（如 preprocessstoreproxy） | node-exporter                               |
-| ---- | ------------------------------ | ------------------------------------------- |
-| 部署   | Deployment / 多副本               | DaemonSet，与 Node 1:1                        |
-| 指标含义 | 领域 KPI、IO、自定义 Counter          | USE：CPU/内存/磁盘/网络                            |
-| 端口   | 常 9090（自研 Init）                | 9100（社区约定）                                  |
-| 面试归类 | RED + 业务                       | **USE**（与 G51 磁盘告警 `node_filesystem_`* 同一套） |
-
+| 对比 | 业务 Pod（如 preprocessstoreproxy） | node-exporter |
+| --- | --- | --- |
+| 部署 | Deployment / 多副本 | DaemonSet，与 Node 1:1 |
+| 指标含义 | 领域 KPI、IO、自定义 Counter | USE：CPU/内存/磁盘/网络 |
+| 端口 | 常 9090（自研 Init） | 9100（社区约定） |
+| 面试归类 | RED + 业务 | **USE**（与 G51 磁盘告警 `node_filesystem_*` 同一套） |
 
 ```promql
 # 节点 CPU 非 idle 占比（示意，按实际 job/instance 过滤）
@@ -4717,22 +4694,20 @@ groups:
     → 同上：Webhook → 钉钉机器人 或 Grafana 钉钉插件
 ```
 
-
-| 阶段     | 做什么                                                    | 策略要点                                    |
-| ------ | ------------------------------------------------------ | --------------------------------------- |
-| **触发** | `expr` 为真且 `for` **窗口内持续**                             | 防抖动：错误率类常 `for: 5m`；`up==0` 可更短         |
-| **标签** | `labels`: severity、team、service                        | 路由依据：`severity=critical` → 电话/on-call 群 |
-| **分组** | Alertmanager `group_by: [alertname, cluster, service]` | 多 Pod 同时挂只发 **一条聚合**（带 instance 列表）     |
-| **抑制** | `inhibit_rules`                                        | 例：节点 down 时抑制该节点上所有 Pod 的 up 告警         |
-| **路由** | `route` → 子 route 匹配 label                             | 业务群 / 基础设施群 / 大模型链路分 channel            |
-| **静默** | Silences（维护窗口）                                         | 发布前建 silence，避免预期抖动轰炸                   |
-| **恢复** | `resolved` 通知                                          | 钉钉消息标明 **已恢复**，便于值班关单                   |
-
+| 阶段 | 做什么 | 策略要点 |
+| --- | --- | --- |
+| **触发** | `expr` 为真且 **`for` 窗口内持续** | 防抖动：错误率类常 `for: 5m`；`up==0` 可更短 |
+| **标签** | `labels`: severity、team、service | 路由依据：`severity=critical` → 电话/on-call 群 |
+| **分组** | Alertmanager `group_by: [alertname, cluster, service]` | 多 Pod 同时挂只发 **一条聚合**（带 instance 列表） |
+| **抑制** | `inhibit_rules` | 例：节点 down 时抑制该节点上所有 Pod 的 up 告警 |
+| **路由** | `route` → 子 route 匹配 label | 业务群 / 基础设施群 / 大模型链路分 channel |
+| **静默** | Silences（维护窗口） | 发布前建 silence，避免预期抖动轰炸 |
+| **恢复** | `resolved` 通知 | 钉钉消息标明 **已恢复**，便于值班关单 |
 
 **钉钉接入（典型）**：
 
-1. 群设置 → **自定义机器人** → 安全设置（签名校验或 IP 白名单）→ 得到 Webhook URL。
-2. 部署 **Webhook 转换服务**（如 `prometheus-webhook-dingtalk`、自研小服务）：接收 Alertmanager `POST /api/v2/alerts` JSON，拼 Markdown（summary、description、startsAt、generatorURL 链到 Grafana/Prometheus）。
+1. 群设置 → **自定义机器人** → 安全设置（签名校验或 IP 白名单）→ 得到 Webhook URL。  
+2. 部署 **Webhook 转换服务**（如 `prometheus-webhook-dingtalk`、自研小服务）：接收 Alertmanager `POST /api/v2/alerts` JSON，拼 Markdown（summary、description、startsAt、generatorURL 链到 Grafana/Prometheus）。  
 3. Alertmanager 配置示例：
 
 ```yaml
@@ -4752,7 +4727,7 @@ receivers:
         send_resolved: true
 ```
 
-1. **Grafana**：Alerting → Contact points → Webhook 填同一适配器 URL；Notification policies 按 label 分到不同机器人（测试群 / 生产群）。
+4. **Grafana**：Alerting → Contact points → Webhook 填同一适配器 URL；Notification policies 按 label 分到不同机器人（测试群 / 生产群）。
 
 **值班与闭环（和「发消息」配套）**：
 
@@ -4774,7 +4749,7 @@ receivers:
 - **高基数 label 禁用**：`user_id`、`trace_id` 做 label 会炸 TSDB
 - recording rule 预聚合：`job:api:http_requests:rate5m` 加速大盘
 
-**面试怎么讲**：服务层 RED、资源层 USE；histogram 设合理 bucket；告警看 **error rate + P99 + up**；label 控制基数。可讲两条 Pull 链：**业务**（Init + 9090 + 自定义 Counter）与 **节点**（DaemonSet node-exporter + 9100 + `node_`*），最后都进同一 Prometheus，Grafana 只查 TSDB；业务例 `rate(preprocess_store_image_path_total[5m])`，资源例 `node_memory_`* / 磁盘余量。
+**面试怎么讲**：服务层 RED、资源层 USE；histogram 设合理 bucket；告警看 **error rate + P99 + up**；label 控制基数。可讲两条 Pull 链：**业务**（Init + 9090 + 自定义 Counter）与 **节点**（DaemonSet node-exporter + 9100 + `node_*`），最后都进同一 Prometheus，Grafana 只查 TSDB；业务例 `rate(preprocess_store_image_path_total[5m])`，资源例 `node_memory_*` / 磁盘余量。
 
 ---
 
@@ -5064,7 +5039,7 @@ CREATE TABLE sync_batch (
 
 ---
 
-### 5. CI/CD
+<h3 id="c-5-5" class="mh2">5. CI/CD</h3>
 
 #### G56. Git Flow vs Trunk Based？
 
@@ -5688,7 +5663,7 @@ helm upgrade --install my-api ./helm --atomic --wait --timeout 5m
 
 ---
 
-### 6. 架构与软技能
+<h3 id="c-5-6" class="mh2">6. 架构与软技能</h3>
 
 #### G63. 何时拆 / 不拆微服务？
 
@@ -5872,12 +5847,12 @@ Cancel:  释放冻结库存、释放余额 （回滚预留）
 **压测工具对比**：
 
 
-| 工具     | 特点         | 示例                                              |
-| ------ | ---------- | ----------------------------------------------- |
-| wrk    | 高并发、Lua 脚本 | `wrk -t4 -c100 -d30s --latency http://host/api` |
-| vegeta | 恒定 QPS、可管道 | `echo "GET [http://host/api](http://host/api)"  |
-| k6     | JS 脚本、场景丰富 | 适合复杂业务流程                                        |
-| hey    | Go 编写、简单   | `hey -n 10000 -c 50 url`                        |
+| 工具     | 特点         | 示例                                                                   |
+| ------ | ---------- | -------------------------------------------------------------------- |
+| wrk    | 高并发、Lua 脚本 | `wrk -t4 -c100 -d30s --latency http://host/api`                      |
+| vegeta | 恒定 QPS、可管道 | `echo "GET http://host/api" | vegeta attack -duration=30s -rate=200` |
+| k6     | JS 脚本、场景丰富 | 适合复杂业务流程                                                             |
+| hey    | Go 编写、简单   | `hey -n 10000 -c 50 url`                                             |
 
 
 **Vegeta 完整流程**：
@@ -6491,7 +6466,7 @@ func (dto PaymentGatewayDTO) ToDomain() domain.Payment {
 
 ---
 
-### 7. 高级自检（速查）
+<h3 id="c-5-7" class="mh2">7. 高级自检（速查）</h3>
 
 
 | 模块           | 题号      | 题量  | 核心覆盖                                                        |
@@ -6518,59 +6493,89 @@ func (dto PaymentGatewayDTO) ToDomain() domain.Payment {
 
 **学习路径**：G1–G17 语言 → G18–G32 框架 → G44–G55 运维 → G56–G62 CI/CD → G63–G72 架构；G33–G43 按项目补插件/AI。
 
----
 
-**目录**
+<hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
 
-- [一、个人](#c-1-0)
-  - [入职公司简介](#c-1-1)
-    - [1. 司睿杰](#c-1-1-1)
-    - [2. 亮风台](#c-1-1-2)
-    - [3. 现在公司](#c-1-1-3)
-  - [Go 与 Python 进行比较？](#c-1-2)
-  - [框架该如何设计定义？](#c-1-3)
-    - [1. 定位与边界](#c-1-3-1)
-    - [2. 架构定义](#c-1-3-2)
-    - [3. 三方面构成](#c-1-3-3)
-  - [Gin：Radix Tree 与 Context](#c-1-4)
-    - [1. Radix Tree](#c-1-4-1)
-    - [2. Context](#c-1-4-2)
-  - [Casbin 与 OPA 是什么？](#c-1-5)
-  - [微服务是什么？](#c-1-6)
-  - [链路追踪（OpenTracing）](#c-1-7)
-  - [服务熔断、降级与限流](#c-1-8)
-    - [1. 服务熔断与降级](#c-1-8-1)
-    - [2. 服务限流](#c-1-8-2)
-- [二、Docker & K8s](#c-2-0)
-  - [Docker](#c-2-1)
-    - [1. 什么是 Docker、容器、镜像？](#c-2-1-1)
-    - [2. Docker 镜像原则](#c-2-1-2)
-    - [3. 更改默认存储路径](#c-2-1-3)
-  - [Kubernetes](#c-2-2)
-    - [1. 容器化好处](#c-2-2-1)
-    - [2. 容器化流程](#c-2-2-2)
-    - [3. 部署常见问题](#c-2-2-3)
-    - [4. deploy / sts / ds 区别](#c-2-2-4)
-- [三、AI](#c-3-0)
-  - [RAG（Retrieval-Augmented Generation）](#c-3-1)
-    - [1. 基础流程（Naive RAG）](#c-3-1-1)
-    - [2. 三代演进](#c-3-1-2)
-    - [3. Advanced RAG 关键点](#c-3-1-3)
-    - [4. Modular RAG 关键点](#c-3-1-4)
-    - [5. 常见命名模式（速查）](#c-3-1-5)
-  - [LangChain](#c-3-2)
-- [四、简历项目深挖（问答）](#c-4-0)
-  - [A. 司睿杰 · 内部 OA / 监理协会考核系统](#c-4-1)
-  - [B. 亮风台 · 云平台（Rust→Go / MySQL→PG）](#c-4-2)
-  - [C. 智慧视通 · 蜂鸟（双网 / 百亿检索 / 服务治理 / 大模型）](#c-4-3)
-  - [D. 跨项目 · 语言 / 框架 / 运维通用深挖](#c-4-4)
-- [五、高级 Go 能力深挖](#c-5-0)
-  - [1. 语言（Go 本身）](#c-5-1)
-  - [2. 框架与工程化](#c-5-2)
-  - [3. 插件与生态](#c-5-3)
-  - [4. 运维（Ops）](#c-5-4)
-  - [5. CI/CD](#c-5-5)
-  - [6. 架构与软技能](#c-5-6)
-  - [7. 高级自检（速查）](#c-5-7)
+<!-- 目录容器 -->
+<div class="mi1">
+    <strong>目录</strong>
+        <ul style="margin: 10px 0; padding-left: 20px; list-style-type: none;">
+            <li style="list-style-type: none;"><a href="#c-1-0">一、个人</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;">
+                <li style="list-style-type: none;"><a href="#c-1-1">入职公司简介</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-1-1-1">1. 司睿杰</a></li>
+                    <li style="list-style-type: none;"><a href="#c-1-1-2">2. 亮风台</a></li>
+                    <li style="list-style-type: none;"><a href="#c-1-1-3">3. 现在公司</a></li>
+                </ul>
+                <li style="list-style-type: none;"><a href="#c-1-2">Go 与 Python 进行比较？</a></li>
+                <li style="list-style-type: none;"><a href="#c-1-3">框架该如何设计定义？</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-1-3-1">1. 定位与边界</a></li>
+                    <li style="list-style-type: none;"><a href="#c-1-3-2">2. 架构定义</a></li>
+                    <li style="list-style-type: none;"><a href="#c-1-3-3">3. 三方面构成</a></li>
+                </ul>
+                <li style="list-style-type: none;"><a href="#c-1-4">Gin：Radix Tree 与 Context</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-1-4-1">1. Radix Tree</a></li>
+                    <li style="list-style-type: none;"><a href="#c-1-4-2">2. Context</a></li>
+                </ul>
+                <li style="list-style-type: none;"><a href="#c-1-5">Casbin 与 OPA 是什么？</a></li>
+                <li style="list-style-type: none;"><a href="#c-1-6">微服务是什么？</a></li>
+                <li style="list-style-type: none;"><a href="#c-1-7">链路追踪（OpenTracing）</a></li>
+                <li style="list-style-type: none;"><a href="#c-1-8">服务熔断、降级与限流</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-1-8-1">1. 服务熔断与降级</a></li>
+                    <li style="list-style-type: none;"><a href="#c-1-8-2">2. 服务限流</a></li>
+                </ul>
+            </ul>
+            <li style="list-style-type: none;"><a href="#c-2-0">二、Docker & K8s</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;">
+                <li style="list-style-type: none;"><a href="#c-2-1">Docker</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-2-1-1">1. 什么是 Docker、容器、镜像？</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-1-2">2. Docker 镜像原则</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-1-3">3. 更改默认存储路径</a></li>
+                </ul>
+                <li style="list-style-type: none;"><a href="#c-2-2">Kubernetes</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-2-2-1">1. 容器化好处</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-2-2">2. 容器化流程</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-2-3">3. 部署常见问题</a></li>
+                    <li style="list-style-type: none;"><a href="#c-2-2-4">4. deploy / sts / ds 区别</a></li>
+                </ul>
+            </ul>
+            <li style="list-style-type: none;"><a href="#c-3-0">三、AI</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;">
+                <li style="list-style-type: none;"><a href="#c-3-1">RAG（Retrieval-Augmented Generation）</a></li>
+                <ul style="padding-left: 15px; list-style-type: none;">
+                    <li style="list-style-type: none;"><a href="#c-3-1-1">1. 基础流程（Naive RAG）</a></li>
+                    <li style="list-style-type: none;"><a href="#c-3-1-2">2. 三代演进</a></li>
+                    <li style="list-style-type: none;"><a href="#c-3-1-3">3. Advanced RAG 关键点</a></li>
+                    <li style="list-style-type: none;"><a href="#c-3-1-4">4. Modular RAG 关键点</a></li>
+                    <li style="list-style-type: none;"><a href="#c-3-1-5">5. 常见命名模式（速查）</a></li>
+                </ul>
+                <li style="list-style-type: none;"><a href="#c-3-2">LangChain</a></li>
+            </ul>
+            <li style="list-style-type: none;"><a href="#c-4-0">四、简历项目深挖（问答）</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;">
+                <li style="list-style-type: none;"><a href="#c-4-1">A. 司睿杰 · 内部 OA / 监理协会考核系统</a></li>
+                <li style="list-style-type: none;"><a href="#c-4-2">B. 亮风台 · 云平台（Rust→Go / MySQL→PG）</a></li>
+                <li style="list-style-type: none;"><a href="#c-4-3">C. 智慧视通 · 蜂鸟（双网 / 百亿检索 / 服务治理 / 大模型）</a></li>
+                <li style="list-style-type: none;"><a href="#c-4-4">D. 跨项目 · 语言 / 框架 / 运维通用深挖</a></li>
+            </ul>
+            <li style="list-style-type: none;"><a href="#c-5-0">五、高级 Go 能力深挖</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;">
+                <li style="list-style-type: none;"><a href="#c-5-1">1. 语言（Go 本身）</a></li>
+                <li style="list-style-type: none;"><a href="#c-5-2">2. 框架与工程化</a></li>
+                <li style="list-style-type: none;"><a href="#c-5-3">3. 插件与生态</a></li>
+                <li style="list-style-type: none;"><a href="#c-5-4">4. 运维（Ops）</a></li>
+                <li style="list-style-type: none;"><a href="#c-5-5">5. CI/CD</a></li>
+                <li style="list-style-type: none;"><a href="#c-5-6">6. 架构与软技能</a></li>
+                <li style="list-style-type: none;"><a href="#c-5-7">7. 高级自检（速查）</a></li>
+            </ul>
+        </ul>
+</div>
 
 本技术手册将持续更新，欢迎提交Issue和Pull Request
+
