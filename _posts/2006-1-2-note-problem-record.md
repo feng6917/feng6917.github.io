@@ -304,6 +304,65 @@ cp: write error: No space left on device
 
 **经验：** 重启后服务连环失败，优先看 `--previous` 日志里是否有 `No space left on device`，再用 `df` / `du` 定位挂载盘占满，而不是只盯着业务报错本身。
 
+<h2 id="c-13-0" class="mh1">13. 磁盘空间占用过高（/data Docker 占用 / /root 大文件清理）</h2>
+
+| 项 | 内容 |
+|----|------|
+| **记录时间** | 2026-10-15 |
+| **相关服务** | 系统层（磁盘空间）、Docker |
+
+**现象：** K8s master 节点根分区 `/` 占用 88%，`/data` 分区被 Docker 文件大量占用；`/root` 目录下个人/缓存目录过大（`du` 统计约 29G）。
+
+**排查结果：**
+
+```bash
+df -Th | grep dev
+# /dev/mapper/centos-root  xfs   50G   44G  6.5G  88% /
+# /dev/mapper/centos-data  ext4  287G  250G  37G  13% /data
+
+du -h --max-depth=1 /root
+# 4.9G  /root/.cache
+# 11G   /root/xjw
+# 7.5G  /root/yjj
+# ...
+```
+
+主要占用来源：
+1. Docker 悬空镜像、已停止容器、构建缓存堆积在 `/data`；
+2. `/root` 下缓存及个人目录（`.cache`、`xjw`、`yjj` 等）占用大量根分区空间。
+
+**调整方式：**
+
+1. Docker 清理（按需逐项执行）：
+
+```bash
+docker image prune      # 清理悬空镜像
+docker container prune  # 清理所有已停止的容器
+docker builder prune    # 清理构建缓存
+```
+
+2. 预防再次爆满：配置构建缓存自动 GC，编辑或创建 `/etc/docker/daemon.json`：
+
+```json
+{
+  "builder": {
+    "gc": {
+      "enabled": true,
+      "defaultKeepStorage": "20GB"
+    }
+  }
+}
+```
+
+3. `/root` 占用过大时，将大目录迁移到大容量数据盘并做软链接：
+
+```bash
+mv /root/xjw /data_ssd/root_data/xjw
+ln -s /data_ssd/root_data/xjw /root/xjw
+```
+
+**经验：** 磁盘爆满优先用 `df` 定位分区、`du -h --max-depth=1` 逐层下钻；Docker 环境定期 `prune` 并开启 builder GC；`/root` 下的大目录可迁移至大盘后用软链接保持原路径可用，避免影响依赖绝对路径的程序。
+
 <hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
 
 <!-- 目录容器 -->
@@ -333,6 +392,8 @@ cp: write error: No space left on device
             <li style="list-style-type: none;"><a href="#c-11-0">11. 服务器重启进入应急模式（fstab 未用 UUID / 选项拼写错误）</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-12-0">12. 服务器重启后服务异常（挂载盘写满导致 Redis 初始化失败）</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-13-0">13. 磁盘空间占用过高（/data Docker 占用 / /root 大文件清理）</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
         </ul>
 </div>
