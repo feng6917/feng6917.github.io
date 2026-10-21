@@ -176,15 +176,14 @@ OPA 是 CNCF 的通用**策略引擎**，用 **Rego** 语言编写策略，与�
 
 微服务是一种以**业务边界**为切割线，用**网络通信**代替进程内调用，牺牲部分**即时一致性**来换取**研发灵活性、高可用性和可扩展性**的架构模式。
 
-也可表述为：将单个应用拆为一组小型服务，每个服务独立进程运行，通过轻量机制（通常 **HTTP REST / gRPC**）通信，围绕业务能力构建，可独立部署、独立扩展，各服务可用不同语言与不同数据库。
+也可表述为：将单个应用围绕业务能力拆为一组小型服务，每个服务独立进程运行，通过轻量机制（通常 **HTTP REST / gRPC**）通信，可独立部署、独立扩展，各服务可用不同语言与不同数据库。
 
 **特点**
 
-1. 一种架构思想，企业演进的自然结果，**没有银弹**
-2. 围绕业务能力拆分，**小而精、高内聚、低耦合**
-3. 服务间**网络调用**（替代本地方法调用），需考虑超时、重试、熔断、限流
-4. 各服务**独立开发、独立部署、独立扩缩容**，技术栈可异构
-5. **自动化部署、持续发版**；治理侧需注册发现、配置中心、链路追踪等配套
+1. 围绕业务能力拆分，**小而精、高内聚、低耦合**
+2. 服务间**网络调用**（替代本地方法调用），需考虑超时、重试、熔断、限流
+3. 各服务**独立开发、独立部署、独立扩缩容**，技术栈可异构
+4. **自动化部署、持续发版**；治理侧需注册发现、配置中心、链路追踪等配套
 
 **与单体对比（简要）**
 
@@ -197,7 +196,7 @@ OPA 是 CNCF 的通用**策略引擎**，用 **Rego** 语言编写策略，与�
 | 复杂度 | 开发简单，后期臃肿 | 研发灵活，运维与治理成本高   |
 
 
-img
+![img](../images/2020-3-3/56.jpg)
 
 <h2 id="c-1-7" class="mh1">链路追踪（OpenTracing）</h2>
 
@@ -241,7 +240,7 @@ img
 
 <h3 id="c-1-8-1" class="mh2">1. 服务熔断与降级</h3>
 
-img
+![img](../images/2020-3-3/42.jpg)
 
 **熔断**：装在当前服务对下级的调用链路上，用来在下级异常时快速止损，避免连锁故障。服务异常超过一定时间、次数或失败比例时，**不再调用下游**，直接返回错误（可配合降级）。暂停一段时间后周期性探测，直到服务恢复。
 
@@ -268,25 +267,25 @@ img
 
 维护时间窗口内请求计数，超限则拒绝。实现简单，但窗口重置时无法平滑处理突发。
 
-img
+![img](../images/2020-3-3/68.jpg)
 
 **2）滑动窗口限流**
 
 将窗口切分为多个小段，逐段计数，可更好应对短时突发。
 
-img
+![img](../images/2020-3-3/69.jpg)
 
 **3）漏桶算法**
 
 请求入队，按固定速率流出；队列满则拒绝。**无法应对突发**（平滑输出）。
 
-img
+![img](../images/2020-3-3/70.jpg)
 
 **4）令牌桶算法**
 
 以固定速率向桶中放令牌，请求取令牌，无令牌则拒绝。**可应对突发**（桶内有余量时）。
 
-img
+![img](../images/2020-3-3/71.jpg)
 
 **Go 插件示例**：`github.com/juju/ratelimit`（令牌桶）
 
@@ -3322,6 +3321,34 @@ defer entry.Exit()
 ```
 
 **熔断阈值务必加「最小请求数」**：样本 < 20 时即使 3/3 失败也不应熔断，否则冷启动或低流量误开。Half-Open 探测用 1～3 个请求，成功则 Closed，失败则重新 Open。
+
+**hystrix-go 典型配置示例（客户端，对下游服务）**：
+
+项目里已有的实际用法在 `pkg/processcache/processmgr.go` 的 `Init` 中：
+
+```go
+// pkg/processcache/processmgr.go:56
+hystrixs := map[string]grpc_interceptor.HystrixConfig{
+    "/zhst.PreProcessManagerService/ListPreProcess": {
+        SleepWindow:            5000,
+        RequestVolumeThreshold: 1,
+        ErrorPercentThreshold:  50,
+    },
+}
+conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithUnaryInterceptor(
+    grpc_interceptor.HystrixClientInterceptor(hystrixs, nil)))
+```
+
+**关键规则**（来自源码注释）：
+
+- 以 **gRPC 接口（FullMethod）为粒度**，key 必须是完整方法名，如 `"/zhst.SearchService/CrossLineSearch"`；不指定接口名的不会做熔断处理。
+- 参数含义：
+  - `RequestVolumeThreshold`：10 秒滑动窗口内的**最小请求数**，达到后才开始统计错误率（设 1 表示第一个失败请求就可能触发）
+  - `ErrorPercentThreshold`：错误率阈值（0-100），达到即熔断
+  - `SleepWindow`：熔断打开后隔多少**毫秒**放一个探测请求试恢复（上面例子 5 秒）
+- 只有返回的 `grpc err` 才计入失败，response 里的 error 字段不算（代码注释标明后续可考虑修改）。
+- `Timeout` 和 `MaxConcurrentRequests` 在 hystrixCommandConfig 里写死为极大值（100s / 100000000），相当于**不靠 hystrix 超时和并发限流，只做错误率熔断**。
+- 客户端熔断配置在进程内是**共享的**（通过 uuid 前缀隔离多个拦截器的命令名，避免冲突）。
 
 **选型建议**：新项目优先 sentinel 或 Kratos 内置 middleware；已有 Hystrix 概念团队可短期用 hystrix-go 但需评估维护风险；仅 1～2 个外部依赖、QPS < 1k 可自研 + Prometheus 指标（`breaker_state{resource="x"}` gauge）。
 
