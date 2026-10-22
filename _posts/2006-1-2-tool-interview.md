@@ -524,6 +524,32 @@ LangChain Agent **底层基于 LangGraph**：简单用 LangChain，复杂工作�
 
 **经验法则**：涉及文档检索、多工具、多模型中 **≥2 项** 时，值得引入。
 
+<h2 id="c-3-3" class="mh1">Skills（Agent 技能）</h2>
+
+**Skills** = 把某个领域的「知识 + 流程 + 脚本」打包成 Agent 可按需加载的技能包
+
+一个 Skill 就是一个文件夹，核心是 `SKILL.md`（带 name/description 元数据），可选配套：
+
+| 文件            | 作用                     |
+| ------------- | ---------------------- |
+| **SKILL.md**  | 技能说明：何时用、怎么做（入口）       |
+| **references** | 补充参考文档（如 API 细节、规范）    |
+| **scripts**   | 可执行脚本（Agent 直接运行，非复制代码）|
+
+**渐进式加载（Progressive Disclosure）**：不把全部内容塞进上下文，按需分层读
+
+```
+1. 启动时    → 只读 name + description（几十字节，判断是否相关）
+2. 触发技能  → 读完整 SKILL.md（工作流程）
+3. 需要细节  → 再读 references / 执行 scripts
+```
+
+**价值**：省 token、技能可独立维护复用；和 MCP 的区别是 **MCP 接外部工具，Skills 沉淀内部知识/流程**。
+
+**面试怎么讲**：Skills = 文件夹 + SKILL.md + 可选 references/scripts；通过元数据匹配触发、按需加载正文，避免一次性占用上下文。
+
+---
+
 <h2 id="c-4-0" class="mh1">四、简历项目深挖（问答）</h2>
 
 > 用法：面试官常从简历项目切入。每题按 **「问题 → 思路 → 参考答案」** 组织，回答时先讲**背景与 trade-off**，再落到**你做了什么、指标如何、失败怎么办**。
@@ -3867,6 +3893,46 @@ Kafka：`msg_id = topic-partition-offset` 或 header `event_id`（UUID）；消�
 
 **与 G42 关系**：幂等解决「重复执行副作用」；重试解决 transient 失败；两者必须同时设计。
 
+**市面常用方案速查（总表）**：
+
+
+| 方案                     | 原理                      | 适用场景            | 注意点                |
+| ---------------------- | ----------------------- | --------------- | ------------------ |
+| **天然幂等方法**             | GET/PUT/DELETE 语义天然幂等   | REST 读/替换/删除    | POST 天然不幂等，需额外方案  |
+| **业务唯一键（唯一索引）**        | 重复插入直接冲突，捕获后返回成功        | 交卷、下单、回调        | 冲突后要**查回已有结果**返回，不能报错 |
+| **防重 Token**           | 先领 token，提交时校验并删除       | 表单防重复提交         | token 一次性，需原子删除    |
+| **HTTP Idempotency-Key** | 客户端 UUID，服务端存 key→响应   | 支付、重试敏感的 POST   | 同 key 不同 body 要 409 |
+| **状态机**                | `UPDATE ... WHERE status=前一状态` | 流程单据（审批/订单/交卷） | 非法状态迁移直接拒绝，天然防重放 |
+| **乐观锁（version）**       | `WHERE version=?` 更新计数为 0 即重复 | 并发更新同一行      | 冲突需重试或返回失败        |
+| **Redis SETNX**        | `SET dedup:{key} NX EX` | 高吞吐 MQ 去重       | Redis 丢数据会穿透，强一致用去重表 |
+| **去重表**                | 消息 ID 插 UNIQUE 表        | 强持久 MQ 消费       | 与业务写放**同事务**才可靠   |
+| **分布式锁**               | SETNX/Redlock 抢锁后执行     | 定时任务多实例防重       | 锁防并发，不防重复投递，常配合幂等键 |
+
+
+**选型口诀**：**写库靠唯一键，流程靠状态机，MQ 靠去重表/SETNX，HTTP 靠 Idempotency-Key**。
+
+**状态机一句话**：状态机幂等就是 **UPDATE 带 WHERE 前置状态，靠「合法来源状态」挡住重复和乱序，影响行数为 0 视为已处理过、返回成功**。
+
+**去重表一句话**：去重表就是 **用数据库唯一索引当「已处理」登记簿**——处理前先 INSERT 登记号，登记冲突 = 处理过了、返回成功；它必须和业务写放**同一个事务**，才能保证「不重复、也不丢」。
+
+**项目落地（我们项目怎么用）**：
+
+
+| 项目             | 场景                     | 幂等方案                                    |
+| -------------- | ---------------------- | --------------------------------------- |
+| **司睿杰 · OA 考核** | 交卷（Q1）                 | `submission_id` + `(exam_id, user_id)` 唯一索引，重复交卷返回成功 |
+|                | 到点超时收卷                 | 状态机：`WHERE status='进行中'`，定时任务与主动交卷竞争不重复阅卷 |
+|                | 阅卷统计 MQ 异步             | 消费端去重表（msg_id），失败进死信人工补偿                |
+| **亮风台 · 云平台**   | MySQL→PG 增量同步（Q6）      | at-least-once + 按主键 upsert，重复事件覆盖写天然幂等；对账兜底 |
+|                | 文档同步 ES（Q4）            | 幂等 docId，失败进死信队列，全量 rebuild 兜底          |
+|                | 薪资服务 gRPC 重试           | 请求带 `Idempotency-Key`，服务端 key→response 缓存（G43 表） |
+| **蜂鸟 · 双网**     | 网闸摆渡摘要入库（Q8）           | `(deviceId, segmentId, version)` 幂等键防重复入库 |
+|                | 内外网业务消费（Q9）            | `(deviceId, bizSeq, protocolVersion)` 幂等键 + 日对账 |
+|                | Outbox → MQ（Q14）       | 消费端幂等；本地事务保证写库与发消息原子                    |
+
+
+**面试怎么讲**：先报方案矩阵（唯一键/状态机/token/幂等键/去重表），再按「本项目哪条链路、用什么键、冲突后返回什么」落到细节——幂等的核心不是「挡住重复请求」，而是**重复请求命中后返回与首次一致的结果**。
+
 ---
 
 <h3 id="c-5-4" class="mh2">4. 运维（Ops）</h3>
@@ -3878,6 +3944,10 @@ Kafka：`msg_id = topic-partition-offset` 或 header `event_id`（UUID）；消�
 **参考答案**：
 
 502/504 本质是 **网关等不到健康 upstream** 或 **upstream 处理超时**；连接池打满则是 **下游慢 + 并发高 + 池太小** 叠加。排障口诀：**从外到内、从症状到根因**，每层用日志 + 指标 + 命令交叉验证。
+
+**请求完整链路（排障前先背熟）**：请求先 **DNS 解析到云 LB**，LB 四层转发到节点 **NodePort**，进入 **Ingress Controller** 做 TLS 终止和七层路由（按 host/path 匹配 Ingress 规则），再转发到 Service——Service 是虚拟 IP，靠 kube-proxy 的 iptables/IPVS 规则 **DNAT 到真实 Pod IP**，最后由业务 Pod 处理。排查 502/504 就按这条链路逐层看：**LB → NodePort → Ingress Pod → Service/Endpoint → 业务 Pod**。
+
+**LB 一句话**：LB（Load Balancer 负载均衡器）就是**流量分发器 + 健康检查器**：四层 LB 按 IP:端口转发（快、简单），七层 LB 能看 HTTP 内容做路由（灵活）。K8s 里入口用四层云 LB 接流量，Ingress 做七层路由，各干各的层。
 
 **Step 0：确认现象与范围**
 
@@ -6583,6 +6653,7 @@ func (dto PaymentGatewayDTO) ToDomain() domain.Payment {
                     <li style="list-style-type: none;"><a href="#c-3-1-5">5. 常见命名模式（速查）</a></li>
                 </ul>
                 <li style="list-style-type: none;"><a href="#c-3-2">LangChain</a></li>
+                <li style="list-style-type: none;"><a href="#c-3-3">Skills（Agent 技能）</a></li>
             </ul>
             <li style="list-style-type: none;"><a href="#c-4-0">四、简历项目深挖（问答）</a></li>
             <ul style="padding-left: 15px; list-style-type: none;">
