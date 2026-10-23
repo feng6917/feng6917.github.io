@@ -363,6 +363,63 @@ ln -s /data_ssd/root_data/xjw /root/xjw
 
 **经验：** 磁盘爆满优先用 `df` 定位分区、`du -h --max-depth=1` 逐层下钻；Docker 环境定期 `prune` 并开启 builder GC；`/root` 下的大目录可迁移至大盘后用软链接保持原路径可用，避免影响依赖绝对路径的程序。
 
+<h2 id="c-14-0" class="mh1">14. docker pull Harbor 镜像卡死 / SSH 断连（交换机端口故障）</h2>
+
+| 项 | 内容 |
+|----|------|
+| **记录时间** | 2026-10-23 |
+| **相关服务** | Harbor（188）、Docker、K8s 节点（157）、交换机（网络层） |
+
+**现象：** docker pull Harbor 大镜像（多层 1.5GB）时进度卡死、重试无效；pull 期间所有到 188 的 SSH 会话被断、ping 丢包；188 主机本身不重启、服务不挂、CPU/磁盘空闲，停止 pull 后约几分钟自动恢复。
+
+**排查结果（逐层排除）：**
+
+1. **主机-内核**：conntrack 连接数 25（上限 26 万）、softnet_stat 的 time_squeeze 全 0，❌ 排除；
+2. **主机-网卡**：两端 `ethtool -S` 0 错误 0 丢包、CRC=0、流控关闭（pause 计数 0），❌ 排除；
+3. **157 主机**：ring buffer 仅 512（默认最小值），调至 4096 后未根治，属于伴生问题；
+4. **故障抓捕监控**（157 持续 ping + 188 计数器日志）抓到现场：ICMP 丢包约 40 秒，RTT 从 0.15ms 飙到 1003ms —— 队列溢出型丢包，定位到网络层；
+5. **tcpdump**：pull 卡死时抓 443 端口 30 秒 **0 包**——TCP 僵尸连接，非应用层问题；
+6. **188 侧 sar 抓到死亡瞬间**：TX 突发 45MB/s（≈360Mbps）→ SSH 当场断，期间 188 的 CPU/磁盘全空闲 —— 矛头指向交换机；
+7. **对照实验（决定性）**：
+
+| 实验 | 速率 | SSH/网络 |
+|---|---|---|
+| docker pull（无限速） | 突发 ~360Mbps | ❌ 断 |
+| tbf 限速 20Mbit | 2.5MB/s | ✅ 稳 |
+| tbf 限速 100Mbit | 12MB/s | ✅ 稳 |
+| tbf 限速 300Mbit | 36MB/s | ✅ 稳 |
+| iperf3 换主机（218）换工具打流 | ~1Gbps | ❌ 秒断 |
+
+换客户端、换工具照样触发 —— 与 docker、Harbor、157 全部无关。
+
+**根因：** 交换机 188 端口异常：出口突发流量达到 ~300-360Mbps（远低于 10G 正常能力）即触发该端口路径大面积丢包，殃及端口上所有连接（pull/SSH/ICMP）；流量退去后自愈。10G 服务器与 1G 客户端的速度差放大了突发强度。
+
+**调整方式：**
+
+1. 短期保护（已落地）：188 出口限速 300Mbps 并用 systemd 固化：
+
+```bash
+tc qdisc replace dev eno1 root tbf rate 300mbit burst 32kbit latency 50ms
+```
+
+```ini
+# /etc/systemd/system/tc-protect.service（开机自动生效）
+[Unit]
+Description=Protect switch port from pull bursts
+After=network-online.target
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/tc qdisc replace dev eno1 root tbf rate 300mbit burst 32kbit latency 50ms
+[Install]
+WantedBy=multi-user.target
+```
+
+2. 客户端限并发：`/etc/docker/daemon.json` 增加 `"max-concurrent-downloads": 2`，`systemctl reload docker` 热加载；
+3. 长期根治：网络组检修/更换 188 对应交换机端口、光模块（附对照实验数据）；修复后 `tc qdisc del dev eno1 root` 恢复全速；
+4. 其他优化：大镜像瘦身（多阶段构建）、多节点大规模拉镜像引入 Dragonfly2 P2P 分发。
+
+**经验：** 自愈型故障必须提前部署「故障抓捕」监控（后台持续 ping + `ip -s link` 计数器日志），事后才能拿到现场数据；排查按 conntrack → 软中断 → 网卡 → 网络层 ping/telnet/curl → tcpdump 分层排除；主机侧全干净但故障随流量出现时，大胆把矛头指向链路设备；用 `tc`/`iperf3` 做对照实验定位阈值，让结论无可辩驳。
+
 <hr aria-hidden="true" style=" border: 0; height: 2px; background: linear-gradient(90deg, transparent, #1bb75c, transparent); margin: 2rem 0; " />
 
 <!-- 目录容器 -->
@@ -394,6 +451,8 @@ ln -s /data_ssd/root_data/xjw /root/xjw
             <li style="list-style-type: none;"><a href="#c-12-0">12. 服务器重启后服务异常（挂载盘写满导致 Redis 初始化失败）</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
             <li style="list-style-type: none;"><a href="#c-13-0">13. 磁盘空间占用过高（/data Docker 占用 / /root 大文件清理）</a></li>
+            <ul style="padding-left: 15px; list-style-type: none;"></ul>
+            <li style="list-style-type: none;"><a href="#c-14-0">14. docker pull Harbor 镜像卡死 / SSH 断连（交换机端口故障）</a></li>
             <ul style="padding-left: 15px; list-style-type: none;"></ul>
         </ul>
 </div>
