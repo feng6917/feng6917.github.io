@@ -112,19 +112,52 @@ author: feng6917
 ### 设置时区
 
 ```bash
-# 临时设置时区
-cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+# 查看当前时区与时间
+timedatectl                    # 推荐：状态一览
+date                           # 当前系统时间
 
-# 安装时间同步工具
-apt install ntpdate -y
+# 设置时区（RHEL/CentOS 7+、多数 systemd 发行版）
+sudo timedatectl set-timezone Asia/Shanghai
+timedatectl list-timezones | grep Shanghai   # 查可用时区
 
-# 同步时间（阿里云NTP服务器）
-ntpdate ntp.aliyun.com
+# 旧方式（无 timedatectl 时）
+sudo ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
-# 时间操作示例
-date                          # 查看当前时间
-date -d '-1 day'             # 查看昨天时间
-date -d '+1 hour'            # 查看一小时后时间
+# 相对时间示例
+date -d '-1 day'               # 昨天（GNU date）
+date -d '+1 hour'              # 一小时后
+```
+
+> 内网环境优先用 **Chrony** 校时，**不要用 `date -s` 手动改时间**，避免与 NTP 漂移、审计不一致。
+
+### 内网校时（Chrony）
+
+1. 向分局索取内网 NTP 地址（示例：`10.0.0.249`）。
+2. 编辑配置：`vi /etc/chrony.conf`，增加或改为：
+
+```conf
+server 10.0.0.249 iburst
+```
+
+3. 生效：
+
+```bash
+sudo systemctl restart chronyd    # 或：service chronyd restart
+sudo systemctl enable chronyd     # 开机自启（建议）
+```
+
+4. 验收：
+
+```bash
+chronyc tracking                  # 看 Reference ID、System time 等
+chronyc sources -v                # 源为 10.0.0.249 且标记 ^* 表示已选中同步
+```
+
+### 公网一次性校时（可选，Debian/Ubuntu 旧习惯）
+
+```bash
+sudo apt install ntpdate -y
+sudo ntpdate ntp.aliyun.com       # 长期运行建议改用 chrony/ntp，不要反复 ntpdate
 ```
 
 ---
